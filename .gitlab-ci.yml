@@ -17,13 +17,14 @@ build:
     untracked: true
   script:
     - node --version
+    - cd website
     - npm install
     - ./node_modules/@angular/cli/bin/ng build --progress false --prod # --base-href accounts.weavver.com
 #    - ./node_modules/@angular/cli/bin/ng test --progress false --single-run=true --watch=false
 #    - ./node_modules/@angular/cli/bin/ng e2e --progress false --watch=false
   artifacts:
     paths:
-      - dist/*
+      - website/dist/*
 
 test:
   stage: test
@@ -40,5 +41,5 @@ deploy:
     - build
   script:
     - pip install awscli
-    - aws s3 sync dist s3://weavver-accoounts --delete --acl public-read
+    - aws s3 sync website/dist s3://weavver-accoounts --delete --acl public-read
     - aws cloudfront create-invalidation --distribution-id E3QVJ7D556DGGR --paths /*
