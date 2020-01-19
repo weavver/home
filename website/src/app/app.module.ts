@@ -1,11 +1,13 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
+
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgModule } from '@angular/core';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { HomeComponent }           from './home/home.component';
+import { SettingsComponent }           from './settings/settings.component';
 
 import { PageNotFoundComponent }   from './page-not-found/page-not-found.component';
 
@@ -21,11 +23,13 @@ import { CardModule } from 'primeng/card';
     BrowserModule,
     BrowserAnimationsModule,
     AppRoutingModule,
-    FlexLayoutModule
+    FlexLayoutModule,
+    FormsModule,
+    ReactiveFormsModule
   ],
   declarations: [
     AppComponent,
-    HomeComponent,
+    SettingsComponent,
     PageNotFoundComponent
   ],
   providers: [],

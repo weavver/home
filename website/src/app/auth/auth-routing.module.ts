@@ -7,13 +7,15 @@ import { LogInResetPasswordComponent }       from './login-resetpassword/login-r
 import { LogInResetPasswordConfirmComponent }       from './login-resetpassword-confirm/login-resetpassword-confirm.component';
 import { SignUpComponent }       from './signup/signup.component';
 import { SignUpConfirmComponent }       from './signup-confirm/signup-confirm.component';
+import { PasswordComponent }       from './password/password.component';
 
 const authRoutes: Routes = [
   { path: 'login', component: LoginComponent },
   { path: 'login/resetpassword', component: LogInResetPasswordComponent },
   { path: 'login/resetpassword/confirm', component: LogInResetPasswordConfirmComponent },
   { path: 'signup', component: SignUpComponent },
-  { path: 'signup/confirm', component: SignUpConfirmComponent }
+  { path: 'signup/confirm', component: SignUpConfirmComponent },
+  { path: 'password', component: PasswordComponent },
 ];
 
 @NgModule({

@@ -4,7 +4,7 @@
 <!-- <body class="application"> -->
   <header>
     <div fxLayout="row" fxLayoutAlign="space-between center" style="display: flex; align-content: center; align-items: center;">
-         <div fxLayout="row" fxLayoutAlign="start center" style="padding-left: 20px; border; height: 48px;">
+         <div fxLayout="row" fxLayoutAlign="start center" style="padding-left: 20px; height: 48px;">
               <div style="background-color: transparent; border: none; margin-right: 10px; cursor: pointer;" routerLink="/">
                    <img src="assets/logo.png" style="width: 255px; margin-top: 0px;" />
               </div>
@@ -39,25 +39,13 @@
 <div class="application-body">
     <nav class="application-nav" fxLayout="column" fxLayoutAlign="space-between stretch" *ngIf="authService.isLoggedIn">
          <div [class.sidebarExpanded]="this.navAccountExpanded" [class.sidebarCollapsed]="!this.navAccountExpanded">
-              <div [class.sidebarItemExpanded]="this.navAccountExpanded" [class.sidebarItemCollapsed]="!this.navAccountExpanded" routerLink="/account" routerLinkActive="sidebarItemActive" *ngIf="authService.isLoggedIn" [routerLinkActiveOptions]="{exact: true}">
-                   <i class="material-icons" style="font-size: 1.85rem">dashboard</i>
-                   <span *ngIf="this.navAccountExpanded">Dashboard</span>
+              <div [class.sidebarItemExpanded]="this.navAccountExpanded" [class.sidebarItemCollapsed]="!this.navAccountExpanded" routerLink="/settings" routerLinkActive="sidebarItemActive" *ngIf="authService.isLoggedIn" [routerLinkActiveOptions]="{exact: true}">
+                   <i class="material-icons" style="font-size: 1.85rem">account_circle</i>
+                   <span *ngIf="this.navAccountExpanded">Profile</span>
               </div>
-              <div [class.sidebarItemExpanded]="this.navAccountExpanded" [class.sidebarItemCollapsed]="!this.navAccountExpanded" routerLink="/case/list" routerLinkActive="sidebarItemActive" title="Cases" *ngIf="authService.isLoggedIn">
-                   <i class="material-icons" style="font-size: 1.85rem">folder_shared</i>
-                   <span *ngIf="this.navAccountExpanded">Cases</span>
-              </div>
-              <div [class.sidebarItemExpanded]="this.navAccountExpanded" [class.sidebarItemCollapsed]="!this.navAccountExpanded" routerLink="/account/orders" routerLinkActive="sidebarItemActive" title="Orders" *ngIf="authService.isLoggedIn">
-                   <i class="material-icons" style="font-size: 1.85rem">mail</i>
-                   <span *ngIf="this.navAccountExpanded">Orders</span>
-              </div>
-              <!-- <div [class.sidebarItemExpanded]="this.navAccountExpanded" [class.sidebarItemCollapsed]="!this.navAccountExpanded" routerLink="/account/orders" routerLinkActive="sidebarItemActive" title="Orders" *ngIf="authService.isLoggedIn">
-                   <i class="material-icons" style="font-size: 1.85rem">mail</i>
-                   <span *ngIf="this.navAccountExpanded">Groups</span>
-              </div> -->
-              <div  [class.sidebarItemExpanded]="this.navAccountExpanded" [class.sidebarItemCollapsed]="!this.navAccountExpanded" routerLink="/account/settings" routerLinkActive="sidebarItemActive" title="Settings" *ngIf="authService.isLoggedIn">
-                   <i class="material-icons" style="font-size: 1.85rem">settings_applications</i>
-                   <span *ngIf="this.navAccountExpanded">Settings</span>
+              <div  [class.sidebarItemExpanded]="this.navAccountExpanded" [class.sidebarItemCollapsed]="!this.navAccountExpanded" routerLink="/password" routerLinkActive="sidebarItemActive" title="Settings" *ngIf="authService.isLoggedIn">
+                   <i class="material-icons" style="font-size: 1.85rem">lock</i>
+                   <span *ngIf="this.navAccountExpanded">Password</span>
               </div>
          </div>
          <div class="menuButton" (click)="toggleNavAccount()" *ngIf="authService.isLoggedIn" style="width: 100%; height: 48px;">

@@ -51,20 +51,20 @@ export class LoginComponent {
     onSubmit() {
     //     this.message = 'Trying to log in ...';
 
-    //     this.authService.login().subscribe(() => {
+        this.authService.login().subscribe(() => {
     //         this.setMessage();
     //         if (this.authService.isLoggedIn) {
     //             // If no redirect has been set, use the default
-    //             let redirect = this.authService.redirectUrl ? this.router.parseUrl(this.authService.redirectUrl) : '/admin';
+                let redirect = this.authService.redirectUrl ? this.router.parseUrl(this.authService.redirectUrl) : '/settings';
 
-    //             let navigationExtras: NavigationExtras = {
-    //                 queryParamsHandling: 'preserve',
-    //                 preserveFragment: true
-    //             };
+                let navigationExtras: NavigationExtras = {
+                    queryParamsHandling: 'preserve',
+                    preserveFragment: true
+                };
 
-    //             this.router.navigateByUrl(redirect, navigationExtras);
+                this.router.navigateByUrl(redirect, navigationExtras);
     //         }
-    //     });
+        });
     }
 
     logout() {

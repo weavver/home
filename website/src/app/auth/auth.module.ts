@@ -11,6 +11,7 @@ import { CardModule } from 'primeng/card';
 import { SignUpConfirmComponent } from './signup-confirm/signup-confirm.component';
 import { LogInResetPasswordComponent } from './login-resetpassword/login-resetpassword.component';
 import { LogInResetPasswordConfirmComponent } from './login-resetpassword-confirm/login-resetpassword-confirm.component';
+import { PasswordComponent } from './password/password.component';
 
 @NgModule({
      imports: [
@@ -26,7 +27,8 @@ import { LogInResetPasswordConfirmComponent } from './login-resetpassword-confir
           LogInResetPasswordComponent,
           LogInResetPasswordConfirmComponent,
           SignUpComponent,
-          SignUpConfirmComponent
+          SignUpConfirmComponent,
+          PasswordComponent
      ]
 })
 export class AuthModule {
