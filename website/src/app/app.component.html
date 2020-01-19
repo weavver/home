@@ -8,11 +8,8 @@
               <div style="background-color: transparent; border: none; margin-right: 10px; cursor: pointer;" routerLink="/">
                    <img src="assets/logo.png" style="width: 255px; margin-top: 0px;" />
               </div>
-              <!-- <div fxShow [fxHide.lt-sm]="true" routerLink="/help" class="navButton" routerLinkActive="navButtonActive">
-                   <p>Help</p>
-              </div> -->
          </div>
-         <div fxLayout="row" fxLayoutAlign="end center" style="padding-left: 20px; height: 48px;" fxShow [fxHide.lt-sm]="true">
+         <div fxLayout="row" fxLayoutAlign="end center" style="padding-left: 20px; height: 48px;">
               <!-- fxShow [fxHide.lt-md]="true"  -->
               <div class="navButton" *ngIf="!authService.isLoggedIn" routerLink="/login" routerLinkActive="navButtonActive">
                    <p>Log In</p>
@@ -25,13 +22,6 @@
               </div>&nbsp;
               <div class="navButton" *ngIf="authService.isLoggedIn" (click)="logout()">
                    <p>Log Out</p>
-              </div>
-         </div>
-         <div fxLayout="row" fxLayoutAlign="start center" fxShow [fxHide.gt-xs]="true" style="padding-left: 20px; height: 48px;">
-              <div class="navButton" (click)="toggleNavGeneral()" fxShow [fxHide.gt-xs]="true">
-                   <p>
-                        <i class="material-icons" style="font-size: 1.85rem">menu</i>
-                   </p>
               </div>
          </div>
     </div>
