@@ -14,12 +14,9 @@ import { PageNotFoundComponent }   from './page-not-found/page-not-found.compone
 import { AuthModule }              from './auth/auth.module';
 import { FlexLayoutModule } from '@angular/flex-layout';
 
-import { CardModule } from 'primeng/card';
-
 @NgModule({
   imports: [
     AuthModule,
-    CardModule,
     BrowserModule,
     BrowserAnimationsModule,
     AppRoutingModule,

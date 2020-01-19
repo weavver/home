@@ -24,14 +24,8 @@
                            ],
                            "styles": [
                                 "src/styles.scss",
-
                                 "node_modules/bootstrap/dist/css/bootstrap-reboot.min.css",
                                 "node_modules/bootstrap/dist/css/bootstrap.min.css",
-
-                                "node_modules/primeicons/primeicons.css",
-                                "node_modules/primeng/resources/themes/nova-light/theme.css",
-                                "node_modules/primeng/resources/primeng.min.css",
-
                                 "node_modules/ngx-toastr/toastr.css"
                            ],
                            "scripts": [
