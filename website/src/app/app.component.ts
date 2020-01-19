@@ -17,7 +17,27 @@ import { AuthService } from "./auth/auth.service";
      animations: [slideInAnimation]
 })
 export class AppComponent {
-     constructor(public authService: AuthService) {}
+     navGeneral: boolean = false;
+     navAccountExpanded: boolean = false;
+
+     constructor(public authService: AuthService)
+     {
+
+     }
+     
+     toggleNavAccount() {
+          this.navAccountExpanded = !this.navAccountExpanded;
+     }
+     
+     toggleNavGeneral() {
+          this.navGeneral = !this.navGeneral;
+     }
+
+
+     logout() {
+          this.authService.logout();
+          return false;
+     }
 
      getAnimationData(outlet: RouterOutlet) {
           return (
