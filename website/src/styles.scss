@@ -1,0 +1,90 @@
+/*@import 'themes';*/
+
+@import '~primeicons/primeicons.css';
+@import '~primeng/resources/themes/nova-light/theme.css';
+@import '~primeng/resources/primeng.min.css';
+
+a {
+     cursor: pointer;
+     cursor: hand;
+}
+
+header {
+     border: 1px solid transparent;
+     border-bottom: solid 1px rgb(124, 124, 124);
+}
+
+nav a.active {
+     color: #039be5;
+}
+
+html {
+     font-size: .8rem;
+     height: 100vh;
+     font-family: sans-serif;
+}
+
+.application {
+     display: flex;
+     min-height: 100vh;
+     flex-direction: column;
+}
+
+.application-body {
+     display: flex;
+     flex: 1;
+     background-color: #494949;
+}
+
+.application-content {
+     padding-left: 20px;
+     padding-right: 20px;
+     min-width: 100%;
+     overflow: auto;
+}
+
+.application-nav {
+     background: #FFFFFF;
+     border-right: solid 1px rgb(124, 124, 124);
+}
+
+.content {
+     flex: 1;
+     display: flex;
+     overflow: auto;
+     }
+
+
+.application-body {
+     position: absolute;
+     top: 50px;
+     right: 0;
+     bottom: 0;
+     left: 0;
+
+     display: flex;
+}
+
+.application-main {
+     flex: 1;
+     display: flex;
+     flex-direction: column;
+     padding: 0px;
+     margin: 0px;
+}
+
+.application-content {
+     flex: 1;
+     display: flex;
+     overflow: auto;
+     padding: 0px;
+     margin: 0px;
+}
+
+.footer {
+     margin-top: 2em;
+     height: 45px;
+     width: 100%;
+     background-color: #FFFFFF;
+     flex-shrink: 0;
+}

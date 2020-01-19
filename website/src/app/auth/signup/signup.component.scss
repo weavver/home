@@ -1,0 +1,31 @@
+
+.form-header {
+     align-content: space-between;
+     display: flex; 
+     justify-content: space-between;
+}
+
+.form-header-required {
+     color: #d32b3f !important;
+}
+
+input.ng-untouched {
+     border-bottom: 2px outset rgb(216, 216, 216) !important;
+}
+
+input.ng-touched {
+     // background-color: blue;
+}
+
+input.ng-invalid {
+     border-bottom: 2px outset red;
+}
+
+input.ng-valid {
+     border-bottom: 2px outset greenyellow;
+}
+
+// .ng-pristine {
+//      border-bottom: none;
+// }
+

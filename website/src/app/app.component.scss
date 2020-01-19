@@ -1,0 +1,139 @@
+
+.menu-text-color {
+     color: white;
+}
+
+.menuButton {
+     // margin-top: 10px;
+     display: flex;
+     height: 40px;
+     width: 40px;
+     float: left;
+     cursor: pointer;
+     justify-content: center;
+     align-items: center;
+     display: flex;
+}
+
+.navButton {
+     height: 100%;
+     padding-left: 15px;
+     padding-right: 15px;
+     margin-left: 10px;
+     margin-right: 10px;
+     display: flex;
+}
+
+.navButton:hover {
+     background-color: rgb(143, 157, 218);
+     cursor: pointer;
+}
+
+.navButton p {
+     margin: auto; /* Important */ 
+        text-align: center; 
+}
+
+.navButtonActive {
+     // background-color: #494949;
+     // color: #FFFFFF;
+     display: none;
+}
+
+.menuButton:hover {
+     background-color: rgb(143, 157, 218);
+}
+
+.navGeneral {
+     min-width: 200px;
+}
+
+.navAccount,
+.navAccount div {
+     background-color: white;
+     width: 100%;
+     border: solid 1px gray;
+     font-size: 6rem;
+}
+
+.sidebarCollapsed { 
+     height:100%;
+     width: 55px;
+     border-right: solid 1px #CCCCCC;
+     background-color: white;
+}
+
+.sidebarExpanded {
+     height:100%;
+     width: 150px;
+     border-right: solid 1px #CCCCCC;
+     background-color: white;
+}
+
+
+.sidebarItemCollapsed {
+     display: flex;
+     justify-content: center;
+     align-items: center;
+     // margin-bottom: 10px;
+     text-align: center;
+     font-size: 1rem;
+     cursor: pointer;
+     width: 100%;
+     line-height: 60px;
+     height: 60px;
+     vertical-align: middle;
+}
+
+.sidebarItemCollapsed:hover {
+     background-color: rgb(143, 157, 218);
+}
+
+.sidebarItemExpanded {
+     display: flex;
+     justify-content: left;
+     align-items: center;
+     // margin-bottom: 10px;
+     font-size: 1rem;
+     cursor: pointer;
+     width: 100%;
+     line-height: 60px;
+     height: 60px;
+     vertical-align: middle;
+     border-left: solid 5px transparent;
+     padding-left: 9px;
+}
+
+.sidebarItemExpanded:hover {
+     background-color: rgb(143, 157, 218);
+     color: white;
+}
+
+.sidebarItemExpanded > * {
+     padding-right: 10px;
+}
+
+.sidebarItemActive {
+     border-left: solid 5px rgb(102, 102, 177);
+     border-right: solid 5px transparent;
+}
+
+.application-nav {
+     flex-basis: auto;
+}
+
+
+:host {
+     ::ng-deep .ui-card-body {
+     //     padding-top: 10px !important;
+     }
+ }
+
+ hr {
+     padding: 0px;
+     margin: 0px;
+     margin-bottom: 10px;
+     height: 5px;
+     background: black; 
+     border: none;
+ }
