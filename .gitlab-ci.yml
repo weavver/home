@@ -32,6 +32,7 @@ test:
     - echo $CI_JOB_STAGE # calls a predefined variable
     - echo $TEST
     - echo $TEST2
+    - mocha --recursive "./api/testing/*.js"
     
 deploy:
   image: python:latest
