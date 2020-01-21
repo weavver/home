@@ -43,7 +43,7 @@ describe('Weavver Accounts', function() {
                it('password maxLength (50)', function() {
                     var data = {
                          "email": "test@example.com",
-                         "password": "12345678901234567890123456789012345678901234567890X"
+                         "password": "12345678901234567890123456789012345678901234567890"
                     }
                     assert.equal(validate(data), false, JSON.stringify(validate.errors));
                });
