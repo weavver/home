@@ -38,8 +38,9 @@ test:
 
 deploy:
   stage: deploy
-  image: mesosphere/aws-cli:1.14.5
-  entrypoint: ["/bin/sh"]
+  image:
+    name: mesosphere/aws-cli:1.14.5
+    entrypoint: ["/bin/sh"]
   only:
     - master
   dependencies:
