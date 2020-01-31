@@ -32,17 +32,18 @@ test:
     - echo $CI_JOB_STAGE # calls a predefined variable
     - echo $TEST
     - cd api
-    - npm install
+    - npm ci
     - npm install -g mocha
     - mocha "{,!(node_modules)/**}/*.test.js"
 
 deploy:
   stage: deploy
   image: mesosphere/aws-cli:1.14.5
+  entrypoint: ["/bin/sh"]
   only:
     - master
   dependencies:
     - build
   script:
-    - s3 sync website/dist s3://weavver-accounts --delete --acl public-read
-    - cloudfront create-invalidation --distribution-id E3QVJ7D556DGGR --paths "/*"
+    - aws s3 sync website/dist s3://weavver-accounts --delete --acl public-read
+    - aws cloudfront create-invalidation --distribution-id E3QVJ7D556DGGR --paths "/*"
