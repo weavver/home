@@ -18,7 +18,7 @@ build:
   script:
     - node --version
     - cd website
-    - npm install
+    - npm ci
     - ./node_modules/@angular/cli/bin/ng build --progress false --prod # --base-href accounts.weavver.com
 #    - ./node_modules/@angular/cli/bin/ng test --progress false --single-run=true --watch=false
 #    - ./node_modules/@angular/cli/bin/ng e2e --progress false --watch=false
