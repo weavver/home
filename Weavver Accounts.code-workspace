@@ -3,5 +3,19 @@
 		{
 			"path": "."
 		}
-	]
+	],
+	"settings": {
+		"auto-run-command.rules": [
+			{
+			    "command": "workbench.action.tasks.runTask start_website",
+			    "message": "Super condition met. Running "
+			}
+		],
+		"testExplorer.codeLens": false,
+		"testExplorer.gutterDecoration": false,
+		"mochaExplorer.timeout": 10000,
+		"testExplorer.hideEmptyLog": false,
+		"testExplorer.showOnRun": true,
+		"testExplorer.mergeSuites": true
+	}
 }

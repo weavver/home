@@ -1,3 +1,4 @@
+.env
 .DS_Store
 .idea
 build/
@@ -5,3 +6,4 @@ dist/
 node_modules/
 aws-exports.js
 awsconfiguration.json
+.serverless

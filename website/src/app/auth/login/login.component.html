@@ -1,6 +1,6 @@
 <div class="card">
      <div fxLayout="row" style="display:flex; font-size: 22px;  align-items: left; justify-content: left;">
-          <div>
+          <div id="card_title">
                <i class="material-icons" style="vertical-align: middle !important; padding-right: 10px;">assignment_ind</i>
                <span style="vertical-align: middle !important;">Log In</span>
           </div>
@@ -32,7 +32,7 @@
                <input formControlName="password" pInput class="form-control required" type="password" placeholder="Password" name="password">
           </div>
           <div style="text-align: center;">
-               <button pButton class="btn btn-primary" status="success" style="min-width: 300px; margin: 15px;">Log In</button>
+               <button id="login" class="btn btn-primary" style="min-width: 300px; margin: 15px;">Log In</button>
                <br />
                <a routerLink="/login/resetpassword">Reset Password</a>
           </div>

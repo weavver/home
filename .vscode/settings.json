@@ -1,0 +1,10 @@
+{
+     "mochaExplorer.files": ["api/rest/**/*.test.js", "website/testing/**/*.js"],
+     "mochaExplorer.logpanel": true,
+     "testExplorer.mergeSuites": true,
+     "testExplorer.addToEditorContextMenu": true,
+     "testExplorer.onStart": "retire",
+     "testExplorer.showOnRun": true,
+     "testExplorer.codeLens": false,
+     "testExplorer.showExpandButton": 3
+}

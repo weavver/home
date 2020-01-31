@@ -1,0 +1,103 @@
+service: ${env:API_NAME}
+
+provider:
+  name: aws
+  runtime: nodejs10.x
+  stage: ${env:API_STAGE}
+  region: us-west-1
+
+#websocketApiRouteSelectionExpression: $request.body.action
+plugins:
+  - serverless-plugin-include-dependencies
+  - serverless-step-functions
+  - serverless-pseudo-parameters
+  - serverless-aws-documentation
+  - serverless-domain-manager
+ # - serverless-websockets-plugin
+
+resources:
+  Resources:
+    ApiGatewayRestApi:
+      Type: AWS::ApiGateway::RestApi
+      Properties:
+        Name: ${env:AWS_API_GATEWAY_NAME}
+
+custom:
+  customDomain:
+    domainName: ${env:API_DOMAIN}
+    certificateName: ${env:API_CERTIFICATE_NAME}
+    basePath: ${env:API_STAGE}
+    stage: ${self:provider.stage}
+    createRoute53Record: false
+    endpointType: edge
+
+  documentation:
+      api:
+        info:
+          version: "1"
+          title: "Weavver Accounts - API"
+          description: "This API basically replicates all functionality available on ${env:WEBSITE_DOMAIN}."
+          termsOfService: ${env:WEBSITE_DOMAIN}
+          contact:
+            name: ${env:CONTACT_NAME_FULL}
+            url: ${env:API_DOMAIN}
+            # email: ""
+          license:
+            name: "Proprietary"
+            url: "http://www.accounts.weavver.com"
+      tags:
+        -
+          name: "Data Creation"
+          description: "Services to create things"
+        -
+          name: "Some other tag"
+          description: "A tag for other things"
+      authorizers:
+        -
+          name: "MyCustomAuthorizer"
+          description: "This is an error"
+      #resources:
+        #-
+          #path: "cases"
+          #description: "This is the description for cases."
+        #-
+          #path: "some/other/path"
+          #description: "This is the description for some/other/path"
+
+  environment:
+      MONGODB_URL: ${env:MONGODB_URL}
+      MONGODB_DATABASE: ${env:MONGODB_DATABASE}
+      SENDGRID_KEY: ${env:SENDGRID_KEY}
+
+package:
+  excludeDevDependencies: false
+  exclude:
+    - node_modules/**
+  include:
+    - node_modules/@maxmind/**
+    - node_modules/@sendgrid/**
+    - node_modules/mongodb/**
+
+functions:
+
+  echo:
+    handler: rest/echo/echo.handler
+    events:
+      - http:
+          path: echo
+          method: get
+          cors: true
+          documentation:
+            summary: "/echo"
+      - http:
+          path: echo
+          method: post
+          cors: true
+          documentation:
+            summary: "/echo"
+      - http:
+          path: echo
+          method: put
+          cors: true
+          documentation:
+            summary: "/echo"

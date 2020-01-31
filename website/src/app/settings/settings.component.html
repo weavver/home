@@ -1,6 +1,6 @@
 <div class="card">
      <div fxLayout="row" style="display:flex; font-size: 22px;  align-items: left; justify-content: left;">
-          <div>
+          <div id="card_title">
                <i class="material-icons" style="vertical-align: middle !important; padding-right: 10px;">assignment_ind</i>
                <span style="vertical-align: middle !important;">Profile</span>
           </div>
@@ -17,7 +17,7 @@
                          A valid email is required.
                     </small>
                </div>
-               <input formControlName="name_first" pInput fullWidth type="text" class="form-control" placeholder="First name" required>
+               <input formControlName="name_first" fullWidth type="text" class="form-control" placeholder="First name" required>
           </div>
           <div class="form-group">
                <div class="form-header">
@@ -29,7 +29,7 @@
                          A valid email is required.
                     </small>
                </div>
-               <input formControlName="name_first" pInput fullWidth type="text" class="form-control" placeholder="First name" required>
+               <input formControlName="name_last" fullWidth type="text" class="form-control" placeholder="First name" required>
           </div>
           <!-- <div class="form-group">
                <div class="form-header">
@@ -41,10 +41,10 @@
                          Password must be over 6 characters.
                     </small>
                </div>
-               <input formControlName="password" pInput class="form-control required" type="password" placeholder="Password" name="password">
+               <input formControlName="password" class="form-control required" type="password" placeholder="Password" name="password">
           </div> -->
           <div style="text-align: center;">
-               <button type="button" class="btn btn-primary" status="success" style="min-width: 200px; margin: 15px;" (click)="onSubmit()">Save</button>
+               <button type="button" class="btn btn-primary" style="min-width: 200px; margin: 15px;" (click)="onSubmit()">Save</button>
           </div>
      </form>
 </div>

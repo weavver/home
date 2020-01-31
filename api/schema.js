@@ -2,12 +2,16 @@
 exports.models = [
      // used when a new account is being created
      {
-          "$id": "http://accounts.weavver.com/schemas/accountCreate.json",
+          "$id": "http://accounts.weavver.com/schema/accountCreate.json",
+          "$async": true,
           "type": "object",
           "properties": {
                "email": {
                     "type": "string",
                     "format": "email"
+               },
+               "phone_number": {
+                    "type": "string"
                },
                "password": {
                     "type": "string",
@@ -19,12 +23,11 @@ exports.models = [
           "additionalProperties": false
      },
      {
-          "$id": "http://accounts.weavver.com/schemas/user.json",
+          "$id": "http://accounts.weavver.com/schema/account.json",
           "type": "object",
           "properties": {
                "tenants.id": {
                     "type": "string",
-                    "format": "email",
                     "default": 0
                },
                "email": {
@@ -37,23 +40,39 @@ exports.models = [
                },
                "password": {
                     "type": "string",
-                    "format": "email"
+                    "minLength": 6,
+                    "maxLength": 50
                },
                "reset_code": {
+                    "type": "string"
+               },
+               "phone_number": {
+                    "type": "string"
+               }
+          },
+          "required": ["email", "password"],
+          "additionalProperties": false
+     },
+     // used when an account is being verified
+     {
+          "$id": "http://accounts.weavver.com/schema/account_verify.json",
+          "type": "object",
+          "properties": {
+               "email": {
                     "type": "string",
                     "format": "email"
                },
-               "phone_number": {
-                    "type": "string",
-                    "format": "email"
+               "code": {
+                    "type": "number"
                }
           },
-          "required": ["email"],
-          "additionalProperties": true
+          "required": ["email", "code"],
+          "additionalProperties": false
      },
      // used when a password is being reset
      {
-          "$id": "http://accounts.weavver.com/schemas/accountPasswordReset.json",
+          "$id": "http://accounts.weavver.com/schema/accountPasswordReset.json",
+          "$async": true,
           "type": "object",
           "properties": {
                "email": {
@@ -65,7 +84,8 @@ exports.models = [
           "additionalProperties": false
      },
      {
-          "$id": "http://accounts.weavver.com/schemas/log.json",
+          "$id": "http://accounts.weavver.com/schema/log.json",
+          "$async": true,
           "type": "object",
           "properties": {
                "accounts.id": { "type": "string" },
