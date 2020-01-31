@@ -33,8 +33,8 @@ test:
     - echo $TEST
     - cd api
     - npm install
-    - npm install -g dotenv mocha
-    - dotenv -e ../.env mocha {,!(node_modules)/**}/*.test.js
+    - npm install -g mocha
+    - mocha {,!(node_modules)/**}/*.test.js
 
 deploy:
   image: mesosphere/aws-cli:1.14.5
