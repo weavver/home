@@ -34,14 +34,15 @@ test:
     - cd api
     - npm install
     - npm install -g mocha
-    - mocha {,!(node_modules)/**}/*.test.js
+    - mocha "{,!(node_modules)/**}/*.test.js"
 
 deploy:
+  stage: deploy
   image: mesosphere/aws-cli:1.14.5
   only:
     - master
   dependencies:
     - build
   script:
-    - aws s3 sync website/dist s3://weavver-accounts --delete --acl public-read
-    - aws cloudfront create-invalidation --distribution-id E3QVJ7D556DGGR --paths "/*"
+    - ./aws.sh s3 sync website/dist s3://weavver-accounts --delete --acl public-read
+    - ./aws.sh cloudfront create-invalidation --distribution-id E3QVJ7D556DGGR --paths "/*"
