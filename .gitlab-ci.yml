@@ -31,19 +31,17 @@ test:
   script:
     - echo $CI_JOB_STAGE # calls a predefined variable
     - echo $TEST
-    - echo $TEST2
     - cd api
     - npm install
-    - npm install -g mocha
-    - mocha --recursive "./testing/*.js"
-    
+    - npm install -g dotenv mocha
+    - dotenv -e ../.env mocha {,!(node_modules)/**}/*.test.js
+
 deploy:
-  image: python:latest
+  image: mesosphere/aws-cli:1.14.5
   only:
     - master
   dependencies:
     - build
   script:
-    - pip install awscli
     - aws s3 sync website/dist s3://weavver-accounts --delete --acl public-read
     - aws cloudfront create-invalidation --distribution-id E3QVJ7D556DGGR --paths "/*"

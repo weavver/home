@@ -1,6 +1,6 @@
 'use strict';
 
-var cookiehandler = require(__dirname + '/helper_cookiehandler.js');
+var cookiehandler = require('../helper_cookiehandler.js');
 
 module.exports.handler = async (event, context) => {
      var date = new Date();

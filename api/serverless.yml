@@ -43,8 +43,8 @@ custom:
             url: ${env:API_DOMAIN}
             # email: ""
           license:
-            name: "Proprietary"
-            url: "http://www.accounts.weavver.com"
+            name: "MIT"
+            url: "http://${env:WEBSITE_DOMAIN}"
       tags:
         -
           name: "Data Creation"
