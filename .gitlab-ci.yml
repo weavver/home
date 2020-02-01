@@ -7,7 +7,8 @@ cache:
 stages:
   - build
   - test
-  - deploy
+  - deploy-api
+  - deploy-website
 
 build:
   stage: build
@@ -36,8 +37,19 @@ test:
     - npm install -g mocha
     - mocha "{,!(node_modules)/**}/*.test.js"
 
-deploy:
-  stage: deploy
+deploy-api:
+  stage: deploy-api
+  only:
+    - master
+  dependencies:
+    - build
+  script:
+    - cd api
+    - npm install -g serverless
+    - serverless deploy
+
+deploy-website:
+  stage: deploy-website
   image:
     name: mesosphere/aws-cli:1.14.5
     entrypoint: [""]
