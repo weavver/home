@@ -45,6 +45,7 @@ deploy-api:
     - build
   script:
     - cd api
+    - npm ci
     - npm install -g serverless
     - serverless deploy
 
