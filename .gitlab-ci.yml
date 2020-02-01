@@ -46,5 +46,9 @@ deploy:
   dependencies:
     - build
   script:
+    - cd api
+    - npm install -g serverless
+    - serverless deploy
+    - cd ..
     - aws s3 sync website/dist s3://weavver-accounts --delete --acl public-read
     - aws cloudfront create-invalidation --distribution-id E3QVJ7D556DGGR --paths "/*"
