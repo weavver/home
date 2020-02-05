@@ -6,7 +6,8 @@ var assert = require('chai').assert;
 var schema = require('../../schema.js');
 var Ajv = require('ajv');
 var ajv = new Ajv({schemas: schema.models});
-var validate = ajv.getSchema('http://accounts.weavver.com/schema/accountCreate.json');
+var validate = ajv.getSchema('http://home.weavver.com/schema/accountCreate.json');
+assert.isDefined(validate);
 
 var nock = require('nock');
 nock.disableNetConnect();
@@ -58,14 +59,13 @@ describe('API', function() {
                it('password: minLength (6)', async () => {
                     var data = {
                          "email": "test@example.com",
-                         "password": "123456"
+                         "password": "abc12" // testing with 5 characters
                     }
                     try {
                          await validate(data);
                     }
                     catch (err) {
-                         console.log(err);
-                         // assert.equal(validate(data), true, JSON.stringify(validate.errors));
+                         assert.equal(err.errors[0].keyword, "minLength", JSON.stringify(validate.errors));
                     }
                });
 
@@ -79,7 +79,6 @@ describe('API', function() {
                          assert.fail("unknown error");
                     }
                     catch (err) {
-                         console.log(err);
                          console.log(err.errors[0].keyword);
                          assert.equal(err.errors[0].keyword, "maxLength");
                     }
