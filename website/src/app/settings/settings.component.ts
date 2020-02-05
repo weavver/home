@@ -1,4 +1,4 @@
-import { DataService } from '../../data.service';
+import { DataService } from '../data.service';
 
 import { Component, ChangeDetectorRef } from '@angular/core';
 import {

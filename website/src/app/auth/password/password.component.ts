@@ -48,9 +48,4 @@ export class PasswordComponent {
      onSubmit() {
           this.router.navigate(["/password/changed"]);
      }
-
-     logout() {
-          this.authService.logout();
-          // this.setMessage();
-     }
 }

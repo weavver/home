@@ -71,9 +71,4 @@ export class LogInResetPasswordComponent {
     //         }
     //     });
     }
-
-    logout() {
-        this.authService.logout();
-        // this.setMessage();
-    }
 }

@@ -70,9 +70,4 @@ export class LogInResetPasswordConfirmComponent {
     //         }
     //     });
     }
-
-    logout() {
-        this.authService.logout();
-        // this.setMessage();
-    }
 }
