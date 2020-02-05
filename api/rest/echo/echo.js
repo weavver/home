@@ -14,7 +14,7 @@ module.exports.handler = async (event, context) => {
           cookieVal = "false";
      }
 
-     var cookieString = "SessionToken=" + cookieVal + ";domain=accounts.weavver.com; expires=" + date.toGMTString() + ";";
+     var cookieString = "SessionToken=" + cookieVal + ";domain=home.weavver.com; expires=" + date.toGMTString() + ";";
      const response = {
           statusCode: 200,
           headers: {
@@ -24,7 +24,7 @@ module.exports.handler = async (event, context) => {
           body: JSON.stringify({
                message: 'Hello World',
                input: event,
-          }),
+          })
      };
 
      return response;

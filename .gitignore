@@ -1,4 +1,5 @@
 .env
+.env-aws-dev
 .DS_Store
 .idea
 build/

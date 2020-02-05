@@ -1,4 +1,6 @@
-import { Component } from '@angular/core';
+import { DataService } from '../../data.service';
+
+import { Component, ChangeDetectorRef } from '@angular/core';
 import {
     Router,
     NavigationExtras
@@ -12,7 +14,6 @@ import {
     FormControl
   } from '@angular/forms';
 import { AuthService } from '../auth/auth.service';
-import { Alert } from 'selenium-webdriver';
 
 @Component({
      selector: 'app-settings',
@@ -21,7 +22,7 @@ import { Alert } from 'selenium-webdriver';
 })
 
 export class SettingsComponent {
-     
+
      form: FormGroup;
 
      errorGet(obj) {
@@ -33,7 +34,8 @@ export class SettingsComponent {
 
      constructor(public authService: AuthService, public router: Router, private fb: FormBuilder) { 
           this.form = this.fb.group({
-              name_first: new FormControl('', [Validators.required, Validators.minLength(3)])
+              name_first: new FormControl('', [Validators.required]),
+              name_last: new FormControl('', [Validators.required])
             }, {
                 updateOn: "blur",
               //   validator: this.checkPasswords

@@ -8,6 +8,16 @@ var Ajv = require('ajv');
 const twilioclient = require('twilio')(process.env.TWILIO_ACCOUNTSID, process.env.TWILIO_AUTHTOKEN);
 
 exports.handler =  async function (event, context) {
+     const response = {
+          statusCode: 522,
+          headers: {
+               'Access-Control-Allow-Origin': '*', // Required for CORS support to work
+          },
+          body: JSON.stringify({
+               message: 'Hello World',
+               input: event,
+          })
+     };
 
      const MongoClient = require('mongodb').MongoClient;
      const connectedClient = await MongoClient.connect(process.env.MONGODB_URL);
@@ -16,9 +26,9 @@ exports.handler =  async function (event, context) {
      const body = JSON.parse(event.body);
      console.log(body);
 
-     console.log(jp.value(schema.models, '$[?(@.$id == "http://accounts.weavver.com/schema/accountCreate.json")].properties.email', {"type": "string", "format": "email", "email_is_not_in_use": true }));
-     console.log(jp.value(schema.models, '$[?(@.$id == "http://accounts.weavver.com/schema/accountCreate.json")].properties.phone_number', {"type": "string", "twilio_validate": true }));
-     // console.log(jp.query(schema.models, '$[?(@.$id == "http://accounts.weavver.com/schema/accountCreate.json")].properties.phone_number'));
+     console.log(jp.value(schema.models, '$[?(@.$id == "http://home.weavver.com/schema/accountCreate.json")].properties.email', {"type": "string", "format": "email", "email_is_not_in_use": true }));
+     console.log(jp.value(schema.models, '$[?(@.$id == "http://home.weavver.com/schema/accountCreate.json")].properties.phone_number', {"type": "string", "twilio_validate": true }));
+     // console.log(jp.query(schema.models, '$[?(@.$id == "http://home.weavver.com/schema/accountCreate.json")].properties.phone_number'));
 
      var ajv = new Ajv({schemas: schema.models});
 
@@ -63,7 +73,7 @@ exports.handler =  async function (event, context) {
           }
      });
 
-     var validate = ajv.getSchema('http://accounts.weavver.com/schema/accountCreate.json');
+     var validate = ajv.getSchema('http://home.weavver.com/schema/accountCreate.json');
      try {
           var result = await validate(body);
           console.log(result);
@@ -71,7 +81,9 @@ exports.handler =  async function (event, context) {
      catch (err) {
           console.log(err);
           await connectedClient.close();
-          return { status_code: 422, errors: err.errors};
+          response.statusCode = 422;
+          response.body = JSON.stringify({message: "FAIL", err: err });
+          return response;
      }
 
      try {
@@ -84,13 +96,15 @@ exports.handler =  async function (event, context) {
      catch (err) {
           console.log(err);
           await connectedClient.close();
-          return { status_code: 400, message: "FAIL", err: err };
+          response.statusCode = 400;
+          response.body = JSON.stringify({message: "FAIL", err: err });
+          return response;
      }
 
      const sgMail = require('@sendgrid/mail');
      sgMail.setApiKey(process.env.SENDGRID_KEY);
 
-     var data = {  };
+     var data = { code: body.verification.email.code };
      console.log(data);
 
      const msg = {
@@ -102,10 +116,13 @@ exports.handler =  async function (event, context) {
      };
      try {
           var sendGridResult = await sgMail.send(msg);
-          return { status_code: 200 };
+          response.statusCode = 200;
+          return response;
      }
      catch (err) {
           console.log(err);
-          return { status_code: 422, error: err };
+          response.statusCode = 422;
+          response.body = JSON.stringify({message: "FAIL", err: err });
+          return response;
      }
 }

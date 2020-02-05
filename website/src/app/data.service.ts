@@ -1,54 +1,51 @@
+import { environment } from '../environments/environment';
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
-export interface ContactData {
-     name_first: string;
-     name_last: string;
-     phone: string;
-     email: string;
-     address_line_1: string;
-     address_line_2: string;
-     city: string;
-     state: string;
-     country: string;
+export interface AccountData {
+     email: string,
+     password: string
+}
+
+export interface ProfileData {
+     id: string;
+     name: string;
 }
 
 @Injectable({
   providedIn: 'root'
 })
 export class DataService {
-     private REST_API_GEN_SIGNED_URL         = "https://api.accounts.weavver.com/dev/signedupload";
-     private REST_API_ORDER_PUT              = "https://api.accounts.weavver.com/dev/order";
+     private API_TOKEN        = environment.baseApiUrl + "/token";
+     private API_ACCOUNT      = environment.baseApiUrl + "/account";
+     private API_PROFILE      = environment.baseApiUrl + "/profile";
+     private API_ECHO         = environment.baseApiUrl + "/echo";
 
      constructor(private httpClient: HttpClient) { }
 
-     // public getOrder(orderId): Observable<any> {
-     //      let params = new HttpParams().set('id', orderId);
-     //      return this.httpClient.get(this.REST_API_ORDERS,  { params: params });
-     // }
+     public getToken(username, password): Observable<any> {
+          let params = new HttpParams();
+          params.append('username', username);
+          params.append('password', password);
+          return this.httpClient.get(this.API_TOKEN, { params: params });
+     }
 
-     // public getOrders(): Observable<any> {
-     //      return this.httpClient.get(this.REST_API_ORDERS);
-     // }
+     public delToken(token): Observable<any> {
+          let params = new HttpParams();
+          params.append('token', token);
+          return this.httpClient.delete(this.API_TOKEN + "/" + token);
+     }
 
-     // public getGroups(): Observable<any> {
-     //      return this.httpClient.get(this.REST_API_GROUPS);
-     // }
+     public accountPut(account:AccountData): Observable<any> {
+          console.log("creating account..");
+          console.log(account);
+          return this.httpClient.put<any>(this.API_ACCOUNT, JSON.stringify(account));
+     }
 
-     // public getUploadURL(name:string) {
-     //      // console.log(name);
-     //      return this.httpClient.post<any>(this.REST_API_GEN_SIGNED_URL, "{ \"key\": \""+ name + "\"}");
-     //      //    .pipe(
-     //      //       catchError(this.handleError('addHero', "error"))
-     //      //    );
-     // }
-     
-     
-     // public orderPut(order:OrderData): Observable<any> {
-     //      console.log("submitting order..");
-     //      console.log(order);
-     //      return this.httpClient.put<any>(this.REST_API_ORDER_PUT, order);
-     // }
-     
+     public profilePut(profile:ProfileData): Observable<any> {
+          console.log("setting profile..");
+          console.log(profile);
+          return this.httpClient.put<any>(this.API_PROFILE, profile);
+     }
 }

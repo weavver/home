@@ -2,7 +2,7 @@
 exports.models = [
      // used when a new account is being created
      {
-          "$id": "http://accounts.weavver.com/schema/accountCreate.json",
+          "$id": "http://home.weavver.com/schema/accountCreate.json",
           "$async": true,
           "type": "object",
           "properties": {
@@ -23,7 +23,7 @@ exports.models = [
           "additionalProperties": false
      },
      {
-          "$id": "http://accounts.weavver.com/schema/account.json",
+          "$id": "http://home.weavver.com/schema/account.json",
           "type": "object",
           "properties": {
                "tenants.id": {
@@ -55,7 +55,7 @@ exports.models = [
      },
      // used when an account is being verified
      {
-          "$id": "http://accounts.weavver.com/schema/account_verify.json",
+          "$id": "http://home.weavver.com/schema/account_verify.json",
           "type": "object",
           "properties": {
                "email": {
@@ -71,7 +71,7 @@ exports.models = [
      },
      // used when a password is being reset
      {
-          "$id": "http://accounts.weavver.com/schema/accountPasswordReset.json",
+          "$id": "http://home.weavver.com/schema/accountPasswordReset.json",
           "$async": true,
           "type": "object",
           "properties": {
@@ -84,7 +84,7 @@ exports.models = [
           "additionalProperties": false
      },
      {
-          "$id": "http://accounts.weavver.com/schema/log.json",
+          "$id": "http://home.weavver.com/schema/log.json",
           "$async": true,
           "type": "object",
           "properties": {

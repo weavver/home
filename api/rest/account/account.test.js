@@ -130,33 +130,33 @@ describe('API', function() {
                });
 
                it('phone: format not right (twilio check)', async () => {
-                    var account = require('./account.put.js');
+                    var account = require('./account_put.js');
                     var event = { body: JSON.stringify({ email: 'is_not_in_use@example.com', phone_number: '1234', password: '12341234' }) };
                     var response = await account.handler(event, {});
                     console.log(response);
-                    assert.equal(response.status_code, 422);
-                    assert.equal(response.errors[0].keyword, "twilio_validate");
+                    assert.equal(response.statusCode, 422);
+                    assert.equal(JSON.parse(response.body).err.errors[0].keyword, "twilio_validate");
                     // 'Phone number format is not recognized. Try again.<br />Email us if this issue continues.'
                });
 
                it('email: is in use', async () => {
-                    var account = require('./account.put.js');
+                    var account = require('./account_put.js');
                     var data = { email: 'is_in_use@example.com', phone_number: '7145551212', password: 'asdfjasldfjasdf' };
                     var response = await account.handler({ body: JSON.stringify(data) }, {});
                     console.log(response);
-                    assert.equal(response.status_code, 422);
-                    assert.lengthOf(response.errors, 1, "email_is_not_in_use");
+                    assert.equal(response.statusCode, 422);
+                    assert.lengthOf(JSON.parse(response.body).err.errors, 1, "email_is_not_in_use");
                     // Try a different email address.
                });
 
                it('email: is not in use', async () => {
-                    var account = require('./account.put.js');
+                    var account = require('./account_put.js');
                     var data = { email: 'is_not_in_use@example.com', phone_number: '7145551212', password: 'asdfjasldfjasdf' };
 
                     var response = await account.handler({ body: JSON.stringify(data) }, {});
                     console.log(response);
-                    assert.equal(response.status_code, 200);
-                    assert.isUndefined(response.errors, "email should not be in use");
+                    assert.equal(response.statusCode, 200);
+                    assert.isUndefined(JSON.parse(response.body).err, "expecting no errors");
                });
 
                it('put and verify', async () => {
@@ -192,7 +192,7 @@ describe('API', function() {
                               });
 
                     // // create a new account
-                    // var account = require('./account.put.js');
+                    // var account = require('./account_put.js');
                     // var response = await account.handler({ body: JSON.stringify(data) }, {});
                     // console.log(response);
                     // assert.equal(response.status_code, 200);

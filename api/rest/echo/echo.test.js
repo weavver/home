@@ -4,7 +4,7 @@ var assert = require('chai').assert;
 var schema = require('../../schema.js');
 var Ajv = require('ajv');
 var ajv = new Ajv({schemas: schema.models});
-var validate = ajv.getSchema('http://accounts.weavver.com/schema/accountCreate.json');
+var validate = ajv.getSchema('http://home.weavver.com/schema/accountCreate.json');
 
 require('dotenv').config({ path: '../../.env' })
 

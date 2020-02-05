@@ -66,7 +66,6 @@ custom:
 
   environment:
       MONGODB_URL: ${env:MONGODB_URL}
-      MONGODB_DATABASE: ${env:MONGODB_DATABASE}
       SENDGRID_KEY: ${env:SENDGRID_KEY}
 
 package:
@@ -101,3 +100,45 @@ functions:
           cors: true
           documentation:
             summary: "/echo"
+
+  account_put:
+    handler: rest/account/account_put.handler
+    environment:
+      MONGODB_URL: ${env:MONGODB_URL}
+      MONGODB_DATABASE: ${env:MONGODB_DATABASE}
+      TWILIO_ACCOUNTSID: ${env:TWILIO_ACCOUNTSID}
+      TWILIO_AUTHTOKEN: ${env:TWILIO_AUTHTOKEN}
+      SENDGRID_KEY: ${env:SENDGRID_KEY}
+    events:
+      - http:
+          path: account
+          method: put
+          cors: true
+          documentation:
+            summary: "PUT /account"
+
+  token_get:
+    handler: rest/token/token_get.handler
+    environment:
+      MONGODB_URL: ${env:MONGODB_URL}
+      MONGODB_DATABASE: ${env:MONGODB_DATABASE}
+    events:
+      - http:
+          path: token
+          method: get
+          cors: true
+          documentation:
+            summary: "GET /token?username={username}&password={password}"
+
+  token_del:
+    handler: rest/token/token_del.handler
+    environment:
+      MONGODB_URL: ${env:MONGODB_URL}
+      MONGODB_DATABASE: ${env:MONGODB_DATABASE}
+    events:
+      - http:
+          path: token/{id}
+          method: delete
+          cors: true
+          documentation:
+            summary: "/token/{id} delete"

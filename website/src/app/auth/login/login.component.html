@@ -6,7 +6,7 @@
           </div>
      </div>
      <hr />
-     <form [formGroup]="loginForm"  (ngSubmit)="onSubmit()">
+     <form [formGroup]="loginForm"  (ngSubmit)="logIn()">
           <div class="form-group">
                <div class="form-header">
                     <label for="email">Email</label>
@@ -17,7 +17,7 @@
                          A valid email is required.
                     </small>
                </div>
-               <input formControlName="email" pInput fullWidth type="email" class="form-control" placeholder="john@doe.com" required>
+               <input formControlName="email" fullWidth type="email" class="form-control" placeholder="john@doe.com" required>
           </div>
           <div class="form-group">
                <div class="form-header">
@@ -29,10 +29,10 @@
                          Password must be over 6 characters.
                     </small>
                </div>
-               <input formControlName="password" pInput class="form-control required" type="password" placeholder="Password" name="password">
+               <input formControlName="password" class="form-control required" type="password" placeholder="Password" name="password">
           </div>
           <div style="text-align: center;">
-               <button id="login" class="btn btn-primary" style="min-width: 300px; margin: 15px;">Log In</button>
+               <button id="login" class="btn btn-primary" style="min-width: 300px; margin: 15px;">{{ logInText }}</button>
                <br />
                <a routerLink="/login/resetpassword">Reset Password</a>
           </div>

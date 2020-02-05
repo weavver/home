@@ -41,6 +41,13 @@
                <input formControlName="password_confirm" pInput class="form-control required" type="password" placeholder="Password" name="password_confirm">
           </div>
           <div style="text-align: center;">
+               <!-- {{ errors.err | json }} -->
+               <div *ngIf="errors && errors.err">
+                    <hr />
+                    <div *ngFor="let error of errors.err.errors">
+                         {{ getErrorText(error.keyword) }}
+                    </div>
+               </div>
                <button type="submit" class="btn btn-primary" status="success" style="min-width: 300px; margin: 15px;" [disabled]="!signupForm.valid">Submit</button>
           </div>
      </form>

@@ -34,7 +34,6 @@ exports.handler =  async function (event, context) {
                return { status_code: 422 };
           }
 
-
           return { status_code: 422 };
      }
      catch (err) {

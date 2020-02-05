@@ -1,4 +1,6 @@
-import { Component } from '@angular/core';
+import { DataService } from '../../data.service';
+
+import { Component, ChangeDetectorRef } from '@angular/core';
 import {
     Router,
     NavigationExtras
@@ -19,10 +21,13 @@ import { AuthService } from '../auth.service';
     styleUrls: ['./login.component.scss']
 })
 export class LoginComponent {
-    data: any = {
-        username: "john",
-        password: "doe"
-    }
+
+     logInText: string = "Log In";
+
+     data: any = {
+          username: "",
+          password: ""
+     }
 
     loginForm: FormGroup;
 
@@ -33,42 +38,30 @@ export class LoginComponent {
         return Object.keys(obj)[0];
     }
 
-    constructor(public authService: AuthService, public router: Router, private fb: FormBuilder) {
-        this.loginForm = this.fb.group({
-            email: new FormControl('', [Validators.required, Validators.minLength(3), Validators.email]),
-            password: new FormControl('', [Validators.required, Validators.minLength(6)]),
-          }, {
-              updateOn: "blur",
-            //   validator: this.checkPasswords
-            })
+    constructor(private cd: ChangeDetectorRef,
+                public authService: AuthService,
+                public router: Router,
+                private fb: FormBuilder,
+                private dataService: DataService) {
+
+          this.loginForm = this.fb.group({
+                    email: new FormControl('', [Validators.required, Validators.minLength(3), Validators.email]),
+                    password: new FormControl('', [Validators.required, Validators.minLength(6)]),
+               },
+               {
+                    updateOn: "blur"
+               })
     }
 
-
-    // setMessage() {
-        // this.message = 'Logged ' + (this.authService.isLoggedIn ? 'in' : 'out');
-    // }
-
-    onSubmit() {
-    //     this.message = 'Trying to log in ...';
-
-        this.authService.login().subscribe(() => {
-    //         this.setMessage();
-    //         if (this.authService.isLoggedIn) {
-    //             // If no redirect has been set, use the default
-                let redirect = this.authService.redirectUrl ? this.router.parseUrl(this.authService.redirectUrl) : '/settings';
-
-                let navigationExtras: NavigationExtras = {
+     logIn() {
+          this.logInText = 'Trying to log in ...';
+          this.authService.getToken(this.email, this.password).subscribe(() => {
+               let redirect = this.authService.redirectUrl ? this.router.parseUrl(this.authService.redirectUrl) : '/settings';
+               let navigationExtras: NavigationExtras = {
                     queryParamsHandling: 'preserve',
                     preserveFragment: true
-                };
-
-                this.router.navigateByUrl(redirect, navigationExtras);
-    //         }
-        });
-    }
-
-    logout() {
-        this.authService.logout();
-        // this.setMessage();
-    }
+               };
+               this.router.navigateByUrl(redirect, navigationExtras);
+          });
+     }
 }

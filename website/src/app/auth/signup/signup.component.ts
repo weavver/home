@@ -1,3 +1,5 @@
+import { DataService, AccountData } from '../../data.service';
+
 import { Component } from '@angular/core';
 import {
     Router,
@@ -20,6 +22,7 @@ import { AuthService } from '../auth.service';
     styleUrls: ['./signup.component.scss']
 })
 export class SignUpComponent {
+     errors : any;
     submitted = false;
 
     // message: string;
@@ -36,11 +39,14 @@ export class SignUpComponent {
     get password() { return this.signupForm.get('password'); }
     get password_confirm() { return this.signupForm.get('password_confirm'); }
 
-    errorGet(obj) {
-        return Object.keys(obj)[0];
-    }
+     errorGet(obj) {
+          return Object.keys(obj)[0];
+     }
     
-    constructor(public authService: AuthService, public router: Router, private fb: FormBuilder) {
+     constructor(   private dataService: DataService,
+                    public authService: AuthService,
+                    public router: Router,
+                    private fb: FormBuilder) {
         this.signupForm = this.fb.group({
             email: new FormControl('', [Validators.required, Validators.minLength(3), Validators.email]),
             password: new FormControl('', [Validators.required, Validators.minLength(6)]),
@@ -49,28 +55,47 @@ export class SignUpComponent {
               // updateOn: "blur",
               validator: this.checkPasswords
             })
-    }
+     }
 
-    ngOnInit() {
-    }
+     ngOnInit() {
+     }
 
-    checkPasswords(group: FormGroup) { // here we have the 'passwords' group
+     checkPasswords(group: FormGroup) { // here we have the 'passwords' group
         let pass = group.get('password').value;
         let password_confirm = group.get('password_confirm').value;
 
         return pass === password_confirm ? null : { notSame: true }     
-    }
+     }
 
-    onSubmit() {
-        // console.log(this.data);
-        // this.form.dirty
-        if (this.signupForm.valid) {
-            console.log('form submitted');
-
-            this.router.navigate(["/signup/confirm"]);
+     onSubmit() {
+          if (this.signupForm.valid) {
+               console.log('submitting form..');
+               const account : AccountData = {
+                    email: this.email.value,
+                    password: this.password.value
+               };
+               this.dataService.accountPut(account).subscribe(
+                    (resp) => {
+                         this.router.navigate(["/signup/confirm"]);
+                    },
+                    (err) => {
+                         console.log("error");
+                         this.errors = err.error;
+                         console.log(err.error);
+                    });
         }
         else {
             console.log('not valid');
         }
+    }
+
+    getErrorText(key) {
+         switch (key) {
+               case "email_is_not_in_use":
+                    return "Email address is already in use. Maybe try to log in instead of signing up.";
+
+               default:
+                    return "Unknown error";
+         }
     }
 }

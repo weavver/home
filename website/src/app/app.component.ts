@@ -4,7 +4,7 @@ import {
      Component,
      ViewChild
 } from "@angular/core";
-import { RouterOutlet } from "@angular/router";
+import { Router, RouterOutlet } from "@angular/router";
 import { slideInAnimation } from "./animations";
 
 import { AuthService } from "./auth/auth.service";
@@ -20,11 +20,10 @@ export class AppComponent {
      navGeneral: boolean = false;
      navAccountExpanded: boolean = false;
 
-     constructor(public authService: AuthService)
+     constructor(private router: Router, public authService: AuthService)
      {
-
      }
-     
+
      toggleNavAccount() {
           this.navAccountExpanded = !this.navAccountExpanded;
      }
@@ -33,10 +32,11 @@ export class AppComponent {
           this.navGeneral = !this.navGeneral;
      }
 
-
-     logout() {
-          this.authService.logout();
-          return false;
+     logOut() {
+          this.authService.delToken("asdf").subscribe(() => {
+               console.log("logged out");
+               this.router.navigate(["/login"]);
+          });
      }
 
      getAnimationData(outlet: RouterOutlet) {
