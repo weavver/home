@@ -15,7 +15,7 @@ describe('API', function() {
      describe('Tokens', function() {
           describe('Data Model', function() {
                it('get token', async () => {
-                    var account = require('./token_get.js');
+                    var account = require('./tokens_get.js');
                     var event = { pathParameters: { id: 'test_id' } };
                     var response = await account.handler(event, {});
                     console.log(response);
@@ -23,7 +23,7 @@ describe('API', function() {
                });
 
                it('delete', async () => {
-                    var account = require('./token_del.js');
+                    var account = require('./tokens_del.js');
                     var event = { pathParameters: { id: 'test_id' } };
                     var response = await account.handler(event, {});
                     console.log(response.body);
