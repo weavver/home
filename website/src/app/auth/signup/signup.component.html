@@ -1,4 +1,4 @@
-<div class="card">
+<card [loading]="signUpProcessing" [maxWidth]="500">
      <form [formGroup]="signupForm"  (ngSubmit)="onSubmit()">
           <div fxLayout="row" style="display:flex; font-size: 22px;  align-items: left; justify-content: left;">
                <div>
@@ -17,7 +17,7 @@
                          A valid email is required.
                     </small>
                </div>
-               <input formControlName="email" pInput fullWidth type="email" class="form-control" placeholder="john@doe.com" required>
+               <input formControlName="email" pInput fullWidth type="email" class="form-control" placeholder="john@doe.com" [disabled]="signUpProcessing" required>
           </div>
           <div class="form-group">
                <div class="form-header">
@@ -41,14 +41,14 @@
                <input formControlName="password_confirm" pInput class="form-control required" type="password" placeholder="Password" name="password_confirm">
           </div>
           <div style="text-align: center;">
-               <!-- {{ errors.err | json }} -->
-               <div *ngIf="errors && errors.err">
+               <div *ngIf="signUpError && !signUpProcessing">
                     <hr />
-                    <div *ngFor="let error of errors.err.errors">
+                    <div *ngFor="let error of signUpError.errors">
+                         <!-- {{ error | json }} -->
                          {{ getErrorText(error.keyword) }}
                     </div>
                </div>
-               <button type="submit" class="btn btn-primary" status="success" style="min-width: 300px; margin: 15px;" [disabled]="!signupForm.valid">Submit</button>
+               <button type="submit" class="btn btn-primary" style="min-width: 300px; margin: 15px;" [disabled]="!signupForm.valid || signUpProcessing">Submit</button>
           </div>
      </form>
-</div>
+</card>

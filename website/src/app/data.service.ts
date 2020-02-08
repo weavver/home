@@ -17,7 +17,7 @@ export interface ProfileData {
   providedIn: 'root'
 })
 export class DataService {
-     private API_TOKEN        = environment.baseApiUrl + "/token";
+     private API_TOKEN        = environment.baseApiUrl + "/tokens";
      private API_ACCOUNT      = environment.baseApiUrl + "/account";
      private API_PROFILE      = environment.baseApiUrl + "/profile";
      private API_ECHO         = environment.baseApiUrl + "/echo";
@@ -37,10 +37,10 @@ export class DataService {
           return this.httpClient.delete(this.API_TOKEN + "/" + token);
      }
 
-     public accountPut(account:AccountData): Observable<any> {
+     public accountPut(account: AccountData): Observable<any> {
           console.log("creating account..");
           console.log(account);
-          return this.httpClient.put<any>(this.API_ACCOUNT, JSON.stringify(account));
+          return this.httpClient.put<AccountData>(this.API_ACCOUNT, JSON.stringify(account));
      }
 
      public profilePut(profile:ProfileData): Observable<any> {

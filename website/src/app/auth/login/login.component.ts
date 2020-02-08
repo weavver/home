@@ -21,6 +21,7 @@ import { AuthService } from '../auth.service';
     styleUrls: ['./login.component.scss']
 })
 export class LoginComponent {
+     logInProcessing: boolean = false;
 
      logInText: string = "Log In";
 
@@ -54,6 +55,7 @@ export class LoginComponent {
     }
 
      logIn() {
+          this.logInProcessing = true;
           this.logInText = 'Trying to log in ...';
           this.authService.getToken(this.email, this.password).subscribe(() => {
                let redirect = this.authService.redirectUrl ? this.router.parseUrl(this.authService.redirectUrl) : '/settings';

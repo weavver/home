@@ -19,6 +19,8 @@ import { AuthService } from '../auth.service';
      styleUrls: ['./password.component.scss']
 })
 export class PasswordComponent {
+     resetPasswordProcessing: boolean = false;
+
      data: any = {
           password_current: "john",
           password_new: "doe"
@@ -46,6 +48,7 @@ export class PasswordComponent {
      }
 
      onSubmit() {
-          this.router.navigate(["/password/changed"]);
+          this.resetPasswordProcessing = true;
+          // this.router.navigate(["/password/changed"]);
      }
 }

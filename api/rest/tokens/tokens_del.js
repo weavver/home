@@ -5,11 +5,7 @@ module.exports.handler = async (event, context) => {
           statusCode: 200,
           headers: {
                'Access-Control-Allow-Origin': '*'
-          },
-          body: JSON.stringify({
-               message: 'token_del',
-               input: event,
-          }),
+          }
      };
 
      const MongoClient = require('mongodb').MongoClient;
