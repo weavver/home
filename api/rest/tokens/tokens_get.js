@@ -1,22 +1,15 @@
 'use strict';
 
 var bcrypt = require('bcryptjs');
-const async = require('async');
-const mongoclient = require('mongodb');
-// var config = require('./config.js');
-
-var response = {
-     statusCode: 404,
-     headers: {
-          "Access-Control-Allow-Origin": "*", // Required for CORS support to work
-          "Access-Control-Allow-Credentials": true, // Required for cookies, authorization headers with HTTPS
-          'Access-Control-Allow-Headers': 'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,X-Custom-Header'
-     }
-};
 
 module.exports.handler = async (event, context) => {
      var jwt = require('jsonwebtoken');
-     var token = jwt.sign({ username: 'test@example.com' }, "shasdfasdfasdf", { expiresIn: 60 * 60 });
+     var token_data = {
+          sub: "123123123",
+          name: "Gen Apple",
+          email: event.queryStringParameters.email // to remove later
+     };
+     var token = jwt.sign(token_data, "shasdfasdfasdf", { expiresIn: 60 * 60 });
 
      const response = {
           statusCode: 200,
@@ -24,12 +17,9 @@ module.exports.handler = async (event, context) => {
                'Access-Control-Allow-Origin': '*'
           },
           body: JSON.stringify({
-               message: 'Hello World token_get',
-               input: event,
                token: token
           }),
      };
-
      return response;
 };
 
