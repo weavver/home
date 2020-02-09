@@ -117,28 +117,28 @@ functions:
           documentation:
             summary: "PUT /account"
 
-  token_get:
-    handler: rest/token/token_get.handler
+  tokens_get:
+    handler: rest/tokens/tokens_get.handler
     environment:
       MONGODB_URL: ${env:MONGODB_URL}
       MONGODB_DATABASE: ${env:MONGODB_DATABASE}
     events:
       - http:
-          path: token
+          path: tokens
           method: get
           cors: true
           documentation:
-            summary: "GET /token?username={username}&password={password}"
+            summary: "GET /tokens?username={username}&password={password}"
 
-  token_del:
-    handler: rest/token/token_del.handler
+  tokens_del:
+    handler: rest/tokens/tokens_del.handler
     environment:
       MONGODB_URL: ${env:MONGODB_URL}
       MONGODB_DATABASE: ${env:MONGODB_DATABASE}
     events:
       - http:
-          path: token/{id}
+          path: tokens/{id}
           method: delete
           cors: true
           documentation:
-            summary: "/token/{id} delete"
+            summary: "/tokens/{id} delete"
