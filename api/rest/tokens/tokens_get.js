@@ -9,16 +9,18 @@ module.exports.handler = async (event, context) => {
           name: "Gen Apple",
           email: event.queryStringParameters.email // to remove later
      };
-     var token = jwt.sign(token_data, "shasdfasdfasdf", { expiresIn: 60 * 60 });
+     var token = jwt.sign(token_data, "asdfasdfasdf", { expiresIn: 60 * 60 });
 
      const response = {
           statusCode: 200,
           headers: {
-               'Access-Control-Allow-Origin': '*'
+               'Access-Control-Allow-Origin': '*',
+               'Set-Cookie': token
           },
-          body: JSON.stringify({
-               token: token
-          }),
+          body: ""
+          // body: JSON.stringify({
+          //      token: token
+          // }),
      };
      return response;
 };

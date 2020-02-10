@@ -24,7 +24,7 @@ describe('API', function() {
                     var encoded_token = JSON.parse(response.body).token;
                     try {
                          var jwt = require('jsonwebtoken');
-                         var decoded_token = jwt.verify(encoded_token, 'shasdfasfdfasdf');
+                         var decoded_token = jwt.verify(encoded_token, 'asdfasdfasdf');
                          console.log(decoded_token);
                          assert.equal(decoded_token.email, "test@example.com");
                     }
