@@ -2,7 +2,6 @@
 
 require('dotenv').config({ path: '.env' })
 
-
 var bcrypt = require('bcryptjs');
 var moment = require("moment");
 
@@ -37,19 +36,17 @@ module.exports.handler = async (event, context) => {
           if (doc == null) {
                throw new Error("Account not found.");
           }
-          console.log(doc);
 
-          var passwordnew = bcrypt.hashSync(event.queryStringParameters.password, 10);
-          // console.log(passwordnew);
-          // console.log(doc.password);
-          if (bcrypt.compareSync(event.queryStringParameters.password, doc.password))
+          var passwordhashed = bcrypt.hashSync(event.queryStringParameters.password, doc.password_hash);
+          if (await bcrypt.compareSync(event.queryStringParameters.password, doc.password_hash))
           {
                console.log("matching");
                response.headers['Set-Cookie'] = cookieString;
+               await connectedClient.close();
           } else {
+               console.log(event.queryStringParameters.password);
                throw new Error("Password does not match");
           }
-          await connectedClient.close();
      }
      catch (err) {
           await connectedClient.close();

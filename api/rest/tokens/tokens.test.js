@@ -16,9 +16,10 @@ nock.disableNetConnect();
 describe('API', function() {
      describe('Tokens', function() {
           describe('Data Model', function() {
+
                it('get token', async () => {
                     var tokens_get = require('./tokens_get.js');
-                    var event = { headers: { origin: "dev.example.com" }, queryStringParameters: { email: 'is_in_use@example.com', password: 'asdfasdf' } };
+                    var event = { headers: { origin: "dev.example.com" }, queryStringParameters: { email: 'is_in_use@example.com', password: 'asdfasdf1234' } };
                     var response = await tokens_get.handler(event, {});
                     console.log(response);
                     assert.equal(response.statusCode, 200);
@@ -45,7 +46,7 @@ describe('API', function() {
                     var response = await tokens_del.handler(event, {});
                     console.log(response);
                     assert.equal(response.statusCode, 200);
-                    assert.isUndefined(response.body);
+                    assert.equal(response.body, "");
                     return;
                });
           });

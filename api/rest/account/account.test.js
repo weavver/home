@@ -116,9 +116,12 @@ describe('API', function() {
 
                          await mongodb.collection("accounts").deleteMany({});
 
+
+                         var bcrypt = require('bcryptjs');
+                         const password_hash = bcrypt.hashSync("asdfasdf1234");
                          var data = {
                               email: "is_in_use@example.com",
-                              password: "$2a$10$0lGBZ1sh7WM762nBLGVW5etHNxOe/n.3RiTeCrPqXo7vh0NhYsAym"
+                              password_hash: password_hash
                          }
                          await mongodb.collection('accounts').insertOne(data);
                          await connectedClient.close();
@@ -131,7 +134,7 @@ describe('API', function() {
 
                it('phone: format not right (twilio check)', async () => {
                     var account = require('./account_put.js');
-                    var event = { body: JSON.stringify({ email: 'is_not_in_use@example.com', phone_number: '1234', password: '12341234' }) };
+                    var event = { body: JSON.stringify({ email: 'is_not_in_use@example.com', phone_number: '1234', password: 'asdfasdf1234' }) };
                     var response = await account.handler(event, {});
                     console.log(response);
                     assert.equal(response.statusCode, 422);
@@ -141,7 +144,7 @@ describe('API', function() {
 
                it('email: is in use', async () => {
                     var account = require('./account_put.js');
-                    var data = { email: 'is_in_use@example.com', phone_number: '7145551212', password: 'asdfjasldfjasdf' };
+                    var data = { email: 'is_in_use@example.com', phone_number: '7145551212', password: 'asdfasdf1234' };
                     var response = await account.handler({ body: JSON.stringify(data) }, {});
                     console.log(response);
                     assert.equal(response.statusCode, 422);
@@ -151,7 +154,7 @@ describe('API', function() {
 
                it('email: is not in use', async () => {
                     var account = require('./account_put.js');
-                    var data = { email: 'is_not_in_use@example.com', phone_number: '7145551212', password: 'asdfjasldfjasdf' };
+                    var data = { email: 'is_not_in_use@example.com', phone_number: '7145551212', password: 'asdfasdf1234' };
 
                     var response = await account.handler({ body: JSON.stringify(data) }, {});
                     console.log(response);
