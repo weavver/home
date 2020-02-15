@@ -2,7 +2,7 @@
 exports.models = [
      // used when a new account is being created
      {
-          "$id": "http://home.weavver.com/schema/accountCreate.json",
+          "$id": "http://home.weavver.com/schema/identityCreate.json",
           "$async": true,
           "type": "object",
           "properties": {
@@ -23,7 +23,7 @@ exports.models = [
           "additionalProperties": false
      },
      {
-          "$id": "http://home.weavver.com/schema/account.json",
+          "$id": "http://home.weavver.com/schema/identity.json",
           "type": "object",
           "properties": {
                "tenants.id": {
@@ -71,7 +71,7 @@ exports.models = [
      },
      // used when a password is being reset
      {
-          "$id": "http://home.weavver.com/schema/accountPasswordReset.json",
+          "$id": "http://home.weavver.com/schema/identityPasswordReset.json",
           "$async": true,
           "type": "object",
           "properties": {
