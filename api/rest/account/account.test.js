@@ -114,8 +114,7 @@ describe('API', function() {
                          const connectedClient = await MongoClient.connect(process.env.MONGODB_URL);
                          const mongodb = connectedClient.db(process.env.MONGODB_DATABASE);
 
-                         await mongodb.collection("accounts").deleteMany({});
-
+                         await mongodb.collection("identities").deleteMany({});
 
                          var bcrypt = require('bcryptjs');
                          const password_hash = bcrypt.hashSync("asdfasdf1234");
@@ -123,7 +122,7 @@ describe('API', function() {
                               email: "is_in_use@example.com",
                               password_hash: password_hash
                          }
-                         await mongodb.collection('accounts').insertOne(data);
+                         await mongodb.collection('identities').insertOne(data);
                          await connectedClient.close();
                     }
                     catch (err) {

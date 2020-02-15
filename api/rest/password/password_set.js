@@ -22,7 +22,7 @@ exports.handler =  async function (event, context) {
 
           // body.verification = { email : { code: Math.floor((Math.random() * 100000) + 100000) } };
 
-          const doc = await mongodb.collection('accounts').findOne({ "email": body.email });
+          const doc = await mongodb.collection('identities').findOne({ "email": body.email });
           if (process.env.DEBUG) console.log(doc);
           var setdata = {
                $set: {
@@ -30,7 +30,7 @@ exports.handler =  async function (event, context) {
                }
           };
           console.log(setdata);
-          var update_result = await mongodb.collection("accounts").updateOne({ "_id" : doc._id }, setdata);
+          var update_result = await mongodb.collection("identities").updateOne({ "_id" : doc._id }, setdata);
           await connectedClient.close();
 
           if (process.env.DEBUG) console.log(update_result);
@@ -46,7 +46,7 @@ exports.handler =  async function (event, context) {
      }
      catch (err) {
           console.log(err);
-          
+
           response.statusCode = 500;
           return response;
      }
@@ -87,7 +87,7 @@ exports.handler =  async function (event, context) {
 //          return;
 //      }
 //      // console.log(bcrypt.hashSync(req.body.password_new));
-//      mongodb.collection("accounts").findOne({ '_id': req.session.account.id },
+//      mongodb.collection("identities").findOne({ '_id': req.session.account.id },
 //          function (err, doc) {
 //              // console.log(doc);
 //              if (doc && bcrypt.compareSync(req.body.password_current, doc.account_password)) {
@@ -96,7 +96,7 @@ exports.handler =  async function (event, context) {
 //                          account_password: bcrypt.hashSync(req.body.password_new, 10)
 //                      }
 //                  };
-//                  mongodb.collection('accounts')
+//                  mongodb.collection('identities')
 //                      .updateOne({ _id : req.session.account.id }, setdata, function(err, r) {
 //                          console.log(r.modifiedCount);
 //                          if (err) {

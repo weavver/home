@@ -61,7 +61,7 @@ exports.handler =  async function (event, context) {
           type: 'string',
           validate: async (schema, data) => {
                console.log("validate email is available..");
-               const doc = await mongodb.collection("accounts").findOne({ email: body.email });
+               const doc = await mongodb.collection("identities").findOne({ email: body.email });
                console.log(doc);
 
                if (doc) {
@@ -89,7 +89,7 @@ exports.handler =  async function (event, context) {
      try {
           body.verification = { email : { code: Math.floor((Math.random() * 100000) + 100000) } };
 
-          const docs = await mongodb.collection('accounts').insertOne(body);
+          const docs = await mongodb.collection('identities').insertOne(body);
           console.log(docs.insertedId);
           await connectedClient.close();
      }

@@ -13,7 +13,7 @@ exports.handler =  async function (event, context) {
 
      var ajv = new Ajv({schemas: schema.models});
 
-     var validate = ajv.getSchema('http://accounts.weavver.com/schema/account_verify.json');
+     var validate = ajv.getSchema('http://home.weavver.com/schema/account_verify.json');
      try {
           var result = await validate(body);
           console.log(result);
@@ -26,7 +26,7 @@ exports.handler =  async function (event, context) {
           const connectedClient = await MongoClient.connect(process.env.MONGODB_URL);
           const mongodb = connectedClient.db(process.env.MONGODB_DATABASE);
 
-          var result = await mongodb.collection("accounts").findOne(searchData);
+          var result = await mongodb.collection("identities").findOne(searchData);
           console.log(result);
           
           if (result == null) {

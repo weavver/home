@@ -49,7 +49,7 @@ module.exports.handler = async function (event, context, callback) {
 
           var reset_code = Math.floor((Math.random() * 100000) + 100000);
 
-          const doc = await mongodb.collection('accounts').findOne({ "email": body.email });
+          const doc = await mongodb.collection('identities').findOne({ "email": body.email });
           if (doc == null) {
                await connectedClient.close();
                throw new Error("Account not found.");
@@ -67,7 +67,7 @@ module.exports.handler = async function (event, context, callback) {
                }
           };
           console.log(setdata);
-          var update_result = await mongodb.collection("accounts").updateOne({ "_id" : doc._id }, setdata);
+          var update_result = await mongodb.collection("identities").updateOne({ "_id" : doc._id }, setdata);
           console.log(update_result);
           if (update_result.modifiedCount == 1) {
                response.statusCode = 200;

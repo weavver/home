@@ -35,7 +35,7 @@ custom:
       api:
         info:
           version: "1"
-          title: "Weavver Accounts - API"
+          title: "Weavver Home - API"
           description: "This API basically replicates all functionality available on ${env:WEBSITE_DOMAIN}."
           termsOfService: ${env:WEBSITE_DOMAIN}
           contact:

@@ -32,7 +32,7 @@ module.exports.handler = async (event, context) => {
      const connectedClient = await MongoClient.connect(process.env.MONGODB_URL);
      const mongodb = connectedClient.db(process.env.MONGODB_DATABASE);
      try {
-          const doc = await mongodb.collection('accounts').findOne({ "email": event.queryStringParameters.email.toLowerCase() });
+          const doc = await mongodb.collection('identities').findOne({ "email": event.queryStringParameters.email.toLowerCase() });
           if (doc == null) {
                throw new Error("Account not found.");
           }
