@@ -26,9 +26,9 @@ exports.handler =  async function (event, context) {
      const body = JSON.parse(event.body);
      console.log(body);
 
-     console.log(jp.value(schema.models, '$[?(@.$id == "http://home.weavver.com/schema/accountCreate.json")].properties.email', {"type": "string", "format": "email", "email_is_not_in_use": true }));
-     console.log(jp.value(schema.models, '$[?(@.$id == "http://home.weavver.com/schema/accountCreate.json")].properties.phone_number', {"type": "string", "twilio_validate": true }));
-     // console.log(jp.query(schema.models, '$[?(@.$id == "http://home.weavver.com/schema/accountCreate.json")].properties.phone_number'));
+     console.log(jp.value(schema.models, '$[?(@.$id == "http://home.weavver.com/schema/identityCreate.json")].properties.email', {"type": "string", "format": "email", "email_is_not_in_use": true }));
+     console.log(jp.value(schema.models, '$[?(@.$id == "http://home.weavver.com/schema/identityCreate.json")].properties.phone_number', {"type": "string", "twilio_validate": true }));
+     // console.log(jp.query(schema.models, '$[?(@.$id == "http://home.weavver.com/schema/identityCreate.json")].properties.phone_number'));
 
      var ajv = new Ajv({schemas: schema.models});
 
@@ -52,7 +52,7 @@ exports.handler =  async function (event, context) {
                     // console.log(number_info.country_code);
                     // // This will sometimes be null
                     // console.log(number_info.caller_name);
-                    // create the account immediate if this is for a partner that is logged in?
+                    // create identity immediately if this is for a partner that is logged in?
                }
           });
 
@@ -73,7 +73,7 @@ exports.handler =  async function (event, context) {
           }
      });
 
-     var validate = ajv.getSchema('http://home.weavver.com/schema/accountCreate.json');
+     var validate = ajv.getSchema('http://home.weavver.com/schema/identityCreate.json');
      try {
           var result = await validate(body);
           console.log(result);
@@ -112,7 +112,7 @@ exports.handler =  async function (event, context) {
           from: 'noreply@weavver.com',
           subject: 'Verification Code',
           text: 'An email client compatible with HTML emails is required.',
-          html: await templates.renderTemplate("/account/account_verification_required", data)
+          html: await templates.renderTemplate("/identities/identity_verification_required", data)
      };
      try {
           var sendGridResult = await sgMail.send(msg);

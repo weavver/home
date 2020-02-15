@@ -1,10 +1,35 @@
-<div class="card">
+<card [loading]="processing">
      <div fxLayout="row" style="display:flex; font-size: 22px;  align-items: left; justify-content: left;">
           <div>
                <i class="material-icons" style="vertical-align: middle !important; padding-right: 10px;">person_add</i>
-               <span style="vertical-align: middle !important;">Confirm by email</span>
+               <span style="vertical-align: middle !important;">Confirm with a Code</span>
           </div>
      </div>
      <hr />
-     We sent you a confirmation email. Check it for a link to to confirm your account.
-</div>
+     We sent you an email with a code in it to verify it. Check it for a code to confirm your account.<br />
+     <br />
+     <form [formGroup]="form"  (ngSubmit)="confirm()">
+          <div class="form-group">
+               <div class="form-header">
+                    <label for="code">Confirmation Code</label>
+                    <small class="form-text text-muted form-header-required" *ngIf="code.invalid && !code.pristine && errorGet(code.errors) == 'required'">
+                         Required
+                    </small>
+                    <small class="form-text text-muted form-header-required" [hidden]="code.valid || code.pristine" *ngIf="(code.invalid && errorGet(code.errors) == 'code')">
+                         A valid code is required.
+                    </small>
+               </div>
+               <input formControlName="code" pInput fullWidth type="code" class="form-control" placeholder="" required>
+          </div>
+          <div style="text-align: center;">
+               <div *ngIf="errors && !processing">
+                    <hr />
+                    <div *ngFor="let error of errors">
+                         {{ error | json }}
+                         <!-- {{ getErrorText(error.keyword) }} -->
+                    </div>
+               </div>
+               <button type="submit" class="btn btn-primary" style="min-width: 300px; margin: 15px;" [disabled]="!form.valid || processing">{{ confirmText }}</button>
+          </div>
+     </form>
+</card>

@@ -1,13 +1,8 @@
 import { DataService } from '../../data.service';
 import { ActivatedRoute } from '@angular/router';
 import { Component, ChangeDetectorRef } from '@angular/core';
+import { Router } from '@angular/router';
 import {
-    Router,
-    NavigationExtras
-}
-from '@angular/router';
-import {
-    FormsModule,
     FormGroup,
     FormBuilder,
     Validators,

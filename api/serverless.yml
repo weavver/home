@@ -101,8 +101,8 @@ functions:
           documentation:
             summary: "/echo"
 
-  account_put:
-    handler: rest/account/account_put.handler
+  identities_put:
+    handler: rest/identities/identities_put.handler
     environment:
       MONGODB_URL: ${env:MONGODB_URL}
       MONGODB_DATABASE: ${env:MONGODB_DATABASE}
@@ -111,11 +111,11 @@ functions:
       SENDGRID_KEY: ${env:SENDGRID_KEY}
     events:
       - http:
-          path: account
+          path: identities
           method: put
           cors: true
           documentation:
-            summary: "PUT /account"
+            summary: "PUT /identities"
 
   tokens_get:
     handler: rest/tokens/tokens_get.handler

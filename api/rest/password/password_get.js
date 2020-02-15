@@ -28,7 +28,7 @@ module.exports.handler = async function (event, context, callback) {
 
      console.log(body);
 
-     var validate = ajv.getSchema('http://home.weavver.com/schema/accountPasswordReset.json');
+     var validate = ajv.getSchema('http://home.weavver.com/schema/identityPasswordReset.json');
      try {          
           var result = await validate(body);
          

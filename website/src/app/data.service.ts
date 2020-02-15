@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
-export interface AccountData {
+export interface IdentityData {
      email: string,
      password: string
 }
@@ -17,8 +17,8 @@ export interface ProfileData {
   providedIn: 'root'
 })
 export class DataService {
+     private API_IDENTITY     = environment.baseApiUrl + "/identities";
      private API_TOKEN        = environment.baseApiUrl + "/tokens";
-     private API_ACCOUNT      = environment.baseApiUrl + "/account";
      private API_PROFILE      = environment.baseApiUrl + "/profile";
      private API_ECHO         = environment.baseApiUrl + "/echo";
 
@@ -44,15 +44,18 @@ export class DataService {
      //      return this.httpClient.delete(this.API_TOKEN, { withCredentials: true });
      // }
 
-     public accountPut(account: AccountData): Observable<any> {
-          console.log("creating account..");
-          console.log(account);
-          return this.httpClient.put<AccountData>(this.API_ACCOUNT, JSON.stringify(account));
+     public identityPut(account: IdentityData): Observable<any> {
+          console.log("creating identity.." + account);
+          return this.httpClient.put<IdentityData>(this.API_IDENTITY, JSON.stringify(account));
+     }
+
+     public identityVerifyCodePut(code: string) : Observable<any> {
+          console.log("identity verifcation.. " + code);
+          return this.httpClient.put<any>(this.API_IDENTITY + "/verify", JSON.stringify(code));
      }
 
      public profilePut(profile:ProfileData): Observable<any> {
-          console.log("setting profile..");
-          console.log(profile);
+          console.log("setting profile.. " + profile);
           return this.httpClient.put<any>(this.API_PROFILE, profile);
      }
 

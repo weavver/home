@@ -1,4 +1,4 @@
-import { DataService, AccountData } from '../../data.service';
+import { DataService, IdentityData } from '../../data.service';
 import { Observable } from 'rxjs'
 
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component } from '@angular/core';
@@ -67,11 +67,11 @@ export class SignUpComponent {
           this.signUpProcessing = true;
           if (this.signupForm.valid) {
                console.log('submitting form..');
-               const account : AccountData = {
+               const identity : IdentityData = {
                     email: this.email.value,
                     password: this.password.value
                };
-               this.dataService.accountPut(account)
+               this.dataService.identityPut(identity)
                     .subscribe(
                     (resp) => {
                          this.router.navigate(["/signup/confirm"]);

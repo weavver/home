@@ -28,15 +28,18 @@ module.exports.handler = async (event, context) => {
           body: ""
      };
 
+     console.log("connecting to database..");
      const MongoClient = require('mongodb').MongoClient;
      const connectedClient = await MongoClient.connect(process.env.MONGODB_URL);
      const mongodb = connectedClient.db(process.env.MONGODB_DATABASE);
      try {
+          console.log("looking for a matching identity..");
           const doc = await mongodb.collection('identities').findOne({ "email": event.queryStringParameters.email.toLowerCase() });
           if (doc == null) {
                throw new Error("Account not found.");
           }
 
+          console.log("validating password..");
           var passwordhashed = bcrypt.hashSync(event.queryStringParameters.password, doc.password_hash);
           if (await bcrypt.compareSync(event.queryStringParameters.password, doc.password_hash))
           {

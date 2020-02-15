@@ -6,14 +6,12 @@ var schema = require('../../schema.js');
 var Ajv = require('ajv');
 
 exports.handler =  async function (event, context) {
-
      const body = JSON.parse(event.body);
      console.log(body);
-     
 
      var ajv = new Ajv({schemas: schema.models});
 
-     var validate = ajv.getSchema('http://home.weavver.com/schema/account_verify.json');
+     var validate = ajv.getSchema('http://home.weavver.com/schema/identityVerify.json');
      try {
           var result = await validate(body);
           console.log(result);

@@ -8,7 +8,7 @@ var should = chai.should();
 var schema = require('../../schema.js');
 var Ajv = require('ajv');
 var ajv = new Ajv({schemas: schema.models});
-var validate = ajv.getSchema('http://home.weavver.com/schema/accountPasswordReset.json');
+var validate = ajv.getSchema('http://home.weavver.com/schema/identityPasswordReset.json');
 assert.isDefined(validate);
 
 var nock = require('nock');

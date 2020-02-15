@@ -6,14 +6,14 @@ var assert = require('chai').assert;
 var schema = require('../../schema.js');
 var Ajv = require('ajv');
 var ajv = new Ajv({schemas: schema.models});
-var validate = ajv.getSchema('http://home.weavver.com/schema/accountCreate.json');
+var validate = ajv.getSchema('http://home.weavver.com/schema/identityCreate.json');
 assert.isDefined(validate);
 
 var nock = require('nock');
 nock.disableNetConnect();
 
 describe('API', function() {
-     describe('Account', function() {
+     describe('Identities', function() {
           describe('Data Model', function() {
                it('email: value not rfc compliant', async () => {
                     var data = {
@@ -132,7 +132,7 @@ describe('API', function() {
                });
 
                it('phone: format not right (twilio check)', async () => {
-                    var account = require('./account_put.js');
+                    var account = require('./identities_put.js');
                     var event = { body: JSON.stringify({ email: 'is_not_in_use@example.com', phone_number: '1234', password: 'asdfasdf1234' }) };
                     var response = await account.handler(event, {});
                     console.log(response);
@@ -142,7 +142,7 @@ describe('API', function() {
                });
 
                it('email: is in use', async () => {
-                    var account = require('./account_put.js');
+                    var account = require('./identities_put.js');
                     var data = { email: 'is_in_use@example.com', phone_number: '7145551212', password: 'asdfasdf1234' };
                     var response = await account.handler({ body: JSON.stringify(data) }, {});
                     console.log(response);
@@ -152,7 +152,7 @@ describe('API', function() {
                });
 
                it('email: is not in use', async () => {
-                    var account = require('./account_put.js');
+                    var account = require('./identities_put.js');
                     var data = { email: 'is_not_in_use@example.com', phone_number: '7145551212', password: 'asdfasdf1234' };
 
                     var response = await account.handler({ body: JSON.stringify(data) }, {});
@@ -207,7 +207,7 @@ describe('API', function() {
                     // nock.enableNetConnect();
 
                     // // verify that code
-                    // var account_verify = require('./account_verify.put.js');
+                    // var account_verify = require('./identities_verify.put.js');
                     // var response_verify = await account_verify.handler({ body: JSON.stringify({ email: data.email, code: code })});
                     // console.log(response_verify);
                     // assert.equal(response_verify.status_code, 200);
