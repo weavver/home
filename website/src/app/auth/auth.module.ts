@@ -3,16 +3,20 @@ import { CommonModule }                           from '@angular/common';
 import { FormsModule,
      ReactiveFormsModule }                        from '@angular/forms';
 
-import { LoginComponent }                         from './login/login.component';
-import { SignUpComponent }                        from './signup/signup.component';
-import { AuthRoutingModule }                      from './auth-routing.module';
+import { WeavverCardComponent }                   from '../shared/card/card.component';
 
+import { ConsentComponent }                       from './consent/consent.component';
+
+import { SignUpComponent }                        from './signup/signup.component';
 import { SignUpConfirmComponent }                 from './signup-confirm/signup-confirm.component';
+
+import { LoginComponent }                         from './login/login.component';
 import { LogInResetPasswordComponent }            from './login-resetpassword/login-resetpassword.component';
 import { LogInResetPasswordConfirmComponent }     from './login-resetpassword-confirm/login-resetpassword-confirm.component';
+
 import { PasswordComponent }                      from './password/password.component';
 
-import { WeavverCardComponent }                   from '../shared/card/card.component';
+import { AuthRoutingModule }                      from './auth-routing.module';
 
 @NgModule({
      imports: [
@@ -22,13 +26,14 @@ import { WeavverCardComponent }                   from '../shared/card/card.comp
           AuthRoutingModule
      ],
      declarations: [
+          WeavverCardComponent,
+          ConsentComponent,
+          SignUpComponent,
+          SignUpConfirmComponent,
           LoginComponent,
           LogInResetPasswordComponent,
           LogInResetPasswordConfirmComponent,
-          SignUpComponent,
-          SignUpConfirmComponent,
-          PasswordComponent,
-          WeavverCardComponent
+          PasswordComponent
      ]
 })
 export class AuthModule {

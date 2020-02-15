@@ -117,7 +117,8 @@ describe('API', function() {
                          await mongodb.collection("accounts").deleteMany({});
 
                          var data = {
-                              email: 'is_in_use@example.com'
+                              email: "is_in_use@example.com",
+                              password: "$2a$10$0lGBZ1sh7WM762nBLGVW5etHNxOe/n.3RiTeCrPqXo7vh0NhYsAym"
                          }
                          await mongodb.collection('accounts').insertOne(data);
                          await connectedClient.close();

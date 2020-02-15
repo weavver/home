@@ -1,4 +1,5 @@
 export const environment = {
      production: true,
-     baseApiUrl: 'https://api.home.weavver.com/master/',
+     website_url: 'https://home.weavver.com',
+     baseApiUrl: 'https://api.home.weavver.com/master/'
 };

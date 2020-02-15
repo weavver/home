@@ -1,5 +1,7 @@
 import { DataService } from '../../data.service';
+
 import { ActivatedRoute } from '@angular/router';
+
 import { Component, ChangeDetectorRef } from '@angular/core';
 import {
     Router,
@@ -17,25 +19,23 @@ import { AuthService } from '../auth.service';
 
 @Component({
     selector: 'app-login',
-    templateUrl: './login.component.html',
-    styleUrls: ['./login.component.scss']
+    templateUrl: './consent.component.html',
+    styleUrls: ['./consent.component.scss']
 })
-export class LoginComponent {
+export class ConsentComponent {
      processing: boolean = false;
      error: boolean = false;
-
-     logInText: string = "Log In";
-
+     submitText: string = "Authorize";
+     form: FormGroup;
      data: any = {
-          username: "",
-          password: ""
+          app_name: "Placeholder App",
+          identifier: "",
+          email: "",
+          app_giver: "",
+          website: "",
+          privacy_policy: "",
+          catalogued_at: ""
      }
-
-     loginForm: FormGroup;
-
-     get email() { return this.loginForm.get('email'); }
-     get password() { return this.loginForm.get('password'); }
-
      errorGet(obj) {
           return Object.keys(obj)[0];
      }
@@ -47,37 +47,27 @@ export class LoginComponent {
                  private data_app: DataService,
                  private route: ActivatedRoute) {
 
-          this.loginForm = this.fb.group({
-                    email: new FormControl('', [Validators.required, Validators.minLength(3), Validators.email]),
-                    password: new FormControl('', [Validators.required, Validators.minLength(6)]),
-               }, {
-                    updateOn: "blur"
-               })
+          this.form = this.fb.group({}, {updateOn: "blur"});
 
-               this.route.queryParams.subscribe(params => this.data_app.login_params = params);
+          this.authService.showSidebar = false;
+          console.log(this.data_app.login_params);
      }
 
-     logIn() {
+     authorize() {
           this.error = false;
           this.processing = true;
-          this.logInText = 'Trying to log in ...';
-          this.authService.tokenGet(this.email.value, this.password.value).subscribe(() => {
-                    let redirect = '/settings';
-
-                    if (this.data_app.login_params)
-                         redirect = '/consent';
-
-                    
+          this.submitText = 'Authorizing..';
+          this.authService.putConsent(this.data_app.login_params.client_id).subscribe(() => {
+                    let redirect = "";
                     this.router.navigateByUrl(redirect);
                },
                (error) => {
                     this.processing = false;
-                    this.logInText = "Log In";
-                    this.error = error // error path
+                    this.submitText = "Authorize";
                     // console.log(error);
                     this.error = true;
                     this.cd.markForCheck();
-               }
+                 }
           );
      }
 }

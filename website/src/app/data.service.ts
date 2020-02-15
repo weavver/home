@@ -22,20 +22,27 @@ export class DataService {
      private API_PROFILE      = environment.baseApiUrl + "/profile";
      private API_ECHO         = environment.baseApiUrl + "/echo";
 
+     login_params: any;
+
      constructor(private httpClient: HttpClient) { }
 
-     public getToken(username, password): Observable<any> {
-          let params = new HttpParams();
-          params.append('username', username);
-          params.append('password', password);
-          return this.httpClient.get(this.API_TOKEN, { params: params });
+     public tokenGet(email, password): Observable<any> {
+          const params = new HttpParams()
+               .set('email', email)
+               .set('password', password);
+
+          return this.httpClient.get(this.API_TOKEN, { params: params, withCredentials: true });
      }
 
-     public delToken(token): Observable<any> {
-          let params = new HttpParams();
-          params.append('token', token);
-          return this.httpClient.delete(this.API_TOKEN + "/" + token);
+     public tokenDel(token): Observable<any> {
+          return this.httpClient.delete(this.API_TOKEN, { withCredentials: true });
      }
+
+     // difficulties implementing it so set aside now and using a redirect instead.
+     // public delToken(token): Observable<any> {
+     //      let params = new HttpParams();
+     //      return this.httpClient.delete(this.API_TOKEN, { withCredentials: true });
+     // }
 
      public accountPut(account: AccountData): Observable<any> {
           console.log("creating account..");
@@ -47,5 +54,13 @@ export class DataService {
           console.log("setting profile..");
           console.log(profile);
           return this.httpClient.put<any>(this.API_PROFILE, profile);
+     }
+
+     public consentPut(client_id:string): Observable<any> {
+          const params = new HttpParams()
+               .set('client_id', client_id);
+
+          console.log("giving consent to an app.. ", client_id);
+          return this.httpClient.put<any>(this.API_PROFILE, { params: params });
      }
 }

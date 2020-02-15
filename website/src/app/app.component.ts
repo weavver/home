@@ -1,3 +1,4 @@
+import { environment } from '../environments/environment';
 import {
      ChangeDetectionStrategy,
      OnInit,
@@ -8,6 +9,7 @@ import { Router, RouterOutlet } from "@angular/router";
 import { slideInAnimation } from "./animations";
 
 import { AuthService } from "./auth/auth.service";
+import { DataService } from './data.service';
 
 @Component({
      selector: "app-root",
@@ -20,7 +22,7 @@ export class AppComponent {
      navGeneral: boolean = false;
      navAccountExpanded: boolean = false;
 
-     constructor(private router: Router, public authService: AuthService)
+     constructor(private router: Router, public authService: AuthService, public data_app: DataService)
      {
      }
 
@@ -33,10 +35,12 @@ export class AppComponent {
      }
 
      logOut() {
-          this.authService.delToken("asdf").subscribe(() => {
-               console.log("logged out");
-               this.router.navigate(["/login"]);
-          });
+          var redirect_url = environment.website_url;
+          if (this.data_app.login_params.redirect_url) {
+               // TBD: lock this down more
+               redirect_url = environment.baseApiUrl + "?redirect_url=" + this.data_app.login_params.redirect_url;
+          }
+          document.location.href = redirect_url;
      }
 
      getAnimationData(outlet: RouterOutlet) {

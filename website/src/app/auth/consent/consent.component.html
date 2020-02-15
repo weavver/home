@@ -1,0 +1,37 @@
+<card [loading]="processing" [maxWidth]="500">
+     <div fxLayout="row" style="display:flex; font-size: 22px;  align-items: left; justify-content: left;">
+          <div id="card_title">
+               <i class="material-icons" style="vertical-align: middle !important; padding-right: 10px;">lock</i>
+               <span style="vertical-align: middle !important;">App Consent of "{{ data.app_name }}" needed</span>
+          </div>
+     </div>
+     <hr />
+     <form [formGroup]="form"  (ngSubmit)="authorize()">
+          <div class="form-group">
+               <label for="email">May an application named "{{ data.app_name }}" use this Weavver Identity to help simplify usage?</label><br />
+               <br />
+               By clicking authorize that app will be give access to:<br />
+               <br />
+               <ul>
+                    <li>Numeric identitifier: {{ data.identifier }}</li>
+                    <li>Email address: {{ data.email }}</li>
+               </ul>
+               <br />
+               App information:<br />
+               <br />
+               <ul>
+                    <li>Application Giver: {{ data.app_giver}} </li>
+                    <li>Website: {{ data.website }}</li>
+                    <li>Privacy Policy: {{ data.privacy_policy }}</li>
+                    <li>Added to our Catalogue: {{ data.catalogued_at }}</li>
+               </ul>
+          </div>
+          <div style="text-align: center; margin-top: 15px;">
+               <hr />
+               <div *ngIf="error" style="padding: 10px; color: red;">
+                    Log in error. Maybe check your email and/or password.
+               </div>
+               <button id="login" class="btn btn-primary" style="font-weight: bold; background-color: orange; color: white; min-width: 300px; margin: 15px;">{{ submitText }}</button>
+          </div>
+     </form>
+</card>

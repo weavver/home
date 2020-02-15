@@ -1,17 +1,20 @@
 'use strict';
 
 module.exports.handler = async (event, context) => {
+     var redirect_url = "https://" + process.env.WEBSITE_DOMAIN;
+     if (event.queryStringParameters.redirect_url) {
+          redirect_url = event.queryStringParameters.redirect_url;
+     }
      const response = {
-          statusCode: 200,
+          statusCode: 307,
           headers: {
-               "Access-Control-Allow-Methods": "OPTIONS,POST,GET",
-               'Access-Control-Allow-Origin': event.headers.origin,
-               'Access-Control-Allow-Credentials': "true",
-               'Set-Cookie': 'SessionToken=deleted; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT'
+               "Set-Cookie": "SessionToken=deleted;domain=" + process.env.COOKIE_DOMAIN + ";path=/" + process.env.API_VERSION + ";expires=Thu, 01 Jan 1970 00:00:00 GMT",
+               Location: redirect_url
           },
-          body: ""
+          body: "Redirecting.. to https://" + redirect_url
      };
 
+     // invalidate that token
      // const MongoClient = require('mongodb').MongoClient;
      // const connectedClient = await MongoClient.connect(process.env.MONGODB_URL);
      // const mongodb = connectedClient.db(process.env.MONGODB_DATABASE);
@@ -24,4 +27,4 @@ module.exports.handler = async (event, context) => {
      // await connectedClient.close();
 
      return response;
-};
+}

@@ -14,7 +14,7 @@ module.exports.handler = async (event, context) => {
           cookieVal = "false";
      }
 
-     var cookieString = "SessionToken=" + cookieVal + ";domain=home.weavver.com; expires=" + date.toGMTString() + ";";
+     var cookieString = "ExampleCookie=" + cookieVal + ";domain=" + process.env.WEBSITE_DOMAIN + "; expires=" + date.toGMTString() + ";";
      const response = {
           statusCode: 200,
           headers: {

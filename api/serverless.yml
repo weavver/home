@@ -122,6 +122,8 @@ functions:
     environment:
       MONGODB_URL: ${env:MONGODB_URL}
       MONGODB_DATABASE: ${env:MONGODB_DATABASE}
+      COOKIE_DOMAIN: ${env:COOKIE_DOMAIN}
+      API_VERSION: ${env:API_STAGE}
     events:
       - http:
           path: tokens
@@ -137,8 +139,26 @@ functions:
       MONGODB_DATABASE: ${env:MONGODB_DATABASE}
     events:
       - http:
-          path: tokens/{id}
+          path: tokens
           method: delete
+          cors:
+            origin: '*' # <-- Specify allowed origin
+            allowCredentials: false
+          documentation:
+            summary: "/tokens delete"
+
+  signout_get:
+    handler: rest/signout_get.handler
+    environment:
+      MONGODB_URL: ${env:MONGODB_URL}
+      MONGODB_DATABASE: ${env:MONGODB_DATABASE}
+      COOKIE_DOMAIN: ${env:COOKIE_DOMAIN}
+      API_VERSION: ${env:API_STAGE}
+      WEBSITE_DOMAIN: ${env:WEBSITE_DOMAIN}
+    events:
+      - http:
+          path: signout
+          method: get
           cors: true
           documentation:
-            summary: "/tokens/{id} delete"
+            summary: "GET /signout"

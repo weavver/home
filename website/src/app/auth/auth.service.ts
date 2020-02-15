@@ -14,6 +14,8 @@ export class AuthService {
     isLoggingOut : boolean = false;
     isLoggedIn : boolean = false;
 
+    showSidebar : boolean = true;
+
     // store the URL so we can redirect after logging in
     redirectUrl: string;
 
@@ -22,8 +24,8 @@ export class AuthService {
     {
     }
 
-    getToken(username, password): Observable<any> {
-        return this.dataService.getToken("username", "password").pipe(
+    tokenGet(email, password): Observable<any> {
+        return this.dataService.tokenGet(email, password).pipe(
             tap(val => {
                 console.log(val);
                 this.isLoggedIn = true;
@@ -31,16 +33,29 @@ export class AuthService {
         );
     }
 
-    delToken(token): Observable<any> {
+    tokenDel(token): Observable<any> {
         this.isLoggingOut = true;
-        return this.dataService.delToken(token).pipe(
+        return this.dataService.tokenDel(token).pipe(
             tap(val => {
                 console.log(val);
                 this.isLoggedIn = false;
             })
         );
     }
+
+    
+
+    putConsent(client_id): Observable<any> {
+        return this.dataService.consentPut(client_id).pipe(
+            tap(val => {
+                console.log(val);
+                // this.isLoggedIn = true;
+            })
+        );
+    }
 }
+
+
 
 //     .subscribe( (resp) => {
 //         console.log(resp);
