@@ -35,10 +35,10 @@ export class AppComponent {
      }
 
      logOut() {
-          var redirect_url = environment.website_url;
+          var redirect_url = environment.baseApiUrl + "/signout?redirect_url=" + environment.website_url;
           if (this.data_app.login_params.redirect_url) {
                // TBD: lock this down more
-               redirect_url = environment.baseApiUrl + "?redirect_url=" + this.data_app.login_params.redirect_url;
+               redirect_url = environment.baseApiUrl + "/signout?redirect_url=" + this.data_app.login_params.redirect_url;
           }
           document.location.href = redirect_url;
      }
