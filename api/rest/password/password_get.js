@@ -51,6 +51,7 @@ module.exports.handler = async function (event, context, callback) {
 
           const doc = await mongodb.collection('accounts').findOne({ "email": body.email });
           if (doc == null) {
+               await connectedClient.close();
                throw new Error("Account not found.");
           }
           console.log(doc);
@@ -76,7 +77,6 @@ module.exports.handler = async function (event, context, callback) {
                response.statusCode = 404;
                response.body = { message: "Not found" };
           }
-
           await connectedClient.close();
      }
      catch (err) {
