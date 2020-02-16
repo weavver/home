@@ -3,7 +3,7 @@ import { Component, OnInit, ChangeDetectionStrategy, Input } from '@angular/core
 @Component({
   selector: 'card',
   template: `
-     <div class="card" [style.width.px]="maxWidth">
+     <div class="card" [style.max-width.px]="maxWidth">
           <div class="overlay" *ngIf="loading"></div>
           <div class="loader" *ngIf="loading"></div>
           <ng-content></ng-content>
