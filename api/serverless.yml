@@ -4,7 +4,7 @@ provider:
   name: aws
   runtime: nodejs10.x
   stage: ${env:API_STAGE}
-  region: us-west-1
+  region: us-east-1
 
 #websocketApiRouteSelectionExpression: $request.body.action
 plugins:
@@ -65,7 +65,10 @@ custom:
           #description: "This is the description for some/other/path"
 
   environment:
-      MONGODB_URL: ${env:MONGODB_URL}
+      GREMLIN_ENDPOINT: ${env:GREMLIN_ENDPOINT}
+      GREMLIN_DATABASE: ${env:GREMLIN_DATABASE}
+      GREMLIN_PRIMARYKEY: ${env:GREMLIN_PRIMARYKEY}
+      GREMLIN_COLLECTION: ${env:GREMLIN_COLLECTION}
       SENDGRID_KEY: ${env:SENDGRID_KEY}
 
 package:
@@ -75,7 +78,7 @@ package:
   include:
     - node_modules/@maxmind/**
     - node_modules/@sendgrid/**
-    - node_modules/mongodb/**
+    - node_modules/gremlin/**
 
 functions:
 
@@ -104,8 +107,10 @@ functions:
   identities_put:
     handler: rest/identities/identities_put.handler
     environment:
-      MONGODB_URL: ${env:MONGODB_URL}
-      MONGODB_DATABASE: ${env:MONGODB_DATABASE}
+      GREMLIN_ENDPOINT: ${env:GREMLIN_ENDPOINT}
+      GREMLIN_DATABASE: ${env:GREMLIN_DATABASE}
+      GREMLIN_PRIMARYKEY: ${env:GREMLIN_PRIMARYKEY}
+      GREMLIN_COLLECTION: ${env:GREMLIN_COLLECTION}
       TWILIO_ACCOUNTSID: ${env:TWILIO_ACCOUNTSID}
       TWILIO_AUTHTOKEN: ${env:TWILIO_AUTHTOKEN}
       SENDGRID_KEY: ${env:SENDGRID_KEY}
@@ -120,8 +125,10 @@ functions:
   tokens_get:
     handler: rest/tokens/tokens_get.handler
     environment:
-      MONGODB_URL: ${env:MONGODB_URL}
-      MONGODB_DATABASE: ${env:MONGODB_DATABASE}
+      GREMLIN_ENDPOINT: ${env:GREMLIN_ENDPOINT}
+      GREMLIN_DATABASE: ${env:GREMLIN_DATABASE}
+      GREMLIN_PRIMARYKEY: ${env:GREMLIN_PRIMARYKEY}
+      GREMLIN_COLLECTION: ${env:GREMLIN_COLLECTION}
       COOKIE_DOMAIN: ${env:COOKIE_DOMAIN}
       API_VERSION: ${env:API_STAGE}
     events:
@@ -135,8 +142,10 @@ functions:
   tokens_del:
     handler: rest/tokens/tokens_del.handler
     environment:
-      MONGODB_URL: ${env:MONGODB_URL}
-      MONGODB_DATABASE: ${env:MONGODB_DATABASE}
+      GREMLIN_ENDPOINT: ${env:GREMLIN_ENDPOINT}
+      GREMLIN_DATABASE: ${env:GREMLIN_DATABASE}
+      GREMLIN_PRIMARYKEY: ${env:GREMLIN_PRIMARYKEY}
+      GREMLIN_COLLECTION: ${env:GREMLIN_COLLECTION}
     events:
       - http:
           path: tokens
@@ -150,8 +159,10 @@ functions:
   signout_get:
     handler: rest/signout_get.handler
     environment:
-      MONGODB_URL: ${env:MONGODB_URL}
-      MONGODB_DATABASE: ${env:MONGODB_DATABASE}
+      GREMLIN_ENDPOINT: ${env:GREMLIN_ENDPOINT}
+      GREMLIN_DATABASE: ${env:GREMLIN_DATABASE}
+      GREMLIN_PRIMARYKEY: ${env:GREMLIN_PRIMARYKEY}
+      GREMLIN_COLLECTION: ${env:GREMLIN_COLLECTION}
       COOKIE_DOMAIN: ${env:COOKIE_DOMAIN}
       API_VERSION: ${env:API_STAGE}
       WEBSITE_DOMAIN: ${env:WEBSITE_DOMAIN}

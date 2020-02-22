@@ -1,7 +1,7 @@
 const bcrypt = require('bcryptjs');
 var moment = require("moment");
-
 var templates = require('../templates.js');
+var gremlin = require('../../gremlin.js');
 
 var response = {
      statusCode: 404,
@@ -24,14 +24,11 @@ module.exports.handler = async function (event, context, callback) {
      var Ajv = require('ajv');
      var ajv = new Ajv({schemas: schema.models});
 
-     var code = Math.floor(10000000 + Math.random() * 90000000);
-
      console.log(body);
 
      var validate = ajv.getSchema('http://home.weavver.com/schema/identityPasswordReset.json');
      try {          
           var result = await validate(body);
-         
      }
      catch (err) {
           console.log("error validating email...");
@@ -43,33 +40,38 @@ module.exports.handler = async function (event, context, callback) {
      }
 
      try {
-          const MongoClient = require('mongodb').MongoClient;
-          const connectedClient = await MongoClient.connect(process.env.MONGODB_URL);
-          const mongodb = connectedClient.db(process.env.MONGODB_DATABASE);
+          var q = gremlin.g.V()
+               .has('label','identity')
+               .has('cid', '0')
+               .has('email', body.email);
 
-          var reset_code = Math.floor((Math.random() * 100000) + 100000);
+          var docs = await gremlin.executeQuery(q);
 
-          const doc = await mongodb.collection('identities').findOne({ "email": body.email });
-          if (doc == null) {
-               await connectedClient.close();
-               throw new Error("Account not found.");
+          if (docs.length > 0) {
           }
-          console.log(doc);
+          else {
+               await gremlin.client.close();
+               throw new Error("Identity not found.");
+          }
+
+          var reset_code = Math.floor(10000000 + Math.random() * 90000000);
+
+          console.log(docs._items[0]);
           // console.log(moment().toDate());
           var newDateObj = moment().add(45, 'm');
-          // console.log(newDateObj.toDate());
-          var setdata = {
-               $set: {
-                    password_reset: {
-                         code: reset_code,
-                         expires_at: newDateObj.toDate()
-                    }
-               }
-          };
-          console.log(setdata);
-          var update_result = await mongodb.collection("identities").updateOne({ "_id" : doc._id }, setdata);
-          console.log(update_result);
-          if (update_result.modifiedCount == 1) {
+
+          console.log(docs._items[0].id);
+
+          var qUpdate = gremlin.g.V(docs._items[0].id)
+               .property('password_resetcode', reset_code)
+               .property('password_resetcode_expires_at', newDateObj.toDate().toISOString());
+
+          var updateResponse = await gremlin.executeQuery(qUpdate);
+
+          // console.log("updateResponse: ");
+          // console.log(updateResponse);
+
+          if (updateResponse.length > 0) {
                response.statusCode = 200;
                response.body = { message: "Updated" };
           }
@@ -77,7 +79,7 @@ module.exports.handler = async function (event, context, callback) {
                response.statusCode = 404;
                response.body = { message: "Not found" };
           }
-          await connectedClient.close();
+          gremlin.client.close();
      }
      catch (err) {
           console.log(err);
@@ -90,8 +92,6 @@ module.exports.handler = async function (event, context, callback) {
      sgMail.setApiKey(process.env.SENDGRID_KEY);
 
      var data = { code: reset_code };
-     console.log(data);
-
      const msg = {
           to: body.email,
           from: 'noreply@weavver.com',

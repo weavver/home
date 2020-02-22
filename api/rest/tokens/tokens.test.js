@@ -11,7 +11,7 @@ var assert = require('chai').assert;
 var cookie = require('cookie');
 
 var nock = require('nock');
-nock.disableNetConnect();
+nock.enableNetConnect();
 
 describe('API', function() {
      describe('Tokens', function() {
@@ -41,6 +41,8 @@ describe('API', function() {
                });
 
                it('delete', async () => {
+                    nock.enableNetConnect();
+
                     var tokens_del = require('./tokens_del.js');
                     var event = { headers: { origin: "dev.example.com" }, pathParameters: { id: 'test_id' } };
                     var response = await tokens_del.handler(event, {});

@@ -1,3 +1,4 @@
+const uuidv4 = require('uuid/v4');
 
 var templates = require('../templates.js');
 var jp = require('jsonpath');
@@ -7,7 +8,11 @@ var Ajv = require('ajv');
 
 const twilioclient = require('twilio')(process.env.TWILIO_ACCOUNTSID, process.env.TWILIO_AUTHTOKEN);
 
+var bcrypt = require('bcryptjs');
+
 exports.handler =  async function (event, context) {
+     var gremlin = require('../../gremlin.js');
+
      const response = {
           statusCode: 522,
           headers: {
@@ -19,10 +24,6 @@ exports.handler =  async function (event, context) {
           })
      };
 
-     const MongoClient = require('mongodb').MongoClient;
-     const connectedClient = await MongoClient.connect(process.env.MONGODB_URL);
-     const mongodb = connectedClient.db(process.env.MONGODB_DATABASE);
-
      const body = JSON.parse(event.body);
      console.log(body);
 
@@ -32,9 +33,7 @@ exports.handler =  async function (event, context) {
 
      var ajv = new Ajv({schemas: schema.models});
 
-     ajv.addKeyword('twilio_validate', {
-               async: true,
-               type: 'string',
+     ajv.addKeyword('twilio_validate', { async: true, type: 'string',
                validate: async (schema, data) => {
                     console.log(schema);
                     console.log("checking twilio validation service... (" + data + ")");
@@ -56,15 +55,17 @@ exports.handler =  async function (event, context) {
                }
           });
 
-     ajv.addKeyword('email_is_not_in_use', {
-          async: true,
-          type: 'string',
+     ajv.addKeyword('email_is_not_in_use', { async: true, type: 'string',
           validate: async (schema, data) => {
                console.log("validate email is available..");
-               const doc = await mongodb.collection("identities").findOne({ email: body.email });
-               console.log(doc);
+               var q2 = gremlin.g.V()
+                    .has('label','identity')
+                    .has('cid', '0')
+                    .has('email', body.email);
 
-               if (doc) {
+               var docs = await gremlin.executeQuery(q2);
+
+               if (docs.length > 0) {
                     return false;
                }
                else {
@@ -80,31 +81,38 @@ exports.handler =  async function (event, context) {
      }
      catch (err) {
           console.log(err);
-          await connectedClient.close();
+          await gremlin.client.close();
           response.statusCode = 422;
           response.body = JSON.stringify({message: "FAIL", err: err });
           return response;
      }
 
+     var verificationcode = Math.floor((Math.random() * 100000) + 100000);
      try {
-          body.verification = { email : { code: Math.floor((Math.random() * 100000) + 100000) } };
+          var queryAddIdentity = gremlin.g.addV("identity")
+                    .property('cid', "0")
+                    .property('id', "identity_" + uuidv4())
+                    .property('name', body.email)
+                    .property('email', body.email)
+                    .property('password_hash', bcrypt.hashSync(body.password, 10))
+                    .property('verification_code', verificationcode);
+          await gremlin.executeQuery(queryAddIdentity);
 
-          const docs = await mongodb.collection('identities').insertOne(body);
-          console.log(docs.insertedId);
-          await connectedClient.close();
+          await gremlin.client.close();
      }
      catch (err) {
-          console.log(err);
-          await connectedClient.close();
+          console.log("err: " + err);
+          await gremlin.client.close();
           response.statusCode = 400;
           response.body = JSON.stringify({message: "FAIL", err: err });
           return response;
      }
 
+     // send welcome email
      const sgMail = require('@sendgrid/mail');
      sgMail.setApiKey(process.env.SENDGRID_KEY);
 
-     var data = { code: body.verification.email.code };
+     var data = { code: verificationcode };
      console.log(data);
 
      const msg = {

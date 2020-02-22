@@ -12,6 +12,8 @@ assert.isDefined(validate);
 var nock = require('nock');
 nock.disableNetConnect();
 
+var gremlin = require('../../gremlin.js');
+
 describe('API', function() {
      describe('Identities', function() {
           describe('Data Model', function() {
@@ -110,24 +112,36 @@ describe('API', function() {
                          "url":"https://lookups.twilio.com/v1/PhoneNumbers/+17145551212"});
 
                     try {
-                         const MongoClient = require('mongodb').MongoClient;
-                         const connectedClient = await MongoClient.connect(process.env.MONGODB_URL);
-                         const mongodb = connectedClient.db(process.env.MONGODB_DATABASE);
-
-                         await mongodb.collection("identities").deleteMany({});
-
                          var bcrypt = require('bcryptjs');
                          const password_hash = bcrypt.hashSync("asdfasdf1234");
-                         var data = {
-                              email: "is_in_use@example.com",
-                              password_hash: password_hash
+
+                         // clean up database
+                         var checkforNotInUse = gremlin.g.V()
+                              .has('label','identity')
+                              .has('cid', '0')
+                              .has('email', 'is_not_in_use@example.com');
+
+                         var docs = await gremlin.executeQuery(checkforNotInUse);
+                         if (docs.length > 0) {
+                              console.log(docs._items[0].id);
+
+                              var deleteNode = gremlin.g.V(docs._items[0].id).drop();
+                              var deletexyz = await gremlin.executeQuery(deleteNode);
                          }
-                         await mongodb.collection('identities').insertOne(data);
-                         await connectedClient.close();
+
+                         var queryAddIdentity = gremlin.g.addV("identity")
+                              .property('cid', "0")
+                              .property('id', "identity_2")
+                              .property('name', "is_in_use@example.com")
+                              .property('email', "is_in_use@example.com")
+                              .property('password_hash', password_hash)
+                              .property('verification_code', Math.floor((Math.random() * 100000) + 100000));
+                         var docsInUse = await gremlin.executeQuery(queryAddIdentity);
+                         console.log(docsInUse);
+                         await gremlin.client.close();
                     }
                     catch (err) {
-                         console.log(process.env.MONGODB_URL);
-                         console.log(err);
+                         assert.equal(err.statusCode, 500, err);
                     }
                });
 
@@ -194,7 +208,7 @@ describe('API', function() {
                               });
 
                     // // create a new account
-                    // var account = require('./account_put.js');
+                    var identity = require('./identities_put.js');
                     // var response = await account.handler({ body: JSON.stringify(data) }, {});
                     // console.log(response);
                     // assert.equal(response.status_code, 200);

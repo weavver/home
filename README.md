@@ -15,7 +15,7 @@ Software Stack: Angular, AWS Lambda, AWS API Gateway, AWS S3
 ## Installation
 
 #### Environment Requirements:  
-1. mongodb (use [atlas.mongodb.com](https://www.mongodb.com/cloud/atlas) as an easy database host)
+1. Gremlin-Compatible Graph Database
 2. AWS account
 3. AWS CLI tools set up in your shell
 

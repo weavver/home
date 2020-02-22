@@ -1,3 +1,5 @@
+var gremlin = require('../../gremlin.js');
+
 var bcrypt = require('bcryptjs');
 
 var templates = require('../templates.js');
@@ -16,33 +18,51 @@ exports.handler =  async function (event, context) {
      console.log(body);
 
      try {
-          const MongoClient = require('mongodb').MongoClient;
-          const connectedClient = await MongoClient.connect(process.env.MONGODB_URL);
-          const mongodb = connectedClient.db(process.env.MONGODB_DATABASE);
+          if (process.env.DEBUG) console.log(body);
 
-          // body.verification = { email : { code: Math.floor((Math.random() * 100000) + 100000) } };
+          var qCheckExistingPassword = gremlin.g.V()
+               .has('label','identity')
+               .has('cid', '0')
+               .has('email', body.email.toLowerCase());
 
-          const doc = await mongodb.collection('identities').findOne({ "email": body.email });
-          if (process.env.DEBUG) console.log(doc);
-          var setdata = {
-               $set: {
-                    password: bcrypt.hashSync(body.password_new, 10)
+          var docs = await gremlin.executeQuery(qCheckExistingPassword);
+          console.log(docs);
+          if (!(docs.length > 0)) {
+               throw new Error("Account not found.");
+          }
+
+          var doc = docs._items[0];
+          console.log("validating password..");
+          if (bcrypt.compareSync(body.password_current, doc.properties.password_hash[0].value))
+          {
+               var qUpdatePassword = gremlin.g.V()
+                    .has('label','identity')
+                    .has('cid', '0')
+                    .has('email', body.email)
+                    .property("password_hash", bcrypt.hashSync(body.password_new, 10));
+
+               var result = await gremlin.executeQuery(qUpdatePassword);
+               console.log("result: ");
+               console.log(result.length);
+
+               if (process.env.DEBUG) console.log(result);
+               if (result.length > 0) {
+                    response.statusCode = 200;
+                    response.body = { message: "Updated" };
                }
-          };
-          console.log(setdata);
-          var update_result = await mongodb.collection("identities").updateOne({ "_id" : doc._id }, setdata);
-          await connectedClient.close();
-
-          if (process.env.DEBUG) console.log(update_result);
-          if (update_result.modifiedCount == 1) {
-               response.statusCode = 200;
-               response.body = { message: "Updated" };
+               else {
+                    response.statusCode = 404;
+                    response.body = { message: "Not found" };
+                    return response;
+               }
           }
           else {
                response.statusCode = 404;
                response.body = { message: "Not found" };
                return response;
           }
+          await gremlin.client.close();
+
      }
      catch (err) {
           console.log(err);
@@ -74,47 +94,4 @@ exports.handler =  async function (event, context) {
           response.body = JSON.stringify({message: "FAIL", err: err });
           return response;
      }
-
-     return response;
 }
-
-//      if (!req.body.password_current || !req.body.password_new) {
-//          res.status(404).send({message: "Data required"});
-//          return;
-//      }
-//      if (req.body.password_new.length < 6) {
-//          res.status(404).send({message: "New password too short"});
-//          return;
-//      }
-//      // console.log(bcrypt.hashSync(req.body.password_new));
-//      mongodb.collection("identities").findOne({ '_id': req.session.account.id },
-//          function (err, doc) {
-//              // console.log(doc);
-//              if (doc && bcrypt.compareSync(req.body.password_current, doc.account_password)) {
-//                  var setdata = {
-//                      $set: {
-//                          account_password: bcrypt.hashSync(req.body.password_new, 10)
-//                      }
-//                  };
-//                  mongodb.collection('identities')
-//                      .updateOne({ _id : req.session.account.id }, setdata, function(err, r) {
-//                          console.log(r.modifiedCount);
-//                          if (err) {
-//                               console.log(err);
-//                               res.status(404).send({message: "Not found"});
-//                          }
-//                          else {
-//                               if (r.modifiedCount == 1) {
-//                                  res.status(200).send({message: "Saved!"});
-//                               }
-//                               else {
-//                                  res.status(404).send({message: "Not found"});
-//                               }
-//                          }
-//                     });
-//              } else {
-//                  res.status(404).send({message: "Not found"});
-//              }
-//          });
-// }
-

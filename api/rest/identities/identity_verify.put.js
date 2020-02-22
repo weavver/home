@@ -19,16 +19,17 @@ exports.handler =  async function (event, context) {
           var searchData = { 'email': body.email, 'verification_code': parseInt(body.code) };
           console.log(searchData);
 
-          const MongoClient = require('mongodb').MongoClient;
-          console.log(process.env.MONGODB_URL);
-          const connectedClient = await MongoClient.connect(process.env.MONGODB_URL);
-          const mongodb = connectedClient.db(process.env.MONGODB_DATABASE);
+          var qIdentityVerify = gremlin.g.V()
+               .has('label','identity')
+               .has('cid', '0')
+               .has('email', body.email)
+               .has('verification_code', body.code);
 
-          var result = await mongodb.collection("identities").findOne(searchData);
+          var result = await gremlin.executeQuery(qIdentityVerify);
           console.log(result);
           
-          if (result == null) {
-               connectedClient.close();
+          if (result.length > 0) {
+               await gremlin.client.close();
                return { status_code: 422 };
           }
 

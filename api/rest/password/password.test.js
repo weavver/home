@@ -1,8 +1,8 @@
 require('dotenv').config({ path: '.env' })
 
 var chai = require('chai');  
-var assert = chai.assert;    // Using Assert style
-var expect = chai.expect;    // Using Expect style
+var assert = chai.assert;
+var expect = chai.expect;
 var should = chai.should();
 
 var schema = require('../../schema.js');
@@ -63,26 +63,26 @@ describe('API', function() {
                     nock.enableNetConnect()
                });
 
-               // it('get reset code with working email', async () => {
-               //      var scope = nock('https://api.sendgrid.com')
-               //           .post('/v3/mail/send')
-               //           .delayBody(2000)
-               //           .reply(200, (uri, postData) => {
-               //                     console.log(postData.content[1].value);
-               //                     code = postData.content[1].value.toString().match(/\b\d{6}\b/g);
-               //                     console.log(code);
-               //                });
+               it('get reset code with working email', async () => {
+                    var scope = nock('https://api.sendgrid.com')
+                         .post('/v3/mail/send')
+                         .delayBody(2000)
+                         .reply(200, (uri, postData) => {
+                                   console.log(postData.content[1].value);
+                                   code = postData.content[1].value.toString().match(/\b\d{6}\b/g);
+                                   console.log(code);
+                              });
 
-               //      var data = {
-               //           "email": "is_in_use@example.com"
-               //      };
-               //      var event = { "body": JSON.stringify(data)};
-               //      var password_get = require('./password_get.js');
-               //      var response = await password_get.handler(event, {});
-               //      // assert.isDefined(response);
-               //      console.log(response);
-               //      assert.equal(response.statusCode, 200);
-               // });
+                    var data = {
+                         "email": "is_in_use@example.com"
+                    };
+                    var event = { "body": JSON.stringify(data)};
+                    var password_get = require('./password_get.js');
+                    var response = await password_get.handler(event, {});
+                    // assert.isDefined(response);
+                    console.log(response);
+                    assert.equal(response.statusCode, 200);
+               });
 
                it('get reset code with not working email', async () => {
                     var scope = nock('https://api.sendgrid.com')
@@ -95,7 +95,7 @@ describe('API', function() {
                               });
 
                     var data = {
-                         "email": "is_not_in_ufssse@eddxample.com"
+                         "email": "not_working_email@example.com"
                     };
                     var event = { "body": JSON.stringify(data)};
                     var password_get = require('./password_get.js');
@@ -118,8 +118,8 @@ describe('API', function() {
 
                     var data = {
                          "email": "is_in_use@example.com",
-                         "password_current": "abc1234",
-                         "password_new": "abc123"
+                         "password_current": "asdfasdf1234",
+                         "password_new": "asdfasdf1234"
                     };
                     var event = { "body": JSON.stringify(data)};
                     var password_set = require('./password_set.js');
