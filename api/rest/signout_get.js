@@ -1,6 +1,6 @@
 'use strict';
 const uuidv4 = require('uuid/v4');
-var gremlin = require('../../gremlin.js');
+var gremlin = require('../gremlin.js');
 
 module.exports.handler = async (event, context) => {
      var redirect_url = "https://" + process.env.WEBSITE_DOMAIN;
