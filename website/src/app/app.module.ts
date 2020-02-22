@@ -13,6 +13,7 @@ import { AuthModule }              from './auth/auth.module';
 
 import { AppComponent }            from './app.component';
 import { SettingsComponent }       from './settings/settings.component';
+import { AppsComponent }           from './apps/apps.component';
 import { PageNotFoundComponent }   from './page-not-found/page-not-found.component';
 
 import { WeavverCardComponent }    from './shared/card/card.component';
@@ -26,13 +27,14 @@ import { WeavverCardComponent }    from './shared/card/card.component';
           AppRoutingModule,
           FlexLayoutModule,
           FormsModule,
-          ReactiveFormsModule
+          ReactiveFormsModule,
      ],
      declarations: [
+          // WeavverCardComponent,
           AppComponent,
+          AppsComponent,
           SettingsComponent,
-          PageNotFoundComponent,
-          // WeavverCardComponent
+          PageNotFoundComponent
      ],
      providers: [],
      bootstrap: [AppComponent]
