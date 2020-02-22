@@ -25,7 +25,7 @@ module.exports.handler = async (event, context) => {
           console.log("completed..");
           console.log(result);
           response.statusCode = 200;
-          await gremlin.client.close();
+          await gremlin.close();
      }
      catch (err) {
           console.log("error...");

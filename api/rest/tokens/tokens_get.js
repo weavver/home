@@ -7,9 +7,9 @@ var moment = require("moment");
 
 var gremlin = require('../../gremlin.js');
 
+var jwt = require('jsonwebtoken');
+
 module.exports.handler = async (event, context) => {
-     
-     var jwt = require('jsonwebtoken');
      var token_data = {
           sub: "123123123",
           name: "Gen Apple",
@@ -55,7 +55,6 @@ module.exports.handler = async (event, context) => {
           {
                console.log("matching");
                response.headers['Set-Cookie'] = cookieString;
-               await gremlin.client.close();
           }
           else {
                console.log(event.queryStringParameters.password);
@@ -63,9 +62,9 @@ module.exports.handler = async (event, context) => {
           }
      }
      catch (err) {
-          await gremlin.client.close();
           response.statusCode = 401;
           console.log(err);
      }
+     await gremlin.close();
      return response;
 }

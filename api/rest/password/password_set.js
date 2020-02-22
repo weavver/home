@@ -1,5 +1,3 @@
-var gremlin = require('../../gremlin.js');
-
 var bcrypt = require('bcryptjs');
 
 var templates = require('../templates.js');
@@ -12,6 +10,8 @@ var response = {
 };
 
 exports.handler =  async function (event, context) {
+     var gremlin = require('../../gremlin.js');
+
      console.log(event);
 
      const body = JSON.parse(event.body);
@@ -25,6 +25,7 @@ exports.handler =  async function (event, context) {
                .has('cid', '0')
                .has('email', body.email.toLowerCase());
 
+          await gremlin.client.open();
           var docs = await gremlin.executeQuery(qCheckExistingPassword);
           console.log(docs);
           if (!(docs.length > 0)) {
@@ -61,8 +62,7 @@ exports.handler =  async function (event, context) {
                response.body = { message: "Not found" };
                return response;
           }
-          await gremlin.client.close();
-
+          await gremlin.close();
      }
      catch (err) {
           console.log(err);

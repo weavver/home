@@ -138,7 +138,7 @@ describe('API', function() {
                               .property('verification_code', Math.floor((Math.random() * 100000) + 100000));
                          var docsInUse = await gremlin.executeQuery(queryAddIdentity);
                          console.log(docsInUse);
-                         await gremlin.client.close();
+                         await gremlin.close();
                     }
                     catch (err) {
                          assert.equal(err.statusCode, 500, err);

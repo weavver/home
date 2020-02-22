@@ -29,7 +29,7 @@ exports.handler =  async function (event, context) {
           console.log(result);
           
           if (result.length > 0) {
-               await gremlin.client.close();
+               await gremlin.close();
                return { status_code: 422 };
           }
 

@@ -50,7 +50,7 @@ module.exports.handler = async function (event, context, callback) {
           if (docs.length > 0) {
           }
           else {
-               await gremlin.client.close();
+               await gremlin.close();
                throw new Error("Identity not found.");
           }
 
@@ -79,7 +79,7 @@ module.exports.handler = async function (event, context, callback) {
                response.statusCode = 404;
                response.body = { message: "Not found" };
           }
-          gremlin.client.close();
+          await gremlin.close();
      }
      catch (err) {
           console.log(err);

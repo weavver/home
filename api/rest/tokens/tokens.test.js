@@ -16,7 +16,6 @@ nock.enableNetConnect();
 describe('API', function() {
      describe('Tokens', function() {
           describe('Data Model', function() {
-
                it('get token', async () => {
                     var tokens_get = require('./tokens_get.js');
                     var event = { headers: { origin: "dev.example.com" }, queryStringParameters: { email: 'is_in_use@example.com', password: 'asdfasdf1234' } };

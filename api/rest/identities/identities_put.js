@@ -81,7 +81,7 @@ exports.handler =  async function (event, context) {
      }
      catch (err) {
           console.log(err);
-          await gremlin.client.close();
+          await gremlin.close();
           response.statusCode = 422;
           response.body = JSON.stringify({message: "FAIL", err: err });
           return response;
@@ -98,11 +98,11 @@ exports.handler =  async function (event, context) {
                     .property('verification_code', verificationcode);
           await gremlin.executeQuery(queryAddIdentity);
 
-          await gremlin.client.close();
+          await gremlin.close();
      }
      catch (err) {
           console.log("err: " + err);
-          await gremlin.client.close();
+          await gremlin.close();
           response.statusCode = 400;
           response.body = JSON.stringify({message: "FAIL", err: err });
           return response;
