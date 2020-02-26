@@ -35,7 +35,7 @@ test:
     - cd api
     - npm ci
     - npm install -g mocha
-    - mocha "{,!(node_modules)/**}/*.test.js"
+    - npm test
 
 deploy-api:
   stage: deploy-api

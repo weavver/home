@@ -1,5 +1,6 @@
-require('dotenv').config({ path: '.env' })
-
+import { resolve } from "path";
+import { config } from 'dotenv';
+config({ path: resolve(__dirname, "../../../.env") });
 
 import * as identities_put from './identities_put';
 
@@ -94,8 +95,8 @@ describe('API', function() {
 
           describe('Database', function() {
                beforeEach(async () => {
-                    nock.cleanAll()
-                    nock.enableNetConnect()
+                    nock.cleanAll();
+                    nock.enableNetConnect();
 
                     nock('https://api.sendgrid.com')
                     // .persist()
@@ -116,7 +117,7 @@ describe('API', function() {
                          "add_ons":null,
                          "url":"https://lookups.twilio.com/v1/PhoneNumbers/+17145551212"});
 
-                    var gremlin : GremlinHelper = new GremlinHelper();
+                    let gremlin = new GremlinHelper();
                     try {
                          var bcrypt = require('bcryptjs');
                          const password_hash = bcrypt.hashSync("asdfasdf1234");
@@ -147,6 +148,7 @@ describe('API', function() {
                          await gremlin.close();
                     }
                     catch (err) {
+                         await gremlin.close();
                          assert.equal(err.statusCode, 500, err);
                     }
                });

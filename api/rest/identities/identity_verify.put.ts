@@ -23,7 +23,6 @@ export const handler = async function (event : APIGatewayProxyEvent, context : C
           var searchData = { 'email': body.email, 'verification_code': parseInt(body.code) };
           console.log(searchData);
 
-
           var qIdentityVerify = gremlin.g.V()
                .has('label','identity')
                .has('cid', '0')
@@ -32,6 +31,8 @@ export const handler = async function (event : APIGatewayProxyEvent, context : C
 
           var result = await gremlin.executeQuery(qIdentityVerify);
           console.log(result);
+          await gremlin.close();
+          
           
           if (result.length > 0) {
                await gremlin.close();

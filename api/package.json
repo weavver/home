@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "mocha testing/**/*.js",
+    "test": "mocha -r ts-node/register \"{,!(node_modules)/**}/*.test.ts\"",
     "local": "dotenv -e ../.env serverless offline start --useSeparateProcesses"
   },
   "author": "Mitchel Constantin",

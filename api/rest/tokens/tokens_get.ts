@@ -48,6 +48,7 @@ export const handler = async (event : APIGatewayProxyEvent, context : Context) =
                .has('email', event.queryStringParameters.email.toLowerCase());
 
           var docs = await gremlin.executeQuery(q3);
+          await gremlin.close();
 
           console.log(docs);
 
@@ -75,6 +76,5 @@ export const handler = async (event : APIGatewayProxyEvent, context : Context) =
           response.statusCode = 401;
           console.log(err);
      }
-     await gremlin.close();
      return response;
 }

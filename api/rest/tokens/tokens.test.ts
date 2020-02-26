@@ -1,4 +1,6 @@
-require('dotenv').config({ path: '.env' })
+import { resolve } from "path";
+import { config } from 'dotenv';
+config({ path: resolve(__dirname, "../../../.env") });
 
 import * as tokens_get from './tokens_get';
 import * as tokens_del from './tokens_del';

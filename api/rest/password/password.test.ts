@@ -1,4 +1,6 @@
-require('dotenv').config({ path: '.env' })
+import { resolve } from "path";
+import { config } from 'dotenv';
+config({ path: resolve(__dirname, "../../../.env") });
 
 import * as password_get from './password_get';
 import * as password_set from './password_set';
