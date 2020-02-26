@@ -11,7 +11,7 @@ var expect = chai.expect;
 var should = chai.should();
 import { APIGatewayProxyEvent, Context } from "aws-lambda"
 
-var schema = require('../../schema.js');
+import * as schema from '../../schema';
 var Ajv = require('ajv');
 var ajv = new Ajv({schemas: schema.models});
 var validate = ajv.getSchema('http://home.weavver.com/schema/identityPasswordReset.json');

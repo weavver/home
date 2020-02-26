@@ -13,6 +13,6 @@ apps: [{
      env_production: {
           NODE_ENV: 'dev'
      },
-     args: 'run offline',
+     args: 'run local',
 }],
 };

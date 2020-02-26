@@ -2,7 +2,7 @@ import * as echo from './echo';
 
 var assert = require('chai').assert;
 
-var schema = require('../../schema.js');
+import * as schema from '../../schema';
 var Ajv = require('ajv');
 var ajv = new Ajv({schemas: schema.models});
 var validate = ajv.getSchema('http://home.weavver.com/schema/accountCreate.json');
