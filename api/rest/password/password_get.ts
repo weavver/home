@@ -3,6 +3,7 @@ import { APIGatewayProxyEvent, Context, APIGatewayProxyResult, APIGatewayProxyCa
 const bcrypt = require('bcryptjs');
 var moment = require("moment");
 import * as templates from '../templates';
+import * as schema from '../../schema';
 
 import { GremlinHelper } from '../../gremlin';
 
@@ -22,7 +23,6 @@ function renderToString(source : String, data : String) {
 }
 
 export const handler = async function (event : APIGatewayProxyEvent, context : Context) {
-     var schema = require('../../schema.js');
      var Ajv = require('ajv');
      var ajv = new Ajv({schemas: schema.models});
 

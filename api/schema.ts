@@ -1,5 +1,5 @@
 
-exports.models = [
+export const models = [
      // used when a new account is being created
      {
           "$id": "http://home.weavver.com/schema/identityCreate.json",

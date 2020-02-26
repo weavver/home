@@ -8,13 +8,13 @@ provider:
 
 #websocketApiRouteSelectionExpression: $request.body.action
 plugins:
+  - serverless-plugin-typescript
   - serverless-plugin-include-dependencies
   - serverless-step-functions
   - serverless-pseudo-parameters
   - serverless-aws-documentation
   - serverless-domain-manager
   - serverless-offline
-  - serverless-plugin-typescript
  # - serverless-websockets-plugin
 
 resources:

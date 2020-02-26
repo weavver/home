@@ -3,9 +3,8 @@ import { APIGatewayProxyEvent, Context } from "aws-lambda";
 const uuidv4 = require('uuid/v4');
 
 import * as templates from '../templates';
+import * as schema from '../../schema';
 var jp = require('jsonpath');
-
-var schema = require('../../schema.js');
 var Ajv = require('ajv');
 
 const twilioclient = require('twilio')(process.env.TWILIO_ACCOUNTSID, process.env.TWILIO_AUTHTOKEN);
