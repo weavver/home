@@ -1,22 +1,22 @@
 
 
-
+class CookieHelper {
 /**
  * Receives an array of headers and extract the value from the cookie header
  * @param  {String}   errors List of errors
  * @return {Object}
  */
-module.exports.getCookiesFromHeader = function (headers) {
+public getCookiesFromHeader(headers : any) {
 
     if (headers === null || headers === undefined || headers.Cookie === undefined) {
         return {};
     }
 
     // Split a cookie string in an array (Originally found http://stackoverflow.com/a/3409200/1427439)
-    var list = {},
-        rc = headers.Cookie;
+    var list : any = {},
+        rc : any = headers.Cookie;
 
-    rc && rc.split(';').forEach(function( cookie ) {
+    rc && rc.split(';').forEach(function( cookie : any ) {
         var parts = cookie.split('=');
         var key = parts.shift().trim()
         var value = decodeURI(parts.join('='));
@@ -49,7 +49,7 @@ module.exports.getCookiesFromHeader = function (headers) {
  * ```
  * @return string
  */
-module.exports.setCookieString = function (key, value, options) {
+ public setCookieString(key : String, value : String, options : any) {
     var defaults = {
         secure: true,
         httpOnly: true,
@@ -96,3 +96,6 @@ module.exports.setCookieString = function (key, value, options) {
 
     return cookie;
 }
+}
+
+export = CookieHelper;

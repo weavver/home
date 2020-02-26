@@ -1,5 +1,5 @@
 
-module.exports.renderTemplate = async (path, data) => {
+export const renderTemplate = async (path : string, data : any) => {
      var fs = require('fs');
      const file = await fs.readFileSync(__dirname + '/' + path + '.hbs', 'utf8');
 

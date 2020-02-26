@@ -3,6 +3,17 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
+import {Apollo} from 'apollo-angular';
+import gql from 'graphql-tag';
+
+const GET_IDENTITIES = gql`
+  {
+    identities {
+      id
+    }
+  }
+`;
+
 export interface IdentityData {
      email: string,
      password: string
@@ -19,12 +30,13 @@ export interface ProfileData {
 export class DataService {
      private API_IDENTITY     = environment.baseApiUrl + "/identities";
      private API_TOKEN        = environment.baseApiUrl + "/tokens";
+     private API_PASSWORDS    = environment.baseApiUrl + "/passwords";
      private API_PROFILE      = environment.baseApiUrl + "/profile";
      private API_ECHO         = environment.baseApiUrl + "/echo";
 
      login_params: any;
 
-     constructor(private httpClient: HttpClient) { }
+     constructor(private apollo: Apollo, private httpClient: HttpClient) { }
 
      public tokenGet(email, password): Observable<any> {
           const params = new HttpParams()
@@ -65,5 +77,40 @@ export class DataService {
 
           console.log("giving consent to an app.. ", client_id);
           return this.httpClient.put<any>(this.API_PROFILE, { params: params });
+     }
+
+     public getApplications() {
+          return this.apollo.watchQuery<any>({
+               query: GET_IDENTITIES
+                    })
+               .valueChanges;
+     }
+
+     public Application_add() {
+          const mutation = gql`mutation($text: String) {
+                    Application_add(text: $text)
+               }`;
+          this.apollo.mutate({
+               mutation: mutation,
+               variables: {
+                    text: 'apollographql/apollo-client'
+               }
+          })
+          .subscribe(
+               ({ data }) => {
+                    console.log('got data', data);
+                    console.log(data.Application_add);
+               },
+               (error) => {
+                    console.log('there was an error sending the query', error);
+               }
+          );
+     }
+
+     public passwordsReset(email): Observable<any> {
+          const params = new HttpParams()
+               .set('email', email);
+
+          return this.httpClient.get(this.API_PASSWORDS, { params: params });
      }
 }

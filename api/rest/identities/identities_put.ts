@@ -1,6 +1,8 @@
+import { APIGatewayProxyEvent, Context } from "aws-lambda";
+
 const uuidv4 = require('uuid/v4');
 
-var templates = require('../templates.js');
+import * as templates from '../templates';
 var jp = require('jsonpath');
 
 var schema = require('../../schema.js');
@@ -9,9 +11,10 @@ var Ajv = require('ajv');
 const twilioclient = require('twilio')(process.env.TWILIO_ACCOUNTSID, process.env.TWILIO_AUTHTOKEN);
 
 var bcrypt = require('bcryptjs');
+import { GremlinHelper } from '../../gremlin';
 
-exports.handler =  async function (event, context) {
-     var gremlin = require('../../gremlin.js');
+export const handler = async function (event : APIGatewayProxyEvent, context : Context) {
+     let gremlin = new GremlinHelper();
 
      const response = {
           statusCode: 522,
@@ -24,7 +27,7 @@ exports.handler =  async function (event, context) {
           })
      };
 
-     const body = JSON.parse(event.body);
+     const body = JSON.parse(event.body || '{}');
      console.log(body);
 
      console.log(jp.value(schema.models, '$[?(@.$id == "http://home.weavver.com/schema/identityCreate.json")].properties.email', {"type": "string", "format": "email", "email_is_not_in_use": true }));
@@ -34,7 +37,7 @@ exports.handler =  async function (event, context) {
      var ajv = new Ajv({schemas: schema.models});
 
      ajv.addKeyword('twilio_validate', { async: true, type: 'string',
-               validate: async (schema, data) => {
+               validate: async (schema : any, data : any) => {
                     console.log(schema);
                     console.log("checking twilio validation service... (" + data + ")");
                     try {
@@ -56,7 +59,7 @@ exports.handler =  async function (event, context) {
           });
 
      ajv.addKeyword('email_is_not_in_use', { async: true, type: 'string',
-          validate: async (schema, data) => {
+          validate: async (schema : any, data : any) => {
                console.log("validate email is available..");
                var q2 = gremlin.g.V()
                     .has('label','identity')

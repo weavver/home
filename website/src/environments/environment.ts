@@ -4,6 +4,6 @@
 
 export const environment = {
      production: false,
-     baseApiUrl: 'https://api.home.weavver.com/dev',
+     baseApiUrl: 'https:/localhost:3000',
      website_url: 'http://localhost:8080'
 }

@@ -16,7 +16,11 @@ import { SettingsComponent }       from './settings/settings.component';
 import { AppsComponent }           from './apps/apps.component';
 import { PageNotFoundComponent }   from './page-not-found/page-not-found.component';
 
-import { WeavverCardComponent }    from './shared/card/card.component';
+import { WeavverCardModule }       from './shared/card/card.module';
+
+import { ApolloModule, APOLLO_OPTIONS } from "apollo-angular";
+import { HttpLinkModule, HttpLink } from "apollo-angular-link-http";
+import { InMemoryCache } from "apollo-cache-inmemory";
 
 @NgModule({
      imports: [
@@ -28,15 +32,28 @@ import { WeavverCardComponent }    from './shared/card/card.component';
           FlexLayoutModule,
           FormsModule,
           ReactiveFormsModule,
+          ApolloModule,
+          HttpLinkModule,
+          WeavverCardModule
      ],
      declarations: [
-          // WeavverCardComponent,
           AppComponent,
           AppsComponent,
           SettingsComponent,
           PageNotFoundComponent
      ],
-     providers: [],
+     providers: [{
+          provide: APOLLO_OPTIONS,
+          useFactory: (httpLink: HttpLink) => {
+            return {
+              cache: new InMemoryCache(),
+              link: httpLink.create({
+                uri: "https://localhost:3000/graphql"
+              })
+            }
+          },
+          deps: [HttpLink]
+        }],
      bootstrap: [AppComponent]
 })
 export class AppModule { }

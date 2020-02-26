@@ -17,6 +17,10 @@
                     "--colors",
                     "${workspaceFolder}/api/units"
                ],
+               "runtimeArgs": [
+                    "-r",
+                    "./node_modules/ts-node/register"
+                ],
                "internalConsoleOptions": "openOnSessionStart",
                "skipFiles": [
                     "<node_internals>/**"

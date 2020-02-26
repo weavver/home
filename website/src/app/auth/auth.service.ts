@@ -43,13 +43,20 @@ export class AuthService {
         );
     }
 
-    
-
     putConsent(client_id): Observable<any> {
         return this.dataService.consentPut(client_id).pipe(
             tap(val => {
                 console.log(val);
                 // this.isLoggedIn = true;
+            })
+        );
+    }
+
+    
+    passwordsReset(email): Observable<any> {
+        return this.dataService.passwordsReset(email).pipe(
+            tap(val => {
+                console.log(val);
             })
         );
     }

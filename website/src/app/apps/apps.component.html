@@ -1,9 +1,12 @@
-<!-- <card> -->
+<card>
      <div fxLayout="row" style="display:flex; font-size: 22px;  align-items: left; justify-content: left;">
           <div id="card_title">
                <i class="material-icons" style="vertical-align: middle !important; padding-right: 10px;">apps</i>
-               <span style="vertical-align: middle !important;">Dash</span>
+               <span style="vertical-align: middle !important;">Apps</span>
           </div>
      </div>
      <hr />
-<!-- </card> -->
+     <div *ngFor="let identity of identities | async">
+          {{ identity | json }}
+     </div>
+</card>

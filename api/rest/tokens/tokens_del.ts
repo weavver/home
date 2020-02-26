@@ -1,8 +1,12 @@
-'use strict';
-const uuidv4 = require('uuid/v4');
-var gremlin = require('../../gremlin.js');
+import { APIGatewayProxyEvent, Context } from "aws-lambda";
 
-module.exports.handler = async (event, context) => {
+const uuidv4 = require('uuid/v4');
+import { GremlinHelper } from '../../gremlin';
+
+export const handler = async (event : APIGatewayProxyEvent, context : Context) => {
+     if (!event || !event.pathParameters || !event.pathParameters.id)
+          return;
+
      const response = {
           statusCode: 500,
           headers: {
@@ -15,6 +19,7 @@ module.exports.handler = async (event, context) => {
      };
 
      try {
+          let gremlin = new GremlinHelper();
           console.log("storing deleted token to database...");
           var queryAddIdentity = gremlin.g.addV("tokens")
                     .property('cid', "0")

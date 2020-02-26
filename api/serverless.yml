@@ -13,6 +13,8 @@ plugins:
   - serverless-pseudo-parameters
   - serverless-aws-documentation
   - serverless-domain-manager
+  - serverless-offline
+  - serverless-plugin-typescript
  # - serverless-websockets-plugin
 
 resources:
@@ -23,6 +25,9 @@ resources:
         Name: ${env:AWS_API_GATEWAY_NAME}
 
 custom:
+  serverless-offline:
+    httpsProtocol: "dev-certs"
+
   customDomain:
     domainName: ${env:API_DOMAIN}
     certificateName: ${env:API_CERTIFICATE_NAME}
@@ -122,6 +127,24 @@ functions:
           documentation:
             summary: "PUT /identities"
 
+  passwords_get:
+    handler: rest/password/password_get.handler
+    environment:
+      GREMLIN_ENDPOINT: ${env:GREMLIN_ENDPOINT}
+      GREMLIN_DATABASE: ${env:GREMLIN_DATABASE}
+      GREMLIN_PRIMARYKEY: ${env:GREMLIN_PRIMARYKEY}
+      GREMLIN_COLLECTION: ${env:GREMLIN_COLLECTION}
+      COOKIE_DOMAIN: ${env:COOKIE_DOMAIN}
+      API_VERSION: ${env:API_STAGE}
+      SENDGRID_KEY: ${env:SENDGRID_KEY}
+    events:
+      - http:
+          path: passwords
+          method: get
+          cors: true
+          documentation:
+            summary: "GET /password?email={email}"
+
   tokens_get:
     handler: rest/tokens/tokens_get.handler
     environment:
@@ -173,3 +196,16 @@ functions:
           cors: true
           documentation:
             summary: "GET /signout"
+
+  graphql:
+    # this is formatted as <FILENAME>.<HANDLER>
+    handler: src/graphql/graphql.handler
+    events:
+    - http:
+        path: graphql
+        method: post
+        cors: true
+    - http:
+        path: graphql
+        method: get
+        cors: true

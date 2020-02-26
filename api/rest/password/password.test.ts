@@ -1,9 +1,13 @@
 require('dotenv').config({ path: '.env' })
 
+import * as password_get from './password_get';
+import * as password_set from './password_set';
+
 var chai = require('chai');  
 var assert = chai.assert;
 var expect = chai.expect;
 var should = chai.should();
+import { APIGatewayProxyEvent, Context } from "aws-lambda"
 
 var schema = require('../../schema.js');
 var Ajv = require('ajv');
@@ -67,9 +71,9 @@ describe('API', function() {
                     var scope = nock('https://api.sendgrid.com')
                          .post('/v3/mail/send')
                          .delayBody(2000)
-                         .reply(200, (uri, postData) => {
+                         .reply(200, (uri : string, postData : any) => {
                                    console.log(postData.content[1].value);
-                                   code = postData.content[1].value.toString().match(/\b\d{6}\b/g);
+                                   var code = postData.content[1].value.toString().match(/\b\d{6}\b/g);
                                    console.log(code);
                               });
 
@@ -77,8 +81,8 @@ describe('API', function() {
                          "email": "is_in_use@example.com"
                     };
                     var event = { "body": JSON.stringify(data)};
-                    var password_get = require('./password_get.js');
-                    var response = await password_get.handler(event, {});
+
+                    var response = await password_get.handler(event as APIGatewayProxyEvent, {} as Context);
                     // assert.isDefined(response);
                     console.log(response);
                     assert.equal(response.statusCode, 200);
@@ -88,9 +92,9 @@ describe('API', function() {
                     var scope = nock('https://api.sendgrid.com')
                          .post('/v3/mail/send')
                          .delayBody(2000)
-                         .reply(200, (uri, postData) => {
+                         .reply(200, (uri : string, postData : any) => {
                                    console.log(postData.content[1].value);
-                                   code = postData.content[1].value.toString().match(/\b\d{6}\b/g);
+                                   var code = postData.content[1].value.toString().match(/\b\d{6}\b/g);
                                    console.log(code);
                               });
 
@@ -98,8 +102,7 @@ describe('API', function() {
                          "email": "not_working_email@example.com"
                     };
                     var event = { "body": JSON.stringify(data)};
-                    var password_get = require('./password_get.js');
-                    var response = await password_get.handler(event, {});
+                    var response = await password_get.handler(event as APIGatewayProxyEvent, {} as Context);
                     // assert.isDefined(response);
                     console.log(response.body);
                     assert.notEqual(response.statusCode, 200);
@@ -110,7 +113,7 @@ describe('API', function() {
                     var scope = nock('https://api.sendgrid.com')
                          .post('/v3/mail/send')
                          .delayBody(2000)
-                         .reply(200, (uri, postData) => {
+                         .reply(200, (uri : string, postData : any) => {
                                    console.log(postData.content[1].value);
                                    // code = postData.content[1].value.toString().match(/\b\d{6}\b/g);
                                    // console.log(code);
@@ -122,8 +125,7 @@ describe('API', function() {
                          "password_new": "asdfasdf1234"
                     };
                     var event = { "body": JSON.stringify(data)};
-                    var password_set = require('./password_set.js');
-                    var response = await password_set.handler(event, {});
+                    var response = await password_set.handler(event as APIGatewayProxyEvent, {} as Context);
                     assert.isDefined(response);
                     console.log(response);
                     assert.equal(response.statusCode, 200);

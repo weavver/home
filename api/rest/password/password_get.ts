@@ -1,49 +1,54 @@
+import { APIGatewayProxyEvent, Context, APIGatewayProxyResult, APIGatewayProxyCallback } from "aws-lambda"
+
 const bcrypt = require('bcryptjs');
 var moment = require("moment");
-var templates = require('../templates.js');
-var gremlin = require('../../gremlin.js');
+import * as templates from '../templates';
+
+import { GremlinHelper } from '../../gremlin';
 
 var response = {
      statusCode: 404,
      headers: {
           "Access-Control-Allow-Origin": "*" // Required for CORS support to work
-     }
+     },
+     body: ""
 };
 
-function renderToString(source, data) {
+function renderToString(source : String, data : String) {
      var handlebars = require('handlebars');
      var template = handlebars.compile(source);
      var outputString = template(data);
      return outputString;
 }
 
-module.exports.handler = async function (event, context, callback) {
-     const body = JSON.parse(event.body);
-
+export const handler = async function (event : APIGatewayProxyEvent, context : Context) {
      var schema = require('../../schema.js');
      var Ajv = require('ajv');
      var ajv = new Ajv({schemas: schema.models});
 
-     console.log(body);
+     // var validate = ajv.getSchema('http://home.weavver.com/schema/identityPasswordReset.json');
+     // try {          
+     //      var result = await validate(body);
+     // }
+     // catch (err) {
+     //      console.log("error validating email...");
+     //      console.log(err);
 
-     var validate = ajv.getSchema('http://home.weavver.com/schema/identityPasswordReset.json');
-     try {          
-          var result = await validate(body);
-     }
-     catch (err) {
-          console.log("error validating email...");
-          console.log(err);
+     //      response.statusCode = 404;
+     //      response.body = err;
+     //      return response;
+     // }
 
-          response.statusCode = 404;
-          response.body = err;
-          return response;
-     }
+     var bodyData = JSON.parse(event.body || '{}');
+     if (!bodyData.email)
+          throw new Error("email not valid");
 
+     let gremlin = new GremlinHelper();
      try {
           var q = gremlin.g.V()
                .has('label','identity')
                .has('cid', '0')
-               .has('email', body.email);
+               .has('email', bodyData.email);
 
           var docs = await gremlin.executeQuery(q);
 
@@ -73,11 +78,11 @@ module.exports.handler = async function (event, context, callback) {
 
           if (updateResponse.length > 0) {
                response.statusCode = 200;
-               response.body = { message: "Updated" };
+               response.body = JSON.stringify({ message: "Updated" });
           }
           else {
                response.statusCode = 404;
-               response.body = { message: "Not found" };
+               response.body = JSON.stringify({ message: "Not found" });
           }
           await gremlin.close();
      }
@@ -93,7 +98,7 @@ module.exports.handler = async function (event, context, callback) {
 
      var data = { code: reset_code };
      const msg = {
-          to: body.email,
+          to: bodyData.email,
           from: 'noreply@weavver.com',
           subject: 'Password Reset',
           text: 'An email client compatible with HTML emails is required.',

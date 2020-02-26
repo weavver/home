@@ -1,5 +1,6 @@
 {
-     "mochaExplorer.files": ["api/rest/**/*.test.js", "website/testing/**/*.js"],
+     "mochaExplorer.files": ["api/rest/**/*.test.ts", "website/testing/**/*.ts"],
+     "mochaExplorer.require": "./api/node_modules/ts-node/register",
      "mochaExplorer.logpanel": true,
      "testExplorer.mergeSuites": true,
      "testExplorer.addToEditorContextMenu": true,

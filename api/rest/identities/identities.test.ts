@@ -1,5 +1,8 @@
 require('dotenv').config({ path: '.env' })
 
+
+import * as identities_put from './identities_put';
+
 // var assert = require('assert');
 var assert = require('chai').assert;
 
@@ -12,7 +15,9 @@ assert.isDefined(validate);
 var nock = require('nock');
 nock.disableNetConnect();
 
-var gremlin = require('../../gremlin.js');
+// import gremlin from '../../gremlin';
+import { GremlinHelper } from '../../gremlin';
+import { Context, APIGatewayProxyEvent } from 'aws-lambda';
 
 describe('API', function() {
      describe('Identities', function() {
@@ -25,7 +30,7 @@ describe('API', function() {
                     try {
                          await validate(data);
                          // fail here because it should not pass
-                         assert.fail(err);
+                         assert.fail("must not pass");
                     }
                     catch (err) {
                          console.log(validate.errors);
@@ -95,7 +100,7 @@ describe('API', function() {
                     nock('https://api.sendgrid.com')
                     // .persist()
                     .post('/v3/mail/send')
-                    .reply(200, async (data) => {
+                    .reply(200, async (data : any) => {
                               console.log(data);
                          });
 
@@ -111,6 +116,7 @@ describe('API', function() {
                          "add_ons":null,
                          "url":"https://lookups.twilio.com/v1/PhoneNumbers/+17145551212"});
 
+                    var gremlin : GremlinHelper = new GremlinHelper();
                     try {
                          var bcrypt = require('bcryptjs');
                          const password_hash = bcrypt.hashSync("asdfasdf1234");
@@ -146,9 +152,8 @@ describe('API', function() {
                });
 
                it('phone: format not right (twilio check)', async () => {
-                    var account = require('./identities_put.js');
                     var event = { body: JSON.stringify({ email: 'is_not_in_use@example.com', phone_number: '1234', password: 'asdfasdf1234' }) };
-                    var response = await account.handler(event, {});
+                    var response = await identities_put.handler(event as APIGatewayProxyEvent, {} as Context);
                     console.log(response);
                     assert.equal(response.statusCode, 422);
                     assert.equal(JSON.parse(response.body).err.errors[0].keyword, "twilio_validate");
@@ -156,9 +161,8 @@ describe('API', function() {
                });
 
                it('email: is in use', async () => {
-                    var account = require('./identities_put.js');
                     var data = { email: 'is_in_use@example.com', phone_number: '7145551212', password: 'asdfasdf1234' };
-                    var response = await account.handler({ body: JSON.stringify(data) }, {});
+                    var response = await identities_put.handler({ body: JSON.stringify(data) } as APIGatewayProxyEvent, {} as Context);
                     console.log(response);
                     assert.equal(response.statusCode, 422);
                     assert.lengthOf(JSON.parse(response.body).err.errors, 1, "email_is_not_in_use");
@@ -166,10 +170,9 @@ describe('API', function() {
                });
 
                it('email: is not in use', async () => {
-                    var account = require('./identities_put.js');
                     var data = { email: 'is_not_in_use@example.com', phone_number: '7145551212', password: 'asdfasdf1234' };
 
-                    var response = await account.handler({ body: JSON.stringify(data) }, {});
+                    var response = await identities_put.handler({ body: JSON.stringify(data) } as APIGatewayProxyEvent, {} as Context);
                     console.log(response);
                     assert.equal(response.statusCode, 200);
                     assert.isUndefined(JSON.parse(response.body).err, "expecting no errors");
@@ -197,19 +200,18 @@ describe('API', function() {
                               "add_ons":null,
                               "url":"https://lookups.twilio.com/v1/PhoneNumbers/+17145551212"});
 
-                    code = null;
+                    var code = null;
                     var scope = nock('https://api.sendgrid.com')
                          .post('/v3/mail/send')
                          .delayBody(2000)
-                         .reply(200, (uri, postData) => {
+                         .reply(200, (uri : string, postData : any) => {
                                    console.log(postData.content[1].value);
                                    code = postData.content[1].value.toString().match(/\b\d{6}\b/g);
                                    console.log(code);
                               });
 
                     // // create a new account
-                    var identity = require('./identities_put.js');
-                    // var response = await account.handler({ body: JSON.stringify(data) }, {});
+                    // var response = await identities_put.handler({ body: JSON.stringify(data) }, {});
                     // console.log(response);
                     // assert.equal(response.status_code, 200);
                     // assert.isNotNull(code);

@@ -2,8 +2,11 @@
 .env*
 .DS_Store
 .idea
+.build
 build/
 dist/
+*.pem
+*.cert
 node_modules/
 aws-exports.js
 awsconfiguration.json

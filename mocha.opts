@@ -1,1 +1,4 @@
-api/rest/**/*.test.js
+--require ts-node/register src/**/test.ts
+--recursive
+
+api/rest`/**/*.test.ts

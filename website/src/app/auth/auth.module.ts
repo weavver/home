@@ -3,7 +3,7 @@ import { CommonModule }                           from '@angular/common';
 import { FormsModule,
      ReactiveFormsModule }                        from '@angular/forms';
 
-import { WeavverCardComponent }                   from '../shared/card/card.component';
+import { WeavverCardModule }                      from '../shared/card/card.module';
 
 import { ConsentComponent }                       from './consent/consent.component';
 
@@ -23,10 +23,11 @@ import { AuthRoutingModule }                      from './auth-routing.module';
           CommonModule,
           FormsModule,
           ReactiveFormsModule,
-          AuthRoutingModule
+          AuthRoutingModule,
+          WeavverCardModule
      ],
      declarations: [
-          WeavverCardComponent,
+          // WeavverCardComponent,
           ConsentComponent,
           SignUpComponent,
           SignUpConfirmComponent,
