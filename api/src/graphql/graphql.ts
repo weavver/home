@@ -10,7 +10,7 @@ import { IdentityResolver } from "./identities/identities.resolver";
 export const server = new ApolloServer({
           schema: buildSchemaSync({
                resolvers: [IdentityResolver, CenterResolver],
-               emitSchemaFile: path.resolve(__dirname, "schema.gql"),
+               // emitSchemaFile: path.resolve(__dirname, "schema.gql"),
                authChecker: ({ context: {req} }) => {
                     console.log(req);
                     return true;
