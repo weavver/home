@@ -99,7 +99,7 @@ export class DataService {
           .subscribe(
                ({ data }) => {
                     console.log('got data', data);
-                    console.log(data.Application_add);
+                    // console.log(data.Application_add);
                },
                (error) => {
                     console.log('there was an error sending the query', error);

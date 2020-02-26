@@ -9,8 +9,7 @@ import { map } from 'rxjs/operators';
   styleUrls: ['./apps.component.scss']
 })
 export class AppsComponent implements OnInit {
-
-     private identities: Observable<any>;
+     identities: Observable<any>;
 
      constructor(private data_app: DataService) { }
 
