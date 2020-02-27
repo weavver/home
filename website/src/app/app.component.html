@@ -2,39 +2,39 @@
 <!--  <a [routerLink]="[{ outlets: { popup: ['compose'] } }]">Contact</a>-->
 <!--</nav>-->
 <header>
-    <div fxLayout="row" fxLayoutAlign="space-between center" style="display: flex; align-content: center; align-items: center;">
-         <div fxLayout="row" fxLayoutAlign="start center" style="padding-left: 20px; height: 48px;">
-              <div style="background-color: transparent; border: none; margin-right: 10px; cursor: pointer;" routerLink="/">
-                   <img src="assets/logo.png" style="width: 255px; margin-top: 0px;" />
-              </div>
-         </div>
-         <div fxLayout="row" fxLayoutAlign="end center" style="padding-left: 20px; height: 48px;">
-              <!-- fxShow [fxHide.lt-md]="true"  -->
-              <div class="navButton" *ngIf="!authService.isLoggedIn" routerLink="/login" routerLinkActive="navButtonActive">
-                   <p>Log In</p>
-              </div>&nbsp;
-              <div class="navButton" *ngIf="!authService.isLoggedIn" routerLink="/signup" routerLinkActive="navButtonActive">
-                   <p>Sign Up</p>
-              </div>&nbsp;
-              <div class="navButton" *ngIf="authService.isLoggedIn" routerLink="/account">
-                   <p>Nova</p>
-              </div>&nbsp;
-              <div class="navButton" *ngIf="authService.isLoggedIn" (click)="logOut()">
-                   <p>Log Out</p>
-              </div>
-         </div>
-    </div>
+     <div fxLayout="row" fxLayoutAlign="space-between center" style="display: flex; align-content: center; align-items: center;">
+          <div fxLayout="row" fxLayoutAlign="start center" style="padding-left: 20px; height: 48px;">
+               <div style="background-color: transparent; border: none; margin-right: 10px; cursor: pointer;" routerLink="/">
+                    <img src="assets/logo.png" style="width: 255px; margin-top: 0px;" />
+               </div>
+          </div>
+          <div fxLayout="row" fxLayoutAlign="end center" style="padding-left: 20px; height: 48px;">
+               <!-- fxShow [fxHide.lt-md]="true"  -->
+               <div class="navButton" *ngIf="!authService.isLoggedIn" routerLink="/login" routerLinkActive="navButtonActive">
+                    <p>Log In</p>
+               </div>&nbsp;
+               <div class="navButton" *ngIf="!authService.isLoggedIn" routerLink="/signup" routerLinkActive="navButtonActive">
+                    <p>Sign Up</p>
+               </div>&nbsp;
+               <div class="navButton" *ngIf="authService.isLoggedIn" routerLink="/identity">
+                    <p *ngIf="I$ | async as I">{{ I.email }}</p>
+               </div>&nbsp;
+               <div class="navButton" *ngIf="authService.isLoggedIn" (click)="logOut()">
+                    <p>Log Out</p>
+               </div>
+          </div>
+     </div>
 </header>
 <div class="application-body">
      <nav class="application-nav" fxLayout="column" fxLayoutAlign="space-between stretch" *ngIf="authService.isLoggedIn && authService.showSidebar">
           <div [class.sidebarExpanded]="this.navAccountExpanded" [class.sidebarCollapsed]="!this.navAccountExpanded">
-               <div [class.sidebarItemExpanded]="this.navAccountExpanded" [class.sidebarItemCollapsed]="!this.navAccountExpanded" routerLink="/apps" routerLinkActive="sidebarItemActive" *ngIf="authService.isLoggedIn" [routerLinkActiveOptions]="{exact: true}">
+               <div [class.sidebarItemExpanded]="this.navAccountExpanded" [class.sidebarItemCollapsed]="!this.navAccountExpanded" routerLink="/applications" routerLinkActive="sidebarItemActive" *ngIf="authService.isLoggedIn" [routerLinkActiveOptions]="{exact: true}">
                     <i class="material-icons" style="font-size: 1.85rem">apps</i>
-                    <span *ngIf="this.navAccountExpanded">Apps</span>
+                    <span *ngIf="this.navAccountExpanded">Applications</span>
                </div>
-               <div [class.sidebarItemExpanded]="this.navAccountExpanded" [class.sidebarItemCollapsed]="!this.navAccountExpanded" routerLink="/settings" routerLinkActive="sidebarItemActive" *ngIf="authService.isLoggedIn" [routerLinkActiveOptions]="{exact: true}">
+               <div [class.sidebarItemExpanded]="this.navAccountExpanded" [class.sidebarItemCollapsed]="!this.navAccountExpanded" routerLink="/identity" routerLinkActive="sidebarItemActive" *ngIf="authService.isLoggedIn" [routerLinkActiveOptions]="{exact: true}">
                     <i class="material-icons" style="font-size: 1.85rem">account_circle</i>
-                    <span *ngIf="this.navAccountExpanded">Profile</span>
+                    <span *ngIf="this.navAccountExpanded">Identity</span>
                </div>
                <div [class.sidebarItemExpanded]="this.navAccountExpanded" [class.sidebarItemCollapsed]="!this.navAccountExpanded" routerLink="/password" routerLinkActive="sidebarItemActive" title="Settings" *ngIf="authService.isLoggedIn">
                    <i class="material-icons" style="font-size: 1.85rem">lock</i>

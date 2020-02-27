@@ -57,9 +57,10 @@ export class LoginComponent {
           this.processing = true;
           this.logInText = 'Trying to log in ...';
           this.authService.tokenGet(this.email.value, this.password.value).subscribe(() => {
-                    let redirect = '/settings';
+                    let redirect = '/applications';
 
-                    if (this.data_app.login_params)
+                    console.log(this.data_app.login_params);
+                    if (this.data_app.login_params.client_id)
                          redirect = '/consent';
 
                     

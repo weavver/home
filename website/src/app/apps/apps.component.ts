@@ -13,7 +13,6 @@ export class AppsComponent implements OnInit {
 
      constructor(private data_app: DataService) { }
 
-
      ngOnInit() {
           this.identities = this.data_app.getApplications()
                .pipe(
@@ -22,5 +21,4 @@ export class AppsComponent implements OnInit {
 
           this.data_app.Application_add();
      }
-
 }

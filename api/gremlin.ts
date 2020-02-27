@@ -41,6 +41,13 @@ export class GremlinHelper {
           return await this.client.submit(gremlinCommand);
      }
 
+     public getPropertyValue(doc : any, property_name : string) : undefined {
+          if (doc && doc[property_name])
+               return doc[property_name][0].value;
+          else
+               return undefined;
+     }
+
      public async close() {
           return await this.client.close();
      }

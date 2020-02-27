@@ -11,16 +11,39 @@ import {
 import { plainToClass } from "class-transformer";
 import { identity, identities_add } from "./identity";
 
+import { GremlinHelper } from '../../../gremlin'
+
 @Resolver(of => identity)
 export class IdentityResolver {
 
-     @Query(() => identity, { nullable: true })
-     async i(): Promise<identity | undefined> {
-          var ia = new identity();
-          ia.email = "test@asdf.com";
-          ia.givenName = "John";
-          return ia;
-          // return undefined;
+     @Query(() => identity)
+     async I(): Promise<identity | undefined> {
+
+          let gremlin = new GremlinHelper();
+          
+          var q2 = gremlin.g.V()
+               .has('label','identity')
+               .has('cid', '0')
+               .has("email", "is_in_use@example.com");
+               // .property('name_given', "John")
+               // .property('name_family', "Doe");
+
+          var docs = await gremlin.executeQuery(q2);
+          
+          if (docs.length == 1) {
+               var doc = docs._items[0].properties;
+               // console.log(doc);
+               
+               let i = new identity();
+               i.email = gremlin.getPropertyValue(doc, "email") || "not found";
+               i.name_given = gremlin.getPropertyValue(doc, "name_given");
+               i.name_family = gremlin.getPropertyValue(doc, "name_family");
+
+               await gremlin.close();
+               return i;
+          }
+          await gremlin.close();
+          return undefined;
      }
 
      @Mutation(() => identity)
@@ -30,16 +53,39 @@ export class IdentityResolver {
           return new identity();
      }
 
-     @FieldResolver()
-     async name(@Root() parent: identity) {
-          return `${parent.givenName} ${parent.lastName}`;
+     @Mutation(() => String)
+     async identity_update(          
+          @Arg("property") property: string,
+          @Arg("value") value: string
+     ): Promise<String> {
+          // console.log(property + ": " + value);
+
+          let gremlin = new GremlinHelper();
+          var q2 = gremlin.g.V()
+               .has('label','identity')
+               .has('cid', '0')
+               .has("email", "is_in_use@example.com")
+               .property(property, value);
+
+          var result = await gremlin.executeQuery(q2);
+          await gremlin.close();
+          // console.log(result);
+
+          return "done";
      }
 
      @Mutation(() => String)
-     async identities_email_reset_code(
+     async identity_email_reset_code(
           @Arg("email") email: string,
           @Arg("center_id") center_id: number
      ): Promise<Boolean> {
           return true;
      }
 }
+
+
+
+// @FieldResolver()
+// async name(@Root() parent: identity) {
+//      return `${parent.name_given} ${parent.name_family}`;
+// }

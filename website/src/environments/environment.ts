@@ -5,5 +5,6 @@
 export const environment = {
      production: false,
      baseApiUrl: 'https:/localhost:3000',
-     website_url: 'http://localhost:8080'
+     website_url: 'http://localhost:8080',
+     graphql_url: 'https://localhost:3000/graphql'
 }

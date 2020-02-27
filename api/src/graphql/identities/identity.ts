@@ -19,13 +19,13 @@ export class identity {
      @Field(() => String)
      email: string;
 
-     @Field(() => String)
+     @Field(() => String, { nullable: true })
      @Length(1, 100)
-     givenName: string;
+     name_given: string | undefined;
 
-     @Field(() => String)
+     @Field(() => String, { nullable: true })
      @Length(1, 100)
-     lastName: string;
+     name_family: string | undefined;
 
      @Field()
      @IsEmail()
@@ -33,7 +33,7 @@ export class identity {
 
      @Field()
      name2(@Root() parent: identity): String {
-          return "a b";
+          return `${parent.name_given} ${parent.name_family}`;
      }
 
      password_hash: string;

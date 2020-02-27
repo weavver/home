@@ -6,14 +6,6 @@ import { Observable } from 'rxjs';
 import {Apollo} from 'apollo-angular';
 import gql from 'graphql-tag';
 
-const GET_IDENTITIES = gql`
-  {
-    identities {
-      id
-    }
-  }
-`;
-
 export interface IdentityData {
      email: string,
      password: string
@@ -36,7 +28,8 @@ export class DataService {
 
      login_params: any;
 
-     constructor(private apollo: Apollo, private httpClient: HttpClient) { }
+     constructor(private apollo: Apollo, private httpClient: HttpClient) {
+     }
 
      public tokenGet(email, password): Observable<any> {
           const params = new HttpParams()
@@ -79,9 +72,46 @@ export class DataService {
           return this.httpClient.put<any>(this.API_PROFILE, { params: params });
      }
 
+
+     public I() {
+          return this.apollo.watchQuery<any>({
+               query: gql`{
+                              I {
+                                   email,
+                                   name_given,
+                                   name_family
+                              }
+                          }`            
+                    })
+               .valueChanges;
+     }
+
+     public identity_update(property : string, value : string) {
+          const identity_update = gql`mutation identity_update($value: String!, $property: String!) {
+                              identity_update(property: $property, value: $value)
+                         }`;
+
+          this.apollo.mutate({
+                    mutation: identity_update,
+                    variables: {
+                         property: property,
+                         value: value,
+                         value2: value
+                    }
+               }).subscribe(({ data }) => {
+                    console.log('got data', data);
+               },(error) => {
+                    console.log('there was an error sending the query', error);
+               });
+     }
+
      public getApplications() {
           return this.apollo.watchQuery<any>({
-               query: GET_IDENTITIES
+               query: gql`
+                    {
+                         centers
+                    }
+                    `
                     })
                .valueChanges;
      }
