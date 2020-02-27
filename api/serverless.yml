@@ -200,6 +200,11 @@ functions:
   graphql:
     # this is formatted as <FILENAME>.<HANDLER>
     handler: src/graphql/graphql.handler
+    environment:
+      GREMLIN_ENDPOINT: ${env:GREMLIN_ENDPOINT}
+      GREMLIN_DATABASE: ${env:GREMLIN_DATABASE}
+      GREMLIN_PRIMARYKEY: ${env:GREMLIN_PRIMARYKEY}
+      GREMLIN_COLLECTION: ${env:GREMLIN_COLLECTION}
     events:
     - http:
         path: graphql
