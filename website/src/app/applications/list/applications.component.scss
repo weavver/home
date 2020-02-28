@@ -7,12 +7,37 @@
      display: flex;
      flex-wrap: wrap;
      // margin:-10px;
-     align-items: center;
-     align-content: center;
+     // align-items: center;
+     // align-content: center;
 }
 .applications-box>* {
-     flex: 1 1 160px;
+     // flex: 1 1 160px;
+     // flex: auto;
+     width: 100px;
      margin: 10px;
      text-align: center;
+     // line-height: 75px;
      cursor: pointer;
+}
+
+.application-icon:hover {
+     // background-color: #CCCCCC;
+     border-radius: 15px;
+     border: dashed #FFFFFF 2px;
+     // font-size: 40px;
+}
+
+.application-icon:hover {
+     background-color: #CCCCCC;
+     border-radius: 15px;
+     border: dashed #CCCCCC 2px;
+     // font-size: 40px;
+}
+
+.icon {
+     max-width: 115px;
+     height:100px;
+     font-size: 40px;
+     border-radius: 15px;
+     border: dashed #CCCCCC 2px;
 }

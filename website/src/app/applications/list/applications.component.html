@@ -8,9 +8,9 @@
      <hr />
      <div class="applications-wrapper">
      <div class="applications-box">
-          <div *ngFor="let application of applications | async" (click)="openApp(application)">
+          <div class="application-icon" *ngFor="let application of applications | async" (click)="openApp(application)">
                <!-- <img src="assets/applications-icon-blank.png" style="max-width: 75px;" /><br /> -->
-               <div style="max-width: 115px; font-size: 40px; border-radius: 15px; border: dashed black 2px;">
+               <div class="icon">
                     {{ getInitials(application) }}
                </div>
                {{ application.name }}

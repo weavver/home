@@ -204,6 +204,9 @@ functions:
       GREMLIN_DATABASE: ${env:GREMLIN_DATABASE}
       GREMLIN_PRIMARYKEY: ${env:GREMLIN_PRIMARYKEY}
       GREMLIN_COLLECTION: ${env:GREMLIN_COLLECTION}
+      COOKIE_DOMAIN: ${env:COOKIE_DOMAIN}
+      API_VERSION: ${env:API_STAGE}
+      WEBSITE_DOMAIN: ${env:WEBSITE_DOMAIN}
     events:
     - http:
         path: graphql

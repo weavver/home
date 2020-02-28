@@ -7,6 +7,7 @@ import { Resolver, Query, buildSchema, buildSchemaSync } from "type-graphql"
 import { CenterResolver } from "./centers/centers.resolver";
 import { IdentityResolver } from "./identities/identities.resolver";
 import { ApplicationsResolver } from "./applications/applications.resolver";
+import { Callback } from 'aws-lambda';
 
 var cookie = require('cookie');
 var jwt = require('jsonwebtoken');
@@ -43,8 +44,19 @@ export const server = new ApolloServer({
 
 export const handler = server.createHandler({
           cors: {
-               origin: '*',
                credentials: true,
+               origin: (origin : string, callback : Callback) => {
+                    console.log(origin);
+                    const whitelist = [
+                         process.env.WEBSITE_DOMAIN
+                    ];
+        
+                    if (whitelist.indexOf(origin) !== -1) {
+                        callback(null, true)
+                    } else {
+                        callback(new Error("Not allowed by CORS"))
+                    }
+                }
           }
      });
 
