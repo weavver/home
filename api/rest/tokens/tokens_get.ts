@@ -27,10 +27,11 @@ export const handler = async (event : APIGatewayProxyEvent, context : Context) =
      console.log(event.queryStringParameters.email);
      
      // var newDateObj = moment().add(14, 'd');
-     var cookieString = "SessionToken=" + token + ";domain=" + process.env.COOKIE_DOMAIN + ";path=/" + process.env.API_VERSION + ";expires=" + date.toUTCString() + ";"; // HttpOnly; Secure";
+     var cookieString = "SessionToken=" + token + ";domain=" + process.env.COOKIE_DOMAIN + ";path=/" + process.env.API_VERSION + ";expires=" + date.toUTCString() + ";HttpOnly; Secure;";
      const response = {
           statusCode: 200,
           headers: {
+               // 'Access-Control-Allow-Origin': event.headers.origin,
                'Access-Control-Allow-Origin': event.headers.origin,
                'Access-Control-Allow-Credentials': true,
                'Set-Cookie': "null"
@@ -50,7 +51,7 @@ export const handler = async (event : APIGatewayProxyEvent, context : Context) =
           var docs = await gremlin.executeQuery(q3);
           await gremlin.close();
 
-          console.log(docs);
+          // console.log(docs);
 
           if (!(docs.length > 0)) {
                throw new Error("Account not found.");
@@ -64,7 +65,7 @@ export const handler = async (event : APIGatewayProxyEvent, context : Context) =
           // console.log(passwordhashed);
           if (bcrypt.compareSync(event.queryStringParameters.password, doc.properties.password_hash[0].value))
           {
-               console.log("matching");
+               console.log("it matches...");
                console.log("setting cookie", cookieString);
                response.headers["Set-Cookie"] = cookieString;
                var data = {

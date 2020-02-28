@@ -175,8 +175,8 @@ functions:
           path: tokens
           method: delete
           cors:
-            origin: '*' # <-- Specify allowed origin
-            allowCredentials: false
+            origin: https://${env:WEBSITE_DOMAIN}
+            allowCredentials: true
           documentation:
             summary: "/tokens delete"
 
@@ -212,8 +212,12 @@ functions:
     - http:
         path: graphql
         method: post
-        cors: true
+        cors:
+          origin: https://${env:WEBSITE_DOMAIN}
+          allowCredentials: true
     - http:
         path: graphql
         method: get
-        cors: true
+        cors:
+          origin: https://${env:WEBSITE_DOMAIN}
+          allowCredentials: true

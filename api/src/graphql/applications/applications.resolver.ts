@@ -35,7 +35,7 @@ export class ApplicationsResolver {
                     var properties = vertex.properties;
                     let item = new application();
                     item.id = vertex.id;
-                    item.cid = gremlin.getPropertyValue(properties, "cid") as Number;
+                    item.cid = gremlin.getPropertyValue(properties, "cid") as unknown as Number;
                     item.name = gremlin.getPropertyValue(properties, "name") || "not found";
                     items.push(item);
                     return item;  
