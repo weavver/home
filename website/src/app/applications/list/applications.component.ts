@@ -1,7 +1,7 @@
 import { DataService } from '../../data.service';
 import { Component, OnInit } from '@angular/core';
 import { Observable, Subscription } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { tap, map, finalize } from 'rxjs/operators';
 import { Router } from '@angular/router';
 
 @Component({
@@ -10,13 +10,19 @@ import { Router } from '@angular/router';
   styleUrls: ['./applications.component.scss']
 })
 export class ApplicationsComponent implements OnInit {
+     processing : Boolean = false;
      applications: Observable<any>;
 
      constructor(public router: Router, private data_app: DataService) { }
 
      ngOnInit() {
+          this.processing = true;
           this.applications = this.data_app.getApplications()
-               .pipe(map(result => result.data.applications));
+               .pipe(
+                    map(result => result.data.applications),
+                    tap(() => this.processing = false),
+                    finalize(() => { this.processing = false })
+               )
      }
 
      openApp(application) {

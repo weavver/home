@@ -63,7 +63,10 @@ export class LoginComponent {
                     if (this.data_app.login_params.client_id)
                          redirect = '/consent';
 
-                    
+                    if (this.authService.redirectUrl) {
+                         redirect = this.authService.redirectUrl;
+                         this.authService.redirectUrl = null;
+                    }
                     this.router.navigateByUrl(redirect);
                },
                (error) => {

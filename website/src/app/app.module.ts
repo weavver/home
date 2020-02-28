@@ -22,6 +22,8 @@ import { WeavverCardModule }            from './shared/card/card.module';
 import { ApolloModule, APOLLO_OPTIONS } from "apollo-angular";
 import { InMemoryCache }                from "apollo-cache-inmemory";
 
+import { AuthService }                  from './auth/auth.service';
+
 import {
      HttpBatchLinkModule,
      HttpBatchLink,
@@ -50,14 +52,17 @@ import { environment } from 'src/environments/environment';
           IdentityComponent,
           PageNotFoundComponent
      ],
-     providers: [{
+     providers: [
+          AuthService,
+          {
           provide: APOLLO_OPTIONS,
           useFactory: (httpLink: HttpBatchLink) => {
                     return {
                          cache: new InMemoryCache(),
                          link: httpLink.create({
-                         uri: environment.graphql_url
-                    })
+                              uri: environment.graphql_url,
+                              withCredentials: true
+                         })
                     }
                },
           deps: [HttpBatchLink]

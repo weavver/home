@@ -10,9 +10,9 @@ import { AuthGuard }                          from './auth/auth.guard';
 import { SelectivePreloadingStrategyService } from './selective-preloading-strategy.service';
 
 const appRoutes: Routes = [
-     { path: 'application/:id',  component: ApplicationComponent },
-     { path: 'applications', component: ApplicationsComponent },
-     { path: 'identity', component: IdentityComponent, canLoad: [AuthGuard] },
+     { path: 'application/:id',    component: ApplicationComponent,   canActivate: [AuthGuard] },
+     { path: 'applications',       component: ApplicationsComponent,  canActivate: [AuthGuard] },
+     { path: 'identity',           component: IdentityComponent,      canActivate: [AuthGuard] },
      {
           path: '',
           redirectTo: '/login',

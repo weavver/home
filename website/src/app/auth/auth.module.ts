@@ -17,6 +17,7 @@ import { LogInResetPasswordConfirmComponent }     from './login-resetpassword-co
 import { PasswordComponent }                      from './password/password.component';
 
 import { AuthRoutingModule }                      from './auth-routing.module';
+import { AuthService }                            from './auth.service';
 
 @NgModule({
      imports: [
@@ -35,6 +36,9 @@ import { AuthRoutingModule }                      from './auth-routing.module';
           LogInResetPasswordComponent,
           LogInResetPasswordConfirmComponent,
           PasswordComponent
+     ],
+     providers: [
+          AuthService
      ]
 })
 export class AuthModule {

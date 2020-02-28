@@ -6,7 +6,8 @@ import {
      FieldResolver,
      Arg,
      Root,
-     Mutation
+     Mutation,
+     Authorized
    } from "type-graphql";
 
 import { plainToClass } from "class-transformer";
@@ -17,6 +18,7 @@ import { GremlinHelper } from '../../../gremlin'
 @Resolver(of => application)
 export class ApplicationsResolver {
 
+     @Authorized()
      @Query(() => [application])
      async applications(): Promise<Array<application>> {
           let gremlin = new GremlinHelper();
@@ -44,6 +46,7 @@ export class ApplicationsResolver {
           return items;
      }
 
+     @Authorized()
      @Mutation(() => String)
      async applications_add(
           @Arg("data") data: String

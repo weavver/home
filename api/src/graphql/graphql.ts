@@ -8,6 +8,9 @@ import { CenterResolver } from "./centers/centers.resolver";
 import { IdentityResolver } from "./identities/identities.resolver";
 import { ApplicationsResolver } from "./applications/applications.resolver";
 
+var cookie = require('cookie');
+var jwt = require('jsonwebtoken');
+
 export const server = new ApolloServer({
           schema: buildSchemaSync({
                resolvers: [
@@ -16,12 +19,26 @@ export const server = new ApolloServer({
                               ApplicationsResolver
                          ],
                // emitSchemaFile: path.resolve(__dirname, "schema.gql"),
-               authChecker: ({ context: {req} }) => {
-                    console.log(req);
-                    return true;
-               }
+               authChecker: ({ root, args, context, info }, roles) => {
+                    console.log(args);
+                    console.log(roles);
+                    console.log(info);
+                    if (context.user)
+                         return true;
+                    else
+                         return false;
+               },
+               
           }),
-          context: ({ req }: any) => ({ req })
+          playground: {
+               settings: {
+                    'editor.theme': 'light',
+                    'request.credentials': 'include'
+               }
+          },
+          context: async ({ event }) => ({
+               user: await getUser(event),
+             }))
      });
 
 export const handler = server.createHandler({
@@ -30,3 +47,18 @@ export const handler = server.createHandler({
                credentials: true,
           }
      });
+
+
+export const getUser = async (event : any) => {
+     if (!event || !event.multiValueHeaders || !event.multiValueHeaders.Cookie || event.multiValueHeaders.Cookie.length < 1)
+          return null;
+
+     // console.log(event.multiValueHeaders.Cookie[0]);
+     // console.log(cookies["SessionToken"]);
+
+     var cookieHeader = event.multiValueHeaders.Cookie[0];
+     var cookies = cookie.parse(cookieHeader);
+     var decoded_token = jwt.verify(cookies["SessionToken"], 'asdfasdfasdf');
+     // console.log(decoded_token);
+     return decoded_token;
+}

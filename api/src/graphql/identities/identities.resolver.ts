@@ -6,22 +6,27 @@ import {
      FieldResolver,
      Arg,
      Root,
-     Mutation
+     Mutation,
+     Authorized,
+     UseMiddleware
    } from "type-graphql";
 
 import { plainToClass } from "class-transformer";
 import { identity, identities_add } from "./identity";
 
 import { GremlinHelper } from '../../../gremlin'
+import { checkAccess } from '../checkAccess';
 
 @Resolver(of => identity)
 export class IdentityResolver {
 
+     @Authorized(["ADMIN"])
+     // @UseMiddleware(checkAccess)
      @Query(() => identity)
      async I(): Promise<identity | undefined> {
 
           let gremlin = new GremlinHelper();
-          
+
           var q2 = gremlin.g.V()
                .has('label','identity')
                .has('cid', '0')

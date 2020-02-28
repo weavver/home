@@ -16,8 +16,8 @@
                <div class="navButton" *ngIf="!authService.isLoggedIn" routerLink="/signup" routerLinkActive="navButtonActive">
                     <p>Sign Up</p>
                </div>&nbsp;
-               <div class="navButton" *ngIf="authService.isLoggedIn" routerLink="/identity">
-                    <p *ngIf="I$ | async as I">{{ I.email }}</p>
+               <div *ngIf="authService.isLoggedIn && (I$ | async) as I" class="navButton" routerLink="/identity">
+                    <p>{{ I.email }}</p>
                </div>&nbsp;
                <div class="navButton" *ngIf="authService.isLoggedIn" (click)="logOut()">
                     <p>Log Out</p>

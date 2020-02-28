@@ -65,7 +65,12 @@ export const handler = async (event : APIGatewayProxyEvent, context : Context) =
           if (bcrypt.compareSync(event.queryStringParameters.password, doc.properties.password_hash[0].value))
           {
                console.log("matching");
+               console.log("setting cookie", cookieString);
                response.headers["Set-Cookie"] = cookieString;
+               var data = {
+                    email: event.queryStringParameters.email.toLowerCase()
+               }
+               response.body = JSON.stringify(data);
           }
           else {
                console.log(event.queryStringParameters.password);

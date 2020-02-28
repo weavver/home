@@ -1,7 +1,7 @@
 import { DataService } from '../data.service';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { map, finalize } from 'rxjs/operators';
 
 import {
     Router,
@@ -23,6 +23,7 @@ import {
 })
 
 export class IdentityComponent implements OnInit {
+     processing : Boolean = false;
 
      I$: Observable<any>;
      form: FormGroup;
@@ -35,7 +36,7 @@ export class IdentityComponent implements OnInit {
      get name_family() { return this.form.get('name_family'); }
      get email() { return this.form.get('email'); }
 
-     constructor(private graph: DataService, public router: Router, private fb: FormBuilder) { 
+     constructor(private cd: ChangeDetectorRef, private graph: DataService, public router: Router, private fb: FormBuilder) { 
           this.form = this.fb.group({
                name_given: new FormControl('', [Validators.required]),
                name_family: new FormControl('', [Validators.required]),
@@ -43,19 +44,23 @@ export class IdentityComponent implements OnInit {
           }, {
                updateOn: "blur"
           });
+          this.processing = true;
      }
 
      ngOnInit() {
-          this.I$ = this.graph.I()
-               .pipe(
-                    map(result => result.data.I)
-                  );
+          // this.I$ = this.graph.I()
+          //      .pipe(
+          //           map(result => result.data.I),
+          //         );
 
           this.graph.I().subscribe(x => {
                this.name_given.setValue(x.data.I.name_given);
                this.name_family.setValue(x.data.I.name_family);
                this.email.setValue(x.data.I.email);
                console.log(x.data.I)
+
+               this.processing = false;
+               this.cd.markForCheck();
           });
      }
 
