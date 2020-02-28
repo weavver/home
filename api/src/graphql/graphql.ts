@@ -21,9 +21,9 @@ export const server = new ApolloServer({
                          ],
                // emitSchemaFile: path.resolve(__dirname, "schema.gql"),
                authChecker: ({ root, args, context, info }, roles) => {
-                    console.log(args);
-                    console.log(roles);
-                    console.log(info);
+                    // console.log(args);
+                    // console.log(roles);
+                    // console.log(info);
                     if (context.user)
                          return true;
                     else
@@ -37,27 +37,32 @@ export const server = new ApolloServer({
                     'request.credentials': 'include'
                }
           },
-          context: async ({ event }) => ({
-               user: await getUser(event),
-             }))
-     });
+          context: async ({ event } : any) => ({
+                    user: await getUser(event),
+               })
+          },
+     );
 
 export const handler = server.createHandler({
-          cors: {
-               credentials: true,
-               origin: (origin : string, callback : Callback) => {
-                    console.log(origin);
-                    const whitelist = [
-                         process.env.WEBSITE_DOMAIN
-                    ];
-        
-                    if (whitelist.indexOf(origin) !== -1) {
-                        callback(null, true)
-                    } else {
-                        callback(new Error("Not allowed by CORS"))
-                    }
-                }
-          }
+     cors: {
+          origin: true,
+          credentials: true,
+        }
+     // cors: {
+     //      credentials: true,
+     //      origin: (origin : string, callback : Callback) => {
+     //           console.log(origin);
+     //           const whitelist = [
+     //                process.env.WEBSITE_DOMAIN
+     //           ];
+   
+     //           if (whitelist.indexOf(origin) !== -1) {
+     //               callback(null, true)
+     //           } else {
+     //               callback(new Error("Not allowed by CORS"))
+     //           }
+     //       }
+     // }
      });
 
 
