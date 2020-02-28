@@ -4,8 +4,10 @@ import { OnInit, Injectable } from '@angular/core';
 import {Router, RouterOutlet} from '@angular/router';
 
 import { Observable, BehaviorSubject, throwError } from 'rxjs';
-import { take, tap, map, catchError } from 'rxjs/operators';
+import { first, tap, map, catchError } from 'rxjs/operators';
 import {LocalStorageService} from "ngx-webstorage";
+
+import {Apollo} from 'apollo-angular';
 
 @Injectable({
     providedIn: 'root',
@@ -26,7 +28,8 @@ export class AuthService {
 
 
     constructor(private router: Router,
-                private graph: DataService)
+                private graph: DataService,
+                private apollo: Apollo)
     {
         this.currentISubject = new BehaviorSubject<any>({"email": "test"});
 
@@ -94,20 +97,28 @@ export class AuthService {
     }
 
     
-    passwordsReset(email): Observable<any> {
-        return this.graph.passwordsReset(email).pipe(
-            tap(val => {
-                console.log(val);
-            })
-        );
-    }
+     passwordsReset(email): Observable<any> {
+          return this.graph.passwordsReset(email).pipe(
+               tap(val => {
+                    console.log(val);
+               })
+          );
+     }
 
-    logOut() : any {
-        this.currentISubject.next(null);
-    }
+     logOut() : any {
+          console.log("logging out...");
+          this.graph.tokenDel("this").pipe(
+               map(response => {
+                    localStorage.setItem('logged_in', "false");
+                    this.isLoggedIn = false;
+                    this.currentISubject.next(null);
+                    this.router.navigate(['/login']);
+                    this.apollo.getClient().cache.reset();
+                }),
+                first()
+          ).subscribe();
+     }
 }
-
-
 
 //     .subscribe( (resp) => {
 //         console.log(resp);
@@ -115,3 +126,10 @@ export class AuthService {
 //         this.isLoggedIn = false;
 //         this.router.navigate(["/login"]);
 // });
+
+// var redirect_url = environment.baseApiUrl + "/signout?redirect_url=" + environment.website_url;
+// if (this.graph.login_params && this.graph.login_params.redirect_url) {
+//      // TBD: lock this down more
+//      redirect_url = environment.baseApiUrl + "/signout?redirect_url=" + this.graph.login_params.redirect_url;
+// }
+// document.location.href = redirect_url;

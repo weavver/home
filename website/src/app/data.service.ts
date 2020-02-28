@@ -21,7 +21,7 @@ export interface ProfileData {
 })
 export class DataService {
      private API_IDENTITY     = environment.baseApiUrl + "/identities";
-     private API_TOKEN        = environment.baseApiUrl + "/tokens";
+     private API_TOKENS       = environment.baseApiUrl + "/tokens";
      private API_PASSWORDS    = environment.baseApiUrl + "/passwords";
      private API_PROFILE      = environment.baseApiUrl + "/profile";
      private API_ECHO         = environment.baseApiUrl + "/echo";
@@ -36,11 +36,11 @@ export class DataService {
                .set('email', email)
                .set('password', password);
 
-          return this.httpClient.get(this.API_TOKEN, { params: params, withCredentials: true });
+          return this.httpClient.get(this.API_TOKENS, { params: params, withCredentials: true });
      }
 
      public tokenDel(token): Observable<any> {
-          return this.httpClient.delete(this.API_TOKEN, { withCredentials: true });
+          return this.httpClient.delete(this.API_TOKENS, { withCredentials: true });
      }
 
      // difficulties implementing it so set aside now and using a redirect instead.

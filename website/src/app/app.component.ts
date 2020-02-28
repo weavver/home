@@ -47,13 +47,7 @@ export class AppComponent implements OnInit {
      }
 
      logOut() {
-          localStorage.setItem('logged_in', "false");
-          var redirect_url = environment.baseApiUrl + "/signout?redirect_url=" + environment.website_url;
-          if (this.graph.login_params && this.graph.login_params.redirect_url) {
-               // TBD: lock this down more
-               redirect_url = environment.baseApiUrl + "/signout?redirect_url=" + this.graph.login_params.redirect_url;
-          }
-          document.location.href = redirect_url;
+          this.authService.logOut();
      }
 
      getAnimationData(outlet: RouterOutlet) {
