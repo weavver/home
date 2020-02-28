@@ -1,0 +1,18 @@
+
+.applications-wrapper {
+     // border: 2px dotted rgb(96, 139, 168);
+     width: 500px;
+}
+.applications-box {
+     display: flex;
+     flex-wrap: wrap;
+     // margin:-10px;
+     align-items: center;
+     align-content: center;
+}
+.applications-box>* {
+     flex: 1 1 160px;
+     margin: 10px;
+     text-align: center;
+     cursor: pointer;
+}

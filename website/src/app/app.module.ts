@@ -13,7 +13,8 @@ import { AuthModule }                   from './auth/auth.module';
 
 import { AppComponent }                 from './app.component';
 import { IdentityComponent }            from './identities/identity.component';
-import { AppsComponent }                from './apps/apps.component';
+import { ApplicationsComponent }        from './applications/list/applications.component';
+import { ApplicationComponent }         from './applications/edit/application.component';
 import { PageNotFoundComponent }        from './page-not-found/page-not-found.component';
 
 import { WeavverCardModule }            from './shared/card/card.module';
@@ -44,7 +45,8 @@ import { environment } from 'src/environments/environment';
      ],
      declarations: [
           AppComponent,
-          AppsComponent,
+          ApplicationsComponent,
+          ApplicationComponent,
           IdentityComponent,
           PageNotFoundComponent
      ],

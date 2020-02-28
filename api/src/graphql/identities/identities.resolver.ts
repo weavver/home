@@ -1,4 +1,5 @@
-  
+var bcrypt = require('bcryptjs');
+
 import {
      Resolver,
      Query,
@@ -54,7 +55,7 @@ export class IdentityResolver {
      }
 
      @Mutation(() => String)
-     async identity_update(          
+     async identity_property_set(          
           @Arg("property") property: string,
           @Arg("value") value: string
      ): Promise<String> {
@@ -72,6 +73,25 @@ export class IdentityResolver {
           // console.log(result);
 
           return "done";
+     }
+
+     @Mutation(() => Boolean)
+     async identity_password_set(          
+          @Arg("password_current") password_current: string,
+          @Arg("password_new") password_new: string
+     ): Promise<Boolean> {
+          let gremlin = new GremlinHelper();
+          var q2 = gremlin.g.V()
+               .has('label','identity')
+               .has('cid', '0')
+               .has("email", "is_in_use@example.com")
+               .property("password_hash", bcrypt.hashSync(password_new, 10));
+
+          var result = await gremlin.executeQuery(q2);
+          await gremlin.close();
+          // console.log(result);
+
+          return true;
      }
 
      @Mutation(() => String)

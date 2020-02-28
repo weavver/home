@@ -14,6 +14,18 @@
                  "reveal": "silent",
                  "panel": "dedicated"
                }
+          },
+          {
+               "label": "start_api",
+               "type": "npm",
+               "script": "local",
+               "path": "api/",
+               "problemMatcher": [],
+               "group": "test",
+               "presentation": {
+                 "reveal": "silent",
+                 "panel": "dedicated"
+               }
           }
      ]
 }

@@ -1,15 +1,17 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
-import { AppsComponent }                      from './apps/apps.component';
 import { IdentityComponent }                  from './identities/identity.component';
+import { ApplicationsComponent }              from './applications/list/applications.component';
+import { ApplicationComponent }               from './applications/edit/application.component';
 import { PageNotFoundComponent }              from './page-not-found/page-not-found.component';
 
 import { AuthGuard }                          from './auth/auth.guard';
 import { SelectivePreloadingStrategyService } from './selective-preloading-strategy.service';
 
 const appRoutes: Routes = [
-     { path: 'applications', component: AppsComponent },
+     { path: 'application/:id',  component: ApplicationComponent },
+     { path: 'applications', component: ApplicationsComponent },
      { path: 'identity', component: IdentityComponent, canLoad: [AuthGuard] },
      {
           path: '',

@@ -29,7 +29,7 @@ export class IdentityComponent implements OnInit {
 
      errorGet(obj) {
           return Object.keys(obj)[0];
-      }
+     }
 
      get name_given() { return this.form.get('name_given'); }
      get name_family() { return this.form.get('name_family'); }
@@ -44,7 +44,7 @@ export class IdentityComponent implements OnInit {
                updateOn: "blur"
           });
      }
-     
+
      ngOnInit() {
           this.I$ = this.graph.I()
                .pipe(
@@ -60,8 +60,8 @@ export class IdentityComponent implements OnInit {
      }
 
      onSubmit() {
-          this.graph.identity_update("name_given", this.name_given.value);
-          this.graph.identity_update("name_family", this.name_family.value);
-          this.graph.identity_update("email", this.email.value);
-    }
+          this.graph.identity_property_set("name_given", this.name_given.value);
+          this.graph.identity_property_set("name_family", this.name_family.value);
+          this.graph.identity_property_set("email", this.email.value);
+     }
 }

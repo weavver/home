@@ -1,0 +1,30 @@
+import { DataService } from '../../data.service';
+import { Component, OnInit } from '@angular/core';
+import { Observable, Subscription } from 'rxjs';
+import { map } from 'rxjs/operators';
+import { Router } from '@angular/router';
+
+@Component({
+  selector: 'applications',
+  templateUrl: './applications.component.html',
+  styleUrls: ['./applications.component.scss']
+})
+export class ApplicationsComponent implements OnInit {
+     applications: Observable<any>;
+
+     constructor(public router: Router, private data_app: DataService) { }
+
+     ngOnInit() {
+          this.applications = this.data_app.getApplications()
+               .pipe(map(result => result.data.applications));
+     }
+
+     openApp(application) {
+          this.router.navigateByUrl("/application/" + application.id);
+     }
+
+     getInitials(application) {
+          return application.name.split(" ").map((n)=>n[0]).join("")
+     }
+     // this.data_app.Application_add();
+}

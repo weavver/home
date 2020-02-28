@@ -1,0 +1,64 @@
+<div class="card">
+     <div fxLayout="row" style="display:flex; font-size: 22px;  align-items: left; justify-content: left;">
+          <div id="card_title">
+               <i class="material-icons" style="vertical-align: middle !important; padding-right: 10px;">settings_applications</i>
+               <span style="vertical-align: middle !important;">Application</span>
+          </div>
+     </div>
+     <hr />
+     <form [formGroup]="form" (ngSubmit)="onSubmit()">
+          <div class="form-group">
+               <div class="form-header">
+                    <label for="name_given">Name</label>
+                    <small class="form-text text-muted form-header-required" *ngIf="name.invalid && !name.pristine && errorGet(name.errors) == 'required'">
+                         Required
+                    </small>
+                    <small class="form-text text-muted form-header-required" [hidden]="name.valid || name.pristine" *ngIf="(name.invalid && errorGet(name.errors) == 'name')">
+                         A valid email is required.
+                    </small>
+               </div>
+               <input formControlName="name" type="text" class="form-control" placeholder="name" name="name" required>
+          </div>
+          <div class="form-group">
+               <div class="form-header">
+                    <label for="client_id">Client ID</label>
+                    <small class="form-text text-muted form-header-required" *ngIf="client_id.invalid && !client_id.pristine && errorGet(client_id.errors) == 'required'">
+                         Required
+                    </small>
+                    <small class="form-text text-muted form-header-required" [hidden]="client_id.valid || client_id.pristine" *ngIf="(client_id.invalid && errorGet(client_id.errors) == 'client_id')">
+                         A valid email is required.
+                    </small>
+               </div>
+               <input formControlName="client_id" type="text" class="form-control required" placeholder="id" name="client_id" required>
+          </div>
+          <div class="form-group">
+               <div class="form-header">
+                    <label for="giver_email">Giver Email</label>
+                    <small class="form-text text-muted form-header-required" *ngIf="giver_email.invalid && !giver_email.pristine && errorGet(giver_email.errors) == 'required'">
+                         Required
+                    </small>
+                    <small class="form-text text-muted form-header-required" [hidden]="giver_email.valid || giver_email.pristine" *ngIf="(giver_email.invalid && errorGet(giver_email.errors) == 'giver_email')">
+                         A valid email is required.
+                    </small>
+               </div>
+               <input formControlName="giver_email" type="text" class="form-control" placeholder="email" name="giver_email" required>
+          </div>
+          <div class="form-group">
+               <div class="form-header">
+                    <label for="giver_website">Giver Website</label>
+                    <small class="form-text text-muted form-header-required" *ngIf="giver_website.invalid && !giver_website.pristine && errorGet(giver_website.errors) == 'required'">
+                         Required
+                    </small>
+                    <small class="form-text text-muted form-header-required" [hidden]="giver_website.valid || giver_website.pristine" *ngIf="(giver_website.invalid && errorGet(giver_website.errors) == 'email')">
+                         A valid email is required.
+                    </small>
+               </div>
+               <input formControlName="giver_website" type="text" class="form-control" placeholder="email" name="giver_website" required>
+          </div>
+          <div style="text-align: center;">
+               <button type="button" class="btn btn-primary" style="min-width: 200px; margin: 15px;" (click)="onSubmit()">Save</button>
+          </div>
+          <!-- {{ I$ | async | json }} -->
+     </form>
+</div>
+

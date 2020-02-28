@@ -198,7 +198,6 @@ functions:
             summary: "GET /signout"
 
   graphql:
-    # this is formatted as <FILENAME>.<HANDLER>
     handler: src/graphql/graphql.handler
     environment:
       GREMLIN_ENDPOINT: ${env:GREMLIN_ENDPOINT}

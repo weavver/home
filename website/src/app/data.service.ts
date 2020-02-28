@@ -86,33 +86,50 @@ export class DataService {
                .valueChanges;
      }
 
-     public identity_update(property : string, value : string) {
-          const identity_update = gql`mutation identity_update($value: String!, $property: String!) {
-                              identity_update(property: $property, value: $value)
+     public identity_property_set(property : string, value : string) {
+          const identity_property_set = gql`mutation identity_property_set($value: String!, $property: String!) {
+               identity_property_set(property: $property, value: $value)
                          }`;
 
           this.apollo.mutate({
-                    mutation: identity_update,
+                    mutation: identity_property_set,
                     variables: {
                          property: property,
-                         value: value,
-                         value2: value
+                         value: value
                     }
-               }).subscribe(({ data }) => {
-                    console.log('got data', data);
-               },(error) => {
-                    console.log('there was an error sending the query', error);
-               });
+               })
+               .subscribe(({ data }) => {
+                         console.log('got data', data);
+                    },(error) => {
+                         console.log('there was an error sending the query', error);
+                    });
      }
+
+     public identity_password_set(password_current : string, password_new : string) {
+          const identity_password_set = gql`mutation identity_password_set($password_current: String!, $password_new: String!) {
+                              identity_password_set(password_current: $password_current, password_new: $password_new)
+                         }`;
+
+          this.apollo.mutate({
+                    mutation: identity_password_set,
+                    variables: {
+                         password_current: password_current,
+                         password_new: password_new
+                    }
+               })
+               .subscribe(({ data }) => {
+                         console.log('got data', data);
+                    },
+                    (error) => {
+                         console.log('there was an error sending the query', error);
+                    });
+     }
+
 
      public getApplications() {
           return this.apollo.watchQuery<any>({
-               query: gql`
-                    {
-                         centers
-                    }
-                    `
-                    })
+                    query: gql`{ applications { id, cid, name } }`
+               })
                .valueChanges;
      }
 

@@ -8,8 +8,12 @@
 		"auto-run-command.rules": [
 			{
 			    "command": "workbench.action.tasks.runTask start_website",
-			    "message": "Super condition met. Running "
-			}
+			    "message": "Auto run: Starting website..."
+			},
+			{
+				"command": "workbench.action.tasks.runTask start_api",
+				"message": "Auto run: Starting api..."
+			 }
 		],
 		"testExplorer.codeLens": false,
 		"testExplorer.gutterDecoration": false,
