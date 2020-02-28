@@ -18,20 +18,21 @@ module.exports.handler = async function (event : APIGatewayProxyEvent, context :
      };
 
      try {
-          if (!event || !event.pathParameters || !event.pathParameters.id) {
-               throw Error("No token passed to signout with");
-          } else {
-               var token = event.pathParameters.id;
-               var queryAddIdentity = gremlin.g.addV("tokens")
-                         .property('cid', "0")
-                         .property('id', "tokens_" + uuidv4())
-                         .property('token', token)
-                         .property('expired', true);
-               await gremlin.executeQuery(queryAddIdentity);
+          // if (!event || !event.pathParameters || !event.pathParameters.id) {
+          //      throw Error("No token passed to signout with");
+          // }
+          // else {
+          //      var token = event.pathParameters.id;
+          //      var queryAddIdentity = gremlin.g.addV("tokens")
+          //                .property('cid', "0")
+          //                .property('id', "tokens_" + uuidv4())
+          //                .property('token', token)
+          //                .property('expired', true);
+          //      await gremlin.executeQuery(queryAddIdentity);
+          //      await gremlin.close();
 
-               response.statusCode = 200;
-          }
-               await gremlin.close();
+          //      response.statusCode = 200;
+          // }
      }
      catch (err) {
           console.log(err);

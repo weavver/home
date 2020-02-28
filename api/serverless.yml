@@ -27,6 +27,7 @@ resources:
 custom:
   serverless-offline:
     httpsProtocol: "dev-certs"
+    port: 3001
 
   customDomain:
     domainName: ${env:API_DOMAIN}

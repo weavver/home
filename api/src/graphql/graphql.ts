@@ -44,25 +44,23 @@ export const server = new ApolloServer({
      );
 
 export const handler = server.createHandler({
-     cors: {
-          origin: true,
-          credentials: true,
-        }
-     // cors: {
-     //      credentials: true,
-     //      origin: (origin : string, callback : Callback) => {
-     //           console.log(origin);
-     //           const whitelist = [
-     //                process.env.WEBSITE_DOMAIN
-     //           ];
-   
-     //           if (whitelist.indexOf(origin) !== -1) {
-     //               callback(null, true)
-     //           } else {
-     //               callback(new Error("Not allowed by CORS"))
-     //           }
-     //       }
-     // }
+          // cors: {
+               // methods: "OPTIONS,POST,GET",
+               // allowedHeaders: "Origin, X-Requested-With, Content-Type, Accept",
+               // credentials: true,
+               // origin: (origin : string, callback : Callback) => {
+               //      console.log(origin);
+               //      const whitelist = [
+               //           process.env.WEBSITE_DOMAIN
+               //      ];
+               //      if (whitelist.indexOf(origin) !== -1) {
+               //      callback(null, true)
+               //      }
+               //      else {
+               //      callback(new Error("Not allowed by CORS"))
+               //      }
+               // }
+          // }
      });
 
 
