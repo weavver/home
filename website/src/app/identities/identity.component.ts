@@ -65,8 +65,20 @@ export class IdentityComponent implements OnInit {
      }
 
      onSubmit() {
-          this.graph.identity_property_set("name_given", this.name_given.value);
-          this.graph.identity_property_set("name_family", this.name_family.value);
-          this.graph.identity_property_set("email", this.email.value);
+          this.processing = true;
+          this.setProperty("name_given", this.name_given.value);
+          this.setProperty("name_family", this.name_family.value);
+          this.setProperty("email", this.email.value);
+     }
+
+     setProperty(property, value) {
+          this.graph.identity_property_set("email", this.email.value)
+               .subscribe(({ data }) => {
+                         console.log('got data', data);
+                         this.processing = false;
+                         this.cd.markForCheck();
+                    },(error) => {
+                         console.log('there was an error sending the query', error);
+                    });
      }
 }

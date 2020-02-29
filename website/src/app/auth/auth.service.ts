@@ -4,7 +4,7 @@ import { OnInit, Injectable } from '@angular/core';
 import {Router, RouterOutlet} from '@angular/router';
 
 import { Observable, BehaviorSubject, throwError } from 'rxjs';
-import { first, tap, map, catchError } from 'rxjs/operators';
+import { take, first, tap, map, catchError } from 'rxjs/operators';
 import {LocalStorageService} from "ngx-webstorage";
 
 import {Apollo} from 'apollo-angular';
@@ -32,12 +32,6 @@ export class AuthService {
                 private apollo: Apollo)
     {
         this.currentISubject = new BehaviorSubject<any>({"email": "test"});
-
-        console.log(localStorage.getItem("logged_in"));
-        if (localStorage.getItem("logged_in") == "true") {
-            console.log("identity seems to be logged in... attempting to confirm with server...");
-            this.I_get();
-        }            
     }
 
     I_get() : Observable<boolean> {
@@ -48,14 +42,13 @@ export class AuthService {
                 this.currentISubject.next(data.data.I);
                 this.isLoggedIn = true;
                 console.log("identity confirmed!");
-                
+
                 return true;
+            }),
+            catchError(error => {
+                console.log("I_get() error: ", error);
+                return throwError(error);
             })
-            // catchError(error => {
-            //     console.log(error.status);
-            //     console.log("I_get() error: ", error);
-            //     return throwError(error);
-            // })
         );
     }
     

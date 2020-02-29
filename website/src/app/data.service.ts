@@ -2,6 +2,7 @@ import { environment } from '../environments/environment';
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { FetchResult } from 'apollo-link';
 
 import {Apollo} from 'apollo-angular';
 import gql from 'graphql-tag';
@@ -86,23 +87,18 @@ export class DataService {
                .valueChanges;
      }
 
-     public identity_property_set(property : string, value : string) {
+     public identity_property_set(property : string, value : string) : Observable<FetchResult<T>> {
           const identity_property_set = gql`mutation identity_property_set($value: String!, $property: String!) {
                identity_property_set(property: $property, value: $value)
                          }`;
 
-          this.apollo.mutate({
+          return this.apollo.mutate({
                     mutation: identity_property_set,
                     variables: {
                          property: property,
                          value: value
                     }
-               })
-               .subscribe(({ data }) => {
-                         console.log('got data', data);
-                    },(error) => {
-                         console.log('there was an error sending the query', error);
-                    });
+               });
      }
 
      public identity_password_set(password_current : string, password_new : string) {

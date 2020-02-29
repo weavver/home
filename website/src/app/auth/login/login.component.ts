@@ -9,6 +9,7 @@ import {
     FormControl
   } from '@angular/forms';
 import { AuthService } from '../auth.service';
+import { take, first, tap, map, catchError } from 'rxjs/operators';
 
 @Component({
     selector: 'app-login',
@@ -50,6 +51,12 @@ export class LoginComponent {
                })
 
                this.route.queryParams.subscribe(params => this.data_app.login_params = params);
+
+               if (localStorage.getItem("logged_in") == "true") {
+                    console.log("identity seems to be logged in... attempting to confirm with server...");
+                    this.authService.I_get().pipe(take(1)).subscribe();                    
+                    this.router.navigate(['/applications']);
+               }
      }
 
      logIn() {

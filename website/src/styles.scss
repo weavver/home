@@ -7,7 +7,8 @@ a {
 
 header {
      border: 1px solid transparent;
-     border-bottom: solid 1px rgb(124, 124, 124);
+     background: #FFFFFF;
+     border-bottom: solid 1px rgb(206, 206, 206);
 }
 
 nav a.active {
@@ -29,7 +30,8 @@ html {
 .application-body {
      display: flex;
      flex: 1;
-     background-color: #494949;
+     // background-color: #494949;
+     // background-color: #eeeeee;
 }
 
 .application-content {
@@ -41,7 +43,7 @@ html {
 
 .application-nav {
      background: #FFFFFF;
-     border-right: solid 1px rgb(124, 124, 124);
+     // border-right: solid 1px rgb(238, 238, 238);
 }
 
 .content {
