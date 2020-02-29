@@ -87,7 +87,7 @@ export class DataService {
                .valueChanges;
      }
 
-     public identity_property_set(property : string, value : string) : Observable<FetchResult<T>> {
+     public identity_property_set(property : string, value : string) : Observable<any> {
           const identity_property_set = gql`mutation identity_property_set($value: String!, $property: String!) {
                identity_property_set(property: $property, value: $value)
                          }`;
