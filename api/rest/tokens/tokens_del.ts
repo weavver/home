@@ -2,6 +2,7 @@ import { APIGatewayProxyEvent, Context } from "aws-lambda";
 
 const uuidv4 = require('uuid/v4');
 import { GremlinHelper } from '../../gremlin';
+let gremlin = new GremlinHelper();
 
 export const handler = async (event : APIGatewayProxyEvent, context : Context) => {
      console.log("deleting token..");
@@ -21,7 +22,6 @@ export const handler = async (event : APIGatewayProxyEvent, context : Context) =
      };
 
      try {
-          // let gremlin = new GremlinHelper();
           // console.log("storing deleted token to database...");
           // var queryAddIdentity = gremlin.g.addV("tokens")
           //           .property('cid', "0")
@@ -40,3 +40,8 @@ export const handler = async (event : APIGatewayProxyEvent, context : Context) =
      }
      return response;
 };
+
+export const clear = async () => {
+     if (gremlin.client) return await gremlin.client.close() 
+     else return;
+}

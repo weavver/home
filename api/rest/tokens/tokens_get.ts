@@ -4,16 +4,16 @@ import { Query } from "type-graphql";
 require('dotenv').config({ path: '.env' })
 
 var bcrypt = require('bcryptjs');
+var jwt = require('jsonwebtoken');
 var moment = require("moment");
 
 import { GremlinHelper } from '../../gremlin';
-
-var jwt = require('jsonwebtoken');
+let gremlin = new GremlinHelper();
 
 export const handler = async (event : APIGatewayProxyEvent, context : Context) => {
      if (!event || !event.queryStringParameters || !event.queryStringParameters.email)
           return;
-          
+
      var token_data = {
           sub: "123123123",
           name: "Gen Apple",
@@ -39,17 +39,15 @@ export const handler = async (event : APIGatewayProxyEvent, context : Context) =
           body: ""
      };
 
-     let gremlin = new GremlinHelper();
      try {
           console.log("getting token...");
 
-          var q3 = gremlin.g.V()
+          var query = gremlin.g.V()
                .has('label','identity')
                .has('cid', '0')
                .has('email', event.queryStringParameters.email.toLowerCase());
 
-          var docs = await gremlin.executeQuery(q3);
-          await gremlin.close();
+          var docs = await gremlin.executeQuery(query);
 
           // console.log(docs);
 
@@ -83,4 +81,8 @@ export const handler = async (event : APIGatewayProxyEvent, context : Context) =
           console.log(err);
      }
      return response;
+}
+
+export const clear = async () => {
+     return await gremlin.client.close();
 }

@@ -16,6 +16,7 @@ describe('API', function() {
           var event = {};
           var context = {};
           var response = await echo.handler(event as APIGatewayProxyEvent, context as Context);
+          await echo.clear();
           console.log(response);
           assert.equal(response.statusCode, 200);
           assert.isTrue(JSON.parse(response.body).message.startsWith("Hello World"));

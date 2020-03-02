@@ -1,5 +1,9 @@
 import { APIGatewayProxyEvent, Context } from "aws-lambda";
 
+import { GremlinHelper } from '../../gremlin';
+let gremlin = new GremlinHelper();
+let counter = 0;
+
 export const handler = async (event : APIGatewayProxyEvent, context : Context) => {
      var date = new Date();
      date.setTime(+date + (1 * 86400000)); // Get Unix milliseconds at current time plus 1 days: 24 \* 60 \* 60 \* 100
@@ -12,6 +16,10 @@ export const handler = async (event : APIGatewayProxyEvent, context : Context) =
           cookieVal = "false";
      }
 
+    var query = gremlin.g.V();
+        // .property("Field4", "2");
+    var result = await gremlin.executeQuery(query); 
+    
      var cookieString = "ExampleCookie=" + cookieVal + ";domain=" + process.env.WEBSITE_DOMAIN + "; expires=" + date.toUTCString() + ";";
      const response = {
           statusCode: 200,
@@ -20,10 +28,16 @@ export const handler = async (event : APIGatewayProxyEvent, context : Context) =
                'Set-Cookie': cookieString
           },
           body: JSON.stringify({
-               message: 'Hello World',
+               message: 'Hello World ' + counter,
                input: event,
           })
      };
+     counter++;
 
+     context.callbackWaitsForEmptyEventLoop = false;
      return response;
 };
+
+export const clear = async () => {
+     return await gremlin.client.close();
+}

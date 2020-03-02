@@ -13,7 +13,8 @@ import {
 import { plainToClass } from "class-transformer";
 import { application } from "./application";
 
-import { GremlinHelper } from '../../../gremlin'
+import { GremlinHelper } from '../../../gremlin';
+let gremlin = new GremlinHelper();
 
 @Resolver(of => application)
 export class ApplicationsResolver {
@@ -21,7 +22,6 @@ export class ApplicationsResolver {
      @Authorized()
      @Query(() => [application])
      async applications(): Promise<Array<application>> {
-          let gremlin = new GremlinHelper();
 
           var query = gremlin.g.V()
                .has('cid', '0')
@@ -42,7 +42,7 @@ export class ApplicationsResolver {
                });
           }
 
-          await gremlin.close();
+          // await gremlin.close();
           return items;
      }
 
@@ -51,7 +51,7 @@ export class ApplicationsResolver {
      async applications_add(
           @Arg("data") data: String
      ): Promise<String> {
-          let gremlin = new GremlinHelper();
+          // let gremlin = new GremlinHelper();
           let query = gremlin.g.addV("application")
                .property('cid', '0')
                .property("name", "I Serve Law");
