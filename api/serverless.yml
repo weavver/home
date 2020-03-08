@@ -92,6 +92,14 @@ functions:
 
   echo:
     handler: rest/echo/echo.handler
+    environment:
+      GREMLIN_ENDPOINT: ${env:GREMLIN_ENDPOINT}
+      GREMLIN_DATABASE: ${env:GREMLIN_DATABASE}
+      GREMLIN_PRIMARYKEY: ${env:GREMLIN_PRIMARYKEY}
+      GREMLIN_COLLECTION: ${env:GREMLIN_COLLECTION}
+      TWILIO_ACCOUNTSID: ${env:TWILIO_ACCOUNTSID}
+      TWILIO_AUTHTOKEN: ${env:TWILIO_AUTHTOKEN}
+      SENDGRID_KEY: ${env:SENDGRID_KEY}
     events:
       - http:
           path: echo

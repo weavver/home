@@ -13,3 +13,6 @@ aws-exports.js
 awsconfiguration.json
 .serverless
 _scratchpad
+terraform.*
+.terraform*
+infrastructure/*

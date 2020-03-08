@@ -1,4 +1,4 @@
-
+var now = require("performance-now");
 import Gremlin = require('gremlin');
 
 export class GremlinHelper {
@@ -38,7 +38,12 @@ export class GremlinHelper {
           const translator = new Gremlin.process.Translator(g);
           let gremlinCommand = "g" + translator.translate(query.getBytecode()).substr(29);
           // console.log(gremlinCommand);
-          return await this.client.submit(gremlinCommand);
+          
+          var t0 = now();
+          var result = await this.client.submit(gremlinCommand);
+          var t1 = now();
+          result.command_time = t1 - t0;
+          return result;
      }
 
      public getPropertyValue(doc : any, property_name : string) : undefined {

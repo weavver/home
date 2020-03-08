@@ -29,6 +29,7 @@ export const handler = async (event : APIGatewayProxyEvent, context : Context) =
           },
           body: JSON.stringify({
                message: 'Hello World ' + counter,
+               command_time: result.command_time,
                input: event,
           })
      };
