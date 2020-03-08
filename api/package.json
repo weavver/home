@@ -11,9 +11,9 @@
   "author": "Mitchel Constantin",
   "license": "MIT",
   "devDependencies": {
-    "@types/chai": "^4.2.9",
-    "@types/mocha": "^7.0.1",
-    "apollo-server-lambda": "^2.10.1",
+    "@types/chai": "^4.2.10",
+    "@types/mocha": "^7.0.2",
+    "apollo-server-lambda": "^2.11.0",
     "chai": "^4.2.0",
     "dotenv": "^8.2.0",
     "graphql": "^14.6.0",
@@ -23,21 +23,22 @@
     "serverless-aws-documentation": "^1.1.0",
     "serverless-domain-manager": "^3.3.1",
     "serverless-offline": "^5.12.1",
-    "serverless-plugin-include-dependencies": "^4.0.1",
-    "serverless-plugin-typescript": "^1.1.7",
+    "serverless-plugin-include-dependencies": "^4.1.0",
+    "serverless-plugin-typescript": "^1.1.9",
     "serverless-pseudo-parameters": "^2.5.0",
-    "serverless-step-functions": "^2.17.1",
+    "serverless-step-functions": "^2.17.2",
     "serverless-websockets-plugin": "^1.0.0",
     "ts-node": "^8.6.2",
-    "type-graphql": "^0.18.0-beta.10"
+    "type-graphql": "^0.18.0-beta.11"
   },
   "dependencies": {
-    "@sendgrid/mail": "^6.5.3",
-    "@types/aws-lambda": "^8.10.44",
+    "@sendgrid/mail": "^6.5.4",
+    "@types/aws-lambda": "^8.10.46",
     "@types/graphql": "^14.5.0",
-    "@types/gremlin": "^3.4.5",
+    "@types/gremlin": "^3.4.6",
     "ajv": "^6.12.0",
-    "apollo-server": "^2.10.1",
+    "apollo-server": "^2.11.0",
+    "apollo-server-fastify": "^2.11.0",
     "async": "^3.2.0",
     "bcryptjs": "^2.4.3",
     "class-transformer": "^0.2.3",
@@ -45,6 +46,7 @@
     "cookie": "^0.4.0",
     "dotenv-safe": "^8.2.0",
     "express": "^4.17.1",
+    "fastify": "^2.12.1",
     "graphql-type-json": "^0.3.1",
     "gremlin": "^3.4.6",
     "handlebars": "^4.7.3",
@@ -59,6 +61,6 @@
     "performance-now": "^2.1.0",
     "reflect-metadata": "^0.1.13",
     "tsc": "^1.20150623.0",
-    "twilio": "^3.39.5"
+    "twilio": "^3.40.0"
   }
 }

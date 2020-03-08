@@ -10,13 +10,12 @@ import { APIGatewayProxyEvent, Context } from "aws-lambda";
 
 require('dotenv').config({ path: '../../.env' })
 
-
 describe('API', function() {
      it('Echo', async () => {
           var event = {};
           var context = {};
           var response = await echo.handler(event as APIGatewayProxyEvent, context as Context);
-          await echo.clear();
+          // await echo.clear();
           console.log(response);
           assert.equal(response.statusCode, 200);
           assert.isTrue(JSON.parse(response.body).message.startsWith("Hello World"));

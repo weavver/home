@@ -16,3 +16,10 @@ _scratchpad
 terraform.*
 .terraform*
 infrastructure/*
+
+
+# Elastic Beanstalk Files
+api/.elasticbeanstalk/*
+api/!.elasticbeanstalk/*.cfg.yml
+api/!.elasticbeanstalk/*.global.yml
+api/.ebextensions/*

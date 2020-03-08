@@ -20,6 +20,11 @@ import { checkAccess } from '../checkAccess';
 @Resolver(of => identity)
 export class IdentityResolver {
 
+     @Mutation(() => String)
+     async echo(@Arg("data") data: string): Promise<string> {
+          return data;
+     }
+
      @Authorized(["ADMIN"])
      // @UseMiddleware(checkAccess)
      @Query(() => identity)

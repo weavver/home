@@ -24,7 +24,7 @@ describe('API', function() {
                it('get token', async () => {
                     var event = { headers: { origin: "dev.example.com" }, queryStringParameters: { email: 'is_in_use@example.com', password: 'asdfasdf1234' } };
                     var response = await tokens_get.handler(event as unknown as APIGatewayProxyEvent, {} as Context);
-                    await tokens_get.clear();
+                    // await tokens_get.clear();
                     console.log(response);
                     assert.equal(response!.statusCode, 200);
 
