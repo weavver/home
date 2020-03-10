@@ -1,41 +1,14 @@
-import * as fastify from 'fastify'
-import { Server, IncomingMessage, ServerResponse } from 'http'
+import { app } from "./src/home-api";
+import { HomeApolloServer } from "./src/graphql/home-apollo-server";
 import 'reflect-metadata'
 
-import { EchoRoute } from './src/echo/echo';
-import { TokensRoute } from './src/tokens/tokens_get';
-import { HomeApolloServer } from './src/graphql/server';
-
+require('dotenv').config({ path: '../.env' })
 
 console.log("weavver home server starting..");
 
-const app: fastify.FastifyInstance = fastify({})
-const opts: fastify.RouteShorthandOptions = {
-     // schema: {
-     //      response: {
-     //           200: {
-     //                type: 'object',
-     //                properties: {
-     //                     pong: {
-     //                          type: 'string'
-     //                     }
-     //                }
-     //           }
-     //      }
-     // }
-}
-
-app.get('/', opts, async (request, reply) => {
-     reply.code(200).send("we are online");
-});
-
 (async function () {
-     var echoRoute = new EchoRoute(app, opts);
-     var tokensRoute = new TokensRoute(app, opts);
-     let homeApolloServer = new HomeApolloServer();
-     homeApolloServer.registerHandler(app);
-
-     app.listen(3000, "0.0.0.0", (err, address) => {
+     var port = process.env.PORT || 3000;
+     var server = app.listen(port as number, "0.0.0.0", (err : any, address : any) => {
           if (err) {
                console.log(err);
                app.log.error(err)

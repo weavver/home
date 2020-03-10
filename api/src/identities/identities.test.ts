@@ -7,6 +7,9 @@ import * as identities_put from './identities_put';
 // var assert = require('assert');
 var assert = require('chai').assert;
 
+import { app } from "../home-api";
+import { HTTPInjectResponse } from 'fastify';
+
 import * as schema from '../../schema';
 var Ajv = require('ajv');
 var ajv = new Ajv({schemas: schema.models});
@@ -118,74 +121,91 @@ describe('API', function() {
                          "url":"https://lookups.twilio.com/v1/PhoneNumbers/+17145551212"});
 
                     let gremlin = new GremlinHelper();
-                    try {
-                         var bcrypt = require('bcryptjs');
-                         const password_hash = bcrypt.hashSync("asdfasdf1234");
+                    // try {
+                    var bcrypt = require('bcryptjs');
+                    const password_hash = bcrypt.hashSync("asdfasdf1234");
 
-                         // clean up database
-                         var checkforNotInUse = gremlin.g.V()
-                              .has('label','identity')
-                              .has('cid', '0')
+                    // clean up database
+                    var cmdCheckforNotInUse = await gremlin.g.V()
+                         .hasLabel('identity')
+                              .has('cid', 0)
                               .has('email', 'is_not_in_use@example.com');
 
-                         var docs = await gremlin.executeQuery(checkforNotInUse);
-                         if (docs.length > 0) {
-                              console.log(docs._items[0].id);
+                    console.log(cmdCheckforNotInUse);
+                    var docs = await gremlin.command(cmdCheckforNotInUse);
+                    if (docs.result.length > 0) {
+                         console.log(docs.result[0].id);
 
-                              var deleteNode = gremlin.g.V(docs._items[0].id).drop();
-                              var deletexyz = await gremlin.executeQuery(deleteNode);
-                         }
+                         var deleteNode = gremlin.g.V(docs.result[0].id).drop();
+                         var deletexyz = await gremlin.command(deleteNode);
+                    }
 
-                         var queryAddIdentity = gremlin.g.addV("identity")
-                              .property('cid', "0")
-                              .property('id', "identity_2")
-                              .property('name', "is_in_use@example.com")
-                              .property('email', "is_in_use@example.com")
-                              .property('password_hash', password_hash)
-                              .property('verification_code', Math.floor((Math.random() * 100000) + 100000));
-                         var docsInUse = await gremlin.executeQuery(queryAddIdentity);
-                         console.log(docsInUse);
-                         await gremlin.close();
-                    }
-                    catch (err) {
-                         await gremlin.close();
-                         assert.equal(err.statusCode, 500, err);
-                    }
+                    var queryAddIdentity = gremlin.g.addV("identity")
+                         .property('id', 0)
+                         .property('cid', 0)
+                         .property('name', "is_in_use@example.com")
+                         .property('email', "is_in_use@example.com")
+                         .property('password_hash', password_hash)
+                         .property('verification_code', Math.floor((Math.random() * 100000) + 100000));
+
+                    var docsInUse = await gremlin.command(queryAddIdentity);
+                    console.log(docsInUse);
+                    await gremlin.close();
+                    // }
+                    // catch (err) {
+                    //      await gremlin.close();
+                    //      assert.equal(err.statusCode, 500, err);
+                    // }
                });
 
                it('phone: format not right (twilio check)', async () => {
-                    var event = { body: JSON.stringify({ email: 'is_not_in_use@example.com', phone_number: '1234', password: 'asdfasdf1234' }) };
-                    var response = await identities_put.handler(event as APIGatewayProxyEvent, {} as Context);
-                    console.log(response);
+                    const response : HTTPInjectResponse = await app.inject({
+                         method: "PUT",
+                         headers: { origin: "dev.example.com" },
+                         url: "/identities",
+                         query: {},
+                         payload: { email: 'is_not_in_use@example.com', phone_number: '123', password: 'asdfasdf1234' }
+                    });
                     assert.equal(response.statusCode, 422);
-                    assert.equal(JSON.parse(response.body).err.errors[0].keyword, "twilio_validate");
+                    console.log(response.payload);
+                    assert.equal(JSON.parse(response.payload).err.errors[0].keyword, "twilio_validate");
                     // 'Phone number format is not recognized. Try again.<br />Email us if this issue continues.'
                });
 
                it('email: is in use', async () => {
-                    var data = { email: 'is_in_use@example.com', phone_number: '7145551212', password: 'asdfasdf1234' };
-                    var response = await identities_put.handler({ body: JSON.stringify(data) } as APIGatewayProxyEvent, {} as Context);
-                    console.log(response);
+                    const response : HTTPInjectResponse = await app.inject({
+                         method: "PUT",
+                         headers: { origin: "dev.example.com" },
+                         url: "/identities",
+                         query: {},
+                         payload: { email: 'is_in_use@example.com', phone_number: '7145551212', password: 'asdfasdf1234' }
+                    });
+                    console.log(response.payload);
                     assert.equal(response.statusCode, 422);
-                    assert.lengthOf(JSON.parse(response.body).err.errors, 1, "email_is_not_in_use");
+                    assert.lengthOf(JSON.parse(response.payload).err.errors, 1, "email_is_not_in_use");
                     // Try a different email address.
                });
 
                it('email: is not in use', async () => {
-                    var data = { email: 'is_not_in_use@example.com', phone_number: '7145551212', password: 'asdfasdf1234' };
+                    const response : HTTPInjectResponse = await app.inject({
+                         method: "PUT",
+                         headers: { origin: "dev.example.com" },
+                         url: "/identities",
+                         query: {},
+                         payload: { email: 'is_not_in_use@example.com', phone_number: '7145551212', password: 'asdfasdf1234' }
+                    });
 
-                    var response = await identities_put.handler({ body: JSON.stringify(data) } as APIGatewayProxyEvent, {} as Context);
                     console.log(response);
                     assert.equal(response.statusCode, 200);
-                    assert.isUndefined(JSON.parse(response.body).err, "expecting no errors");
+                    assert.equal(response.payload, "", "expecting no errors");
                });
 
                it('put and verify', async () => {
                     nock.cleanAll()
-                    nock.disableNetConnect()
+                    // nock.disableNetConnect();
 
                     var data = {
-                         "email": "new_account@example.com",
+                         "email": "is_not_in_use@example.com",
                          "phone_number": "7145551212",
                          "password": "123456"
                     };
@@ -212,19 +232,25 @@ describe('API', function() {
                                    console.log(code);
                               });
 
-                    // // create a new account
-                    // var response = await identities_put.handler({ body: JSON.stringify(data) }, {});
-                    // console.log(response);
-                    // assert.equal(response.status_code, 200);
-                    // assert.isNotNull(code);
+                    const response : HTTPInjectResponse = await app.inject({
+                              method: "PUT",
+                              headers: { origin: "dev.example.com" },
+                              url: "/identities",
+                              query: {},
+                              payload: data
+                         });
 
-                    // // check that login works by intercepting emailed activation code
-                    // console.log(code);
+                    console.log(response);
+                    assert.equal(response.statusCode, 200);
+                    assert.isNotNull(code);
 
-                    // nock.cleanAll();
-                    // nock.enableNetConnect();
+                    // check that login works by intercepting emailed activation code
+                    console.log(code);
 
-                    // // verify that code
+                    nock.cleanAll();
+                    nock.enableNetConnect();
+
+                    // verify that code
                     // var account_verify = require('./identities_verify.put.js');
                     // var response_verify = await account_verify.handler({ body: JSON.stringify({ email: data.email, code: code })});
                     // console.log(response_verify);

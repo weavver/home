@@ -12,7 +12,9 @@ export class EchoRoute {
           if (app) {
                app.get('/echo', opts, async (request, reply) => {
                     let result = await this.handler(null);
-                    reply.code(200).send(result);
+                    reply.code(200)
+                         .header("Content-Type", "application/json; charset=utf-8")
+                         .send(result);
                });
           }
      }
@@ -25,15 +27,15 @@ export class EchoRoute {
           cookieVal = (Math.round(Math.random()) == 1) ? "true" : cookieVal = "false";
 
           var qCreate = gremlin.g.addV("identity")
-                         .property("center", 0)
+                         .property("cid", 0)
                          .property("email", "is_in_use@example.com")
-                         .property("password_hash", );
+                         .property("password_hash", "asdf");
 
-          var result2 = await gremlin.executeQuery(qCreate); 
+          var result2 = await gremlin.command(qCreate); 
 
           var query = gremlin.g.V();
           //      // .property("Field4", "2");
-          var result = await gremlin.executeQuery(query); 
+          var result = await gremlin.command(query); 
      
           var cookieString = "ExampleCookie=" + cookieVal + ";domain=" + process.env.WEBSITE_DOMAIN + "; expires=" + date.toUTCString() + ";";
           const response = {
@@ -45,6 +47,7 @@ export class EchoRoute {
                body: {
                     message: 'Hello World ' + counter,
                     result: result,
+                    command_time: result.command_time,
                     input: event
                }
           };
@@ -66,5 +69,6 @@ export const handler = async function (event : APIGatewayProxyEvent, context : C
      // performance help
      context.callbackWaitsForEmptyEventLoop = false;
 
-     echoRoute.handler(event);
+     var response = echoRoute.handler(event);
+     return response;
 }

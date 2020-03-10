@@ -16,7 +16,7 @@ var jwt = require('jsonwebtoken');
 export class HomeApolloServer {
      server : ApolloServer;
 
-     constructor() {
+     constructor(app : any) {
           this.server = new ApolloServer({
                schema: buildSchemaSync({
                     resolvers: [
@@ -42,32 +42,32 @@ export class HomeApolloServer {
                          'request.credentials': 'include'
                     }
                },
-               context: async ({ event } : any) => ({
-                         user: await this.getUser(event),
+               context: async (ctx : any) => ({
+                         user: await this.getUser(ctx),
                     })
                },
           );
-     }
 
-     public async registerHandler(app : any) {
+          console.log("initializing graphql...");
           app.register(this.server.createHandler({
                     cors: {
                          credentials: true,
                          origin: ['https://' + process.env.WEBSITE_DOMAIN]
                     }
                }));
-     };
+     }
 
-     public async getUser(event : any) : Promise<any> {
-          if (!event || !event.multiValueHeaders || !event.multiValueHeaders.Cookie || event.multiValueHeaders.Cookie.length < 1)
+     public async getUser(ctx : any) : Promise<any> {
+          // console.log(ctx.headers.cookie);
+          if (!ctx || !ctx.headers || !ctx.headers.cookie || ctx.headers.cookie.length < 1)
                return null;
 
           // console.log(event.multiValueHeaders.Cookie[0]);
           // console.log(cookies["SessionToken"]);
 
-          var cookieHeader = event.multiValueHeaders.Cookie[0];
+          var cookieHeader = ctx.headers.cookie;
           var cookies = cookie.parse(cookieHeader);
-          var decoded_token = jwt.verify(cookies["SessionToken"], 'asdfasdfasdf');
+          var decoded_token = jwt.verify(cookies["SessionToken"], process.env.COOKIE_JWT_SIGNING_SECRET);
           // console.log(decoded_token);
           return decoded_token;
      }

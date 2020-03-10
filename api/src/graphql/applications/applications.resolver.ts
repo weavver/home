@@ -27,7 +27,7 @@ export class ApplicationsResolver {
                .has('cid', '0')
                .has('label','application');
 
-          var docs = await gremlin.executeQuery(query);
+          var docs = await gremlin.command(query);
 
           var items : Array<application> = [];
           if (docs.length > 0) {
@@ -55,7 +55,7 @@ export class ApplicationsResolver {
           let query = gremlin.g.addV("application")
                .property('cid', '0')
                .property("name", "I Serve Law");
-          gremlin.executeQuery(query);
+          gremlin.command(query);
 
           return data;
      }

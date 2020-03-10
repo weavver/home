@@ -1,22 +1,30 @@
-module.exports = () => {
+module.exports = function (wallaby) {
      return {
           files: [
                     { pattern: 'api/node_modules/dotenv/**', instrument: false},
                     { pattern: '.env.example', instrument: false},
                     { pattern: '.env', instrument: false},
-                    'api/schema.js',
-                    'api/rest/*.js',
-                    'api/rest/**/*.js',
-                    'api/rest/**/*.hbs',
-                    { pattern: 'api/rest/**/*test.js', ignore: true }
+                    'api/schema.ts',
+                    'api/*.ts',
+                    'api/src/*.ts',
+                    'api/src/**/*.ts',
+                    'api/src/**/*.hbs',
+                    { pattern: 'api/src/**/*test.ts', ignore: true }
                ],
                tests: [
-                    'api/rest/**/*test.js'
+                    'api/src/**/*test.ts'
                ],
                env: {
                     kind: 'chrome',
                     type: 'node'
                },
+               compilers: {
+                    '**/*.ts': wallaby.compilers.typeScript({
+                      /* TypeScript compiler specific options
+                       * https://github.com/Microsoft/TypeScript/wiki/Compiler-Options
+                       * (no need to duplicate tsconfig.json, if you have it, it will be automatically used) */
+                    })
+               },              
                debug: true,
                setup: function(wallaby) {
                     var path = require('path');

@@ -32,28 +32,32 @@ export class IdentityResolver {
 
           let gremlin = new GremlinHelper();
 
-          var q2 = gremlin.g.V()
-               .has('label','identity')
-               .has('cid', '0')
-               .has("email", "is_in_use@example.com");
+          var qIdentityGet = gremlin.g.V()
+               .hasLabel('identity')
+               .has('cid', 0)
+               .has("email", "is_in_use@example.com")
+               .valueMap(true)
+               .limit(1);
                // .property('name_given', "John")
                // .property('name_family', "Doe");
 
-          var docs = await gremlin.executeQuery(q2);
+          var docs = await gremlin.command(qIdentityGet);
+          console.log(docs);
           
-          if (docs.length == 1) {
-               var doc = docs._items[0].properties;
-               // console.log(doc);
-               
+          if (docs.result.length == 1) {
+               var doc = docs.result[0];
+               console.log(doc.email);
                let i = new identity();
-               i.email = gremlin.getPropertyValue(doc, "email") || "not found";
+               i.id = doc.id[0];
+               i.email = doc.email[0] || "not found";
                i.name_given = gremlin.getPropertyValue(doc, "name_given");
                i.name_family = gremlin.getPropertyValue(doc, "name_family");
 
-               await gremlin.close();
+               console.log(i);
+               // await gremlin.close();
                return i;
           }
-          await gremlin.close();
+          // await gremlin.close();
           return undefined;
      }
 
@@ -69,7 +73,7 @@ export class IdentityResolver {
           @Arg("property") property: string,
           @Arg("value") value: string
      ): Promise<String> {
-          // console.log(property + ": " + value);
+          console.log(property + ": " + value);
 
           let gremlin = new GremlinHelper();
           var q2 = gremlin.g.V()
@@ -78,7 +82,7 @@ export class IdentityResolver {
                .has("email", "is_in_use@example.com")
                .property(property, value);
 
-          var result = await gremlin.executeQuery(q2);
+          var result = await gremlin.command(q2);
           await gremlin.close();
           // console.log(result);
 
@@ -97,7 +101,7 @@ export class IdentityResolver {
                .has("email", "is_in_use@example.com")
                .property("password_hash", bcrypt.hashSync(password_new, 10));
 
-          var result = await gremlin.executeQuery(q2);
+          var result = await gremlin.command(q2);
           await gremlin.close();
           // console.log(result);
 

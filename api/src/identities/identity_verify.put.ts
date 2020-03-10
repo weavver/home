@@ -29,11 +29,10 @@ export const handler = async function (event : APIGatewayProxyEvent, context : C
                .has('email', body.email)
                .has('verification_code', body.code);
 
-          var result = await gremlin.executeQuery(qIdentityVerify);
+          var result = await gremlin.command(qIdentityVerify);
           console.log(result);
           await gremlin.close();
-          
-          
+
           if (result.length > 0) {
                await gremlin.close();
                return { status_code: 422 };

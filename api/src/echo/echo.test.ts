@@ -1,23 +1,24 @@
-import * as echo from './echo';
+import { config } from 'dotenv';
+import { resolve } from "path";
+config({ path: resolve(__dirname, "../../.env") });
 
-var assert = require('chai').assert;
+import chai = require('chai');
+var assert = chai.assert;
 
-import * as schema from '../../schema';
-var Ajv = require('ajv');
-var ajv = new Ajv({schemas: schema.models});
-var validate = ajv.getSchema('http://home.weavver.com/schema/accountCreate.json');
-import { APIGatewayProxyEvent, Context } from "aws-lambda";
-
-require('dotenv').config({ path: '../../.env' })
+import { app } from "../home-api";
+import { HTTPInjectResponse } from 'fastify';
 
 describe('API', function() {
      it('Echo', async () => {
-          var event = {};
-          var context = {};
-          var response = await echo.handler(event as APIGatewayProxyEvent, context as Context);
-          // await echo.clear();
-          console.log(response);
+          const response : HTTPInjectResponse = await app.inject({
+                    method: "GET",
+                    headers: {},
+                    url: "/",
+                    query: { "a": "b" }
+               });
+               
           assert.equal(response.statusCode, 200);
-          assert.isTrue(JSON.parse(response.body).message.startsWith("Hello World"));
+          console.log(response.payload);
+          assert.isTrue(JSON.parse(response.payload).message.startsWith("we are online"));
      });
 });
