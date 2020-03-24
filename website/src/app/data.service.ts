@@ -73,7 +73,6 @@ export class DataService {
           return this.httpClient.put<any>(this.API_PROFILE, { params: params });
      }
 
-
      public I() {
           return this.apollo.watchQuery<any>({
                query: gql`{
@@ -85,6 +84,10 @@ export class DataService {
                           }`            
                     })
                .valueChanges;
+     }
+
+     public identities() {
+          return this.apollo.watchQuery<any>({ query: gql`{ identities { id, email, name_given, name_family } }` }).valueChanges;
      }
 
      public identity_property_set(property : string, value : string) : Observable<any> {
@@ -121,12 +124,8 @@ export class DataService {
                     });
      }
 
-
      public getApplications() {
-          return this.apollo.watchQuery<any>({
-                    query: gql`{ applications { id, cid, name } }`
-               })
-               .valueChanges;
+          return this.apollo.watchQuery<any>({ query: gql`{ applications { id, cid, name } }` }).valueChanges;
      }
 
      public Application_add() {

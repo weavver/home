@@ -13,6 +13,7 @@ import { AuthModule }                   from './auth/auth.module';
 
 import { AppComponent }                 from './app.component';
 import { IdentityComponent }            from './identities/identity.component';
+import { IdentitiesComponent }          from './identities/list/identities.component';
 import { ApplicationsComponent }        from './applications/list/applications.component';
 import { ApplicationComponent }         from './applications/edit/application.component';
 import { PageNotFoundComponent }        from './page-not-found/page-not-found.component';
@@ -23,6 +24,11 @@ import { ApolloModule, APOLLO_OPTIONS } from "apollo-angular";
 import { InMemoryCache }                from "apollo-cache-inmemory";
 
 import { AuthService }                  from './auth/auth.service';
+
+import { AgGridModule } from 'ag-grid-angular';
+
+// import "ag-grid/dist/styles/ag-grid.css";
+// import "ag-grid/dist/styles/ag-theme-balham.css";
 
 import {
      HttpBatchLinkModule,
@@ -43,13 +49,15 @@ import { environment } from 'src/environments/environment';
           ApolloModule,
           // HttpLinkModule,
           WeavverCardModule,
-          HttpBatchLinkModule
+          HttpBatchLinkModule,
+          AgGridModule
      ],
      declarations: [
           AppComponent,
           ApplicationsComponent,
           ApplicationComponent,
           IdentityComponent,
+          IdentitiesComponent,
           PageNotFoundComponent
      ],
      providers: [

@@ -2,42 +2,50 @@ service: ${env:API_NAME}
 
 provider:
   name: aws
-  runtime: nodejs10.x
+  runtime: nodejs12.x
+  region: ${env:AWS_REGION}
   stage: ${env:API_STAGE}
-  region: us-east-1
-  memorySize: 2048
+  memorySize: 1024
   timeout: 4
+  environment:
+    GREMLIN_ENDPOINT: ${env:GREMLIN_ENDPOINT}
+    GREMLIN_DATABASE: ${env:GREMLIN_DATABASE}
+    GREMLIN_PRIMARYKEY: ${env:GREMLIN_PRIMARYKEY}
+    GREMLIN_COLLECTION: ${env:GREMLIN_COLLECTION}
+    TWILIO_ACCOUNTSID: ${env:TWILIO_ACCOUNTSID}
+    TWILIO_AUTHTOKEN: ${env:TWILIO_AUTHTOKEN}
+    SENDGRID_KEY: ${env:SENDGRID_KEY}
+    API_STAGE: ${env:API_STAGE}
 
-#websocketApiRouteSelectionExpression: $request.body.action
 plugins:
   - serverless-plugin-typescript
   - serverless-plugin-include-dependencies
   - serverless-step-functions
   - serverless-pseudo-parameters
-  - serverless-aws-documentation
-  - serverless-domain-manager
+  # - serverless-aws-documentation
+  # - serverless-domain-manager
   - serverless-offline
- # - serverless-websockets-plugin
+  # - serverless-websockets-plugin
 
-resources:
-  Resources:
-    ApiGatewayRestApi:
-      Type: AWS::ApiGateway::RestApi
-      Properties:
-        Name: ${env:AWS_API_GATEWAY_NAME}
+# resources:
+#   Resources:
+#     ApiGatewayRestApi:
+#       Type: AWS::ApiGateway::RestApi
+#       Properties:
+#         Name: ${env:AWS_API_GATEWAY_NAME}
 
 custom:
   serverless-offline:
     httpsProtocol: "dev-certs"
-    port: 3001
+    port: 3000
 
-  customDomain:
-    domainName: ${env:API_DOMAIN}
-    certificateName: ${env:API_CERTIFICATE_NAME}
-    basePath: ${env:API_STAGE}
-    stage: ${self:provider.stage}
-    createRoute53Record: false
-    endpointType: edge
+#   customDomain:
+#     domainName: ${env:API_DOMAIN}
+#     certificateName: ${env:API_CERTIFICATE_NAME}
+#     basePath: ${env:API_STAGE}
+#     stage: ${self:provider.stage}
+#     createRoute53Record: false
+#     endpointType: edge
 
   documentation:
       api:
@@ -72,162 +80,40 @@ custom:
           #path: "some/other/path"
           #description: "This is the description for some/other/path"
 
-  environment:
-      GREMLIN_ENDPOINT: ${env:GREMLIN_ENDPOINT}
-      GREMLIN_DATABASE: ${env:GREMLIN_DATABASE}
-      GREMLIN_PRIMARYKEY: ${env:GREMLIN_PRIMARYKEY}
-      GREMLIN_COLLECTION: ${env:GREMLIN_COLLECTION}
-      SENDGRID_KEY: ${env:SENDGRID_KEY}
-
 package:
-  excludeDevDependencies: false
+  excludeDevDependencies: true
   exclude:
     - node_modules/**
   include:
     - node_modules/@maxmind/**
     - node_modules/@sendgrid/**
     - node_modules/gremlin/**
+    - node_modules/apollo**
+    - node_modules/@apollo**
 
 functions:
 
-  echo:
-    handler: rest/echo/echo.handler
-    environment:
-      GREMLIN_ENDPOINT: ${env:GREMLIN_ENDPOINT}
-      GREMLIN_DATABASE: ${env:GREMLIN_DATABASE}
-      GREMLIN_PRIMARYKEY: ${env:GREMLIN_PRIMARYKEY}
-      GREMLIN_COLLECTION: ${env:GREMLIN_COLLECTION}
-      TWILIO_ACCOUNTSID: ${env:TWILIO_ACCOUNTSID}
-      TWILIO_AUTHTOKEN: ${env:TWILIO_AUTHTOKEN}
-      SENDGRID_KEY: ${env:SENDGRID_KEY}
+  default:
+    handler: src/home-api.handler
     events:
-      - http:
-          path: echo
-          method: get
-          cors: true
-          documentation:
-            summary: "/echo"
-      - http:
-          path: echo
-          method: post
-          cors: true
-          documentation:
-            summary: "/echo"
-      - http:
-          path: echo
-          method: put
-          cors: true
-          documentation:
-            summary: "/echo"
+      - httpApi: '*'
+        # path: '*'
+        # cors:
+        #   origin: https://${env:WEBSITE_DOMAIN}
+        #   allowCredentials: true
 
-  identities_put:
-    handler: rest/identities/identities_put.handler
-    environment:
-      GREMLIN_ENDPOINT: ${env:GREMLIN_ENDPOINT}
-      GREMLIN_DATABASE: ${env:GREMLIN_DATABASE}
-      GREMLIN_PRIMARYKEY: ${env:GREMLIN_PRIMARYKEY}
-      GREMLIN_COLLECTION: ${env:GREMLIN_COLLECTION}
-      TWILIO_ACCOUNTSID: ${env:TWILIO_ACCOUNTSID}
-      TWILIO_AUTHTOKEN: ${env:TWILIO_AUTHTOKEN}
-      SENDGRID_KEY: ${env:SENDGRID_KEY}
+  graphql:
+    handler: src/graphql/home-apollo-server.handler
     events:
-      - http:
-          path: identities
-          method: put
-          cors: true
-          documentation:
-            summary: "PUT /identities"
-
-  passwords_get:
-    handler: rest/password/password_get.handler
-    environment:
-      GREMLIN_ENDPOINT: ${env:GREMLIN_ENDPOINT}
-      GREMLIN_DATABASE: ${env:GREMLIN_DATABASE}
-      GREMLIN_PRIMARYKEY: ${env:GREMLIN_PRIMARYKEY}
-      GREMLIN_COLLECTION: ${env:GREMLIN_COLLECTION}
-      COOKIE_DOMAIN: ${env:COOKIE_DOMAIN}
-      API_VERSION: ${env:API_STAGE}
-      SENDGRID_KEY: ${env:SENDGRID_KEY}
-    events:
-      - http:
-          path: passwords
-          method: get
-          cors: true
-          documentation:
-            summary: "GET /password?email={email}"
-
-  tokens_get:
-    handler: rest/tokens/tokens_get.handler
-    environment:
-      GREMLIN_ENDPOINT: ${env:GREMLIN_ENDPOINT}
-      GREMLIN_DATABASE: ${env:GREMLIN_DATABASE}
-      GREMLIN_PRIMARYKEY: ${env:GREMLIN_PRIMARYKEY}
-      GREMLIN_COLLECTION: ${env:GREMLIN_COLLECTION}
-      COOKIE_DOMAIN: ${env:COOKIE_DOMAIN}
-      API_VERSION: ${env:API_STAGE}
-    events:
-      - http:
-          path: tokens
-          method: get
-          cors: true
-          documentation:
-            summary: "GET /tokens?username={username}&password={password}"
-
-  tokens_del:
-    handler: rest/tokens/tokens_del.handler
-    environment:
-      GREMLIN_ENDPOINT: ${env:GREMLIN_ENDPOINT}
-      GREMLIN_DATABASE: ${env:GREMLIN_DATABASE}
-      GREMLIN_PRIMARYKEY: ${env:GREMLIN_PRIMARYKEY}
-      GREMLIN_COLLECTION: ${env:GREMLIN_COLLECTION}
-    events:
-      - http:
-          path: tokens
-          method: delete
+      - httpApi:
+          path: /graphql
+          method: GET
           cors:
             origin: https://${env:WEBSITE_DOMAIN}
             allowCredentials: true
-          documentation:
-            summary: "/tokens delete"
-
-  signout_get:
-    handler: rest/signout_get.handler
-    environment:
-      GREMLIN_ENDPOINT: ${env:GREMLIN_ENDPOINT}
-      GREMLIN_DATABASE: ${env:GREMLIN_DATABASE}
-      GREMLIN_PRIMARYKEY: ${env:GREMLIN_PRIMARYKEY}
-      GREMLIN_COLLECTION: ${env:GREMLIN_COLLECTION}
-      COOKIE_DOMAIN: ${env:COOKIE_DOMAIN}
-      API_VERSION: ${env:API_STAGE}
-      WEBSITE_DOMAIN: ${env:WEBSITE_DOMAIN}
-    events:
-      - http:
-          path: signout
-          method: get
-          cors: true
-          documentation:
-            summary: "GET /signout"
-
-  graphql:
-    handler: src/graphql/graphql.handler
-    environment:
-      GREMLIN_ENDPOINT: ${env:GREMLIN_ENDPOINT}
-      GREMLIN_DATABASE: ${env:GREMLIN_DATABASE}
-      GREMLIN_PRIMARYKEY: ${env:GREMLIN_PRIMARYKEY}
-      GREMLIN_COLLECTION: ${env:GREMLIN_COLLECTION}
-      COOKIE_DOMAIN: ${env:COOKIE_DOMAIN}
-      API_VERSION: ${env:API_STAGE}
-      WEBSITE_DOMAIN: ${env:WEBSITE_DOMAIN}
-    events:
-    - http:
-        path: graphql
-        method: post
-        cors:
-          origin: https://${env:WEBSITE_DOMAIN}
-          allowCredentials: true
-    - http:
-        path: graphql
-        method: get
-        cors:
-          origin: https://${env:WEBSITE_DOMAIN}
-          allowCredentials: true
+      - httpApi:
+          path: /graphql
+          method: POST
+          cors:
+            origin: https://${env:WEBSITE_DOMAIN}
+            allowCredentials: true

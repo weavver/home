@@ -15,6 +15,8 @@
     "@angular/platform-browser-dynamic": "8.2.14",
     "@angular/router": "8.2.14",
     "@types/rx": "^4.1.1",
+    "ag-grid-angular": "^22.1.1",
+    "ag-grid-community": "^22.1.1",
     "angular-in-memory-web-api": "0.8.0",
     "apollo-angular": "^1.8.0",
     "apollo-angular-link-http": "^1.9.0",

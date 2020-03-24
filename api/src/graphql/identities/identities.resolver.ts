@@ -17,8 +17,39 @@ import { identity, identities_add } from "./identity";
 import { GremlinHelper } from '../../../gremlin'
 import { checkAccess } from '../checkAccess';
 
+import { Args,ArgsType, Field, Int } from 'type-graphql'
+import { Min, Max } from "class-validator";
+
+@ArgsType()
+export class IdentitiesArgs {
+     @Field(type => Int, { defaultValue: 0 })
+     @Min(0)
+     skip: number;
+
+     @Field(type => Int)
+     @Min(1)
+     @Max(50)
+     take = 25;
+
+     @Field(type => Int, { nullable: true })
+     id?: string;
+
+     // helpers - index calculations
+     get startIndex(): number {
+          return this.skip;
+     }
+     get endIndex(): number {
+          return this.skip + this.take;
+     }
+}
+
 @Resolver(of => identity)
 export class IdentityResolver {
+     gremlin : GremlinHelper;
+
+     constructor() {
+          this.gremlin = new GremlinHelper();
+     }
 
      @Mutation(() => String)
      async echo(@Arg("data") data: string): Promise<string> {
@@ -29,10 +60,7 @@ export class IdentityResolver {
      // @UseMiddleware(checkAccess)
      @Query(() => identity)
      async I(): Promise<identity | undefined> {
-
-          let gremlin = new GremlinHelper();
-
-          var qIdentityGet = gremlin.g.V()
+          var qIdentityGet = this.gremlin.g.V()
                .hasLabel('identity')
                .has('cid', 0)
                .has("email", "is_in_use@example.com")
@@ -41,7 +69,7 @@ export class IdentityResolver {
                // .property('name_given', "John")
                // .property('name_family', "Doe");
 
-          var docs = await gremlin.command(qIdentityGet);
+          var docs = await this.gremlin.command(qIdentityGet);
           console.log(docs);
           
           if (docs.result.length == 1) {
@@ -50,8 +78,8 @@ export class IdentityResolver {
                let i = new identity();
                i.id = doc.id[0];
                i.email = doc.email[0] || "not found";
-               i.name_given = gremlin.getPropertyValue(doc, "name_given");
-               i.name_family = gremlin.getPropertyValue(doc, "name_family");
+               i.name_given = this.gremlin.getPropertyValue(doc, "name_given");
+               i.name_family = this.gremlin.getPropertyValue(doc, "name_family");
 
                console.log(i);
                // await gremlin.close();
@@ -94,15 +122,14 @@ export class IdentityResolver {
           @Arg("password_current") password_current: string,
           @Arg("password_new") password_new: string
      ): Promise<Boolean> {
-          let gremlin = new GremlinHelper();
-          var q2 = gremlin.g.V()
+          var q2 = this.gremlin.g.V()
                .has('label','identity')
                .has('cid', '0')
                .has("email", "is_in_use@example.com")
                .property("password_hash", bcrypt.hashSync(password_new, 10));
 
-          var result = await gremlin.command(q2);
-          await gremlin.close();
+          var result = await this.gremlin.command(q2);
+          // await gremlin.close();
           // console.log(result);
 
           return true;
@@ -115,8 +142,47 @@ export class IdentityResolver {
      ): Promise<Boolean> {
           return true;
      }
-}
 
+     @Authorized(["ADMIN"])
+     // @UseMiddleware(checkAccess)
+     @Query(() => [identity], { nullable: true })
+     async identities(@Args() { id, startIndex, endIndex }: IdentitiesArgs): Promise<[identity] | undefined> {
+          var qIdentitiesGet;
+          if (id) {
+               qIdentitiesGet = this.gremlin.g.V(id)
+                    .hasLabel('identity')
+                    .has('cid', 0)
+                    // .property("id")
+                    .valueMap(true);
+          }
+          else {
+               qIdentitiesGet = this.gremlin.g.V()
+                    .hasLabel('identity')
+                    .has('cid', 0)
+                    // .property("id")
+                    .valueMap(true);
+          }
+
+          var docs = await this.gremlin.command(qIdentitiesGet);
+          // return docs.result;
+          var identities : any = [];
+          docs.result.forEach((item:any) => {
+                    console.log(item.email);
+                    identities.push(this.getObject(item));
+               });
+          return identities;
+     }
+
+     private getObject(item : any) : identity {
+          let i = new identity();
+          // console.log(item.id);
+          i.id = parseInt(item.id);
+          i.email = item.email[0] || "not found";
+          i.name_given = this.gremlin.getPropertyValue(item, "name_given");
+          i.name_family = this.gremlin.getPropertyValue(item, "name_family");
+          return i;
+     }
+}
 
 
 // @FieldResolver()

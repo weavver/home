@@ -61,10 +61,6 @@
         },
      "include": [
           "./src/*",
-          "./src/**/*",
-          "./rest/*",
-          "./rest/**/*",
-          "./rest/helper_cookiehandler.ts",
           "./app.ts"
-]    
+      ]    
 }

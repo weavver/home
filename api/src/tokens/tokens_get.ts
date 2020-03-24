@@ -1,10 +1,10 @@
 import { GremlinHelper } from '../../gremlin';
 import { APIGatewayProxyEvent, Context, APIGatewayProxyResult } from "aws-lambda";
 import { HTTPResponseType } from '../common/http-response-type';
-
 import * as fastifyCookie from "fastify-cookie";
 import * as fastify from 'fastify'
 
+var ms = require('ms');
 var cookie = require('cookie');
 var bcrypt = require('bcryptjs');
 var jwt = require('jsonwebtoken');
@@ -75,7 +75,7 @@ export class TokensGetRoute {
 
                var doc = cmdResponse.result[0];
 
-               console.log("validating password..");
+               console.log("validating password...");
                // console.log(doc.password_hash[0]);
                // console.log(query.password);
                // var passwordhashed = bcrypt.hashSync(query.password); // doc.password_hash[0]);
@@ -89,8 +89,19 @@ export class TokensGetRoute {
                          name: "Gen Apple",
                          email: query.email // to remove later
                     };
-                    response.cookieToken = jwt.sign(token_data, process.env.COOKIE_JWT_SIGNING_SECRET, { expiresIn: 60 * 60 });
-                    response.body = cmdResponse.command_time;;
+
+                    console.log(ms('30 days'));
+                    // console.log(process.env.COOKIE_JWT_SIGNING_SECRET);
+                    response.cookieToken = jwt.sign(token_data,
+                                                    process.env.COOKIE_JWT_SIGNING_SECRET,
+                                                    { expiresIn: ms('30 days') });
+                    response.body = cmdResponse.command_time;
+
+
+                    console.log("cookie token: ", response.cookieToken);
+
+                    var x = jwt.verify(response.cookieToken, process.env.COOKIE_JWT_SIGNING_SECRET);
+                    console.log(x);
                }
                else {
                     // passwords do not match

@@ -13,8 +13,8 @@ import {
 
 @ObjectType("identity")
 export class identity {
-     @Field(() => ID)
-     id: number;
+     @Field(() => Number)
+     id: Number;
 
      @Field(() => String)
      email: string;
