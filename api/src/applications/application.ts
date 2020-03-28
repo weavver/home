@@ -16,9 +16,6 @@ export class application {
      @Field(() => String)
      id: string;
 
-     @Field(() => Number)
-     cid: Number;
-
      @Field(() => String)
      name: string;
 

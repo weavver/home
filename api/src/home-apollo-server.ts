@@ -9,7 +9,7 @@ import { CenterResolver } from "./centers/centers.resolver";
 import { IdentityResolver } from "./identities/identities.resolver";
 import { ApplicationsResolver } from "./applications/applications.resolver";
 import { Callback, Context } from 'aws-lambda';
-import { GremlinHelper } from '../../gremlin';
+import { GremlinHelper } from './gremlin';
 
 var cookie = require('cookie');
 var jwt = require('jsonwebtoken');

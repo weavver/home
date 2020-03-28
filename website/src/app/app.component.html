@@ -36,15 +36,22 @@
                     <i class="material-icons" style="font-size: 1.85rem">account_circle</i>
                     <span *ngIf="this.navAccountExpanded">Identity</span>
                </div>
-               <div [class.sidebarItemExpanded]="this.navAccountExpanded" [class.sidebarItemCollapsed]="!this.navAccountExpanded" routerLink="/password" routerLinkActive="sidebarItemActive" title="Settings" *ngIf="authService.isLoggedIn">
-                   <i class="material-icons" style="font-size: 1.85rem">lock</i>
-                   <span *ngIf="this.navAccountExpanded">Password</span>
-              </div>
-              <div [class.sidebarItemExpanded]="this.navAccountExpanded" [class.sidebarItemCollapsed]="!this.navAccountExpanded" routerLink="/identities" routerLinkActive="sidebarItemActive" title="Settings" *ngIf="authService.isLoggedIn">
-               <!-- <i class="material-icons" style="font-size: 1.85rem">supervised_user_circle</i>settings_overscan -->
-               <i class="material-icons" style="font-size: 1.85rem">settings</i>
-               <span *ngIf="this.navAccountExpanded">Identities</span>
-             </div>
+               <div [class.sidebarItemExpanded]="this.navAccountExpanded" [class.sidebarItemCollapsed]="!this.navAccountExpanded" routerLink="/password" routerLinkActive="sidebarItemActive" title="Password" *ngIf="authService.isLoggedIn">
+                    <i class="material-icons" style="font-size: 1.85rem">lock</i>
+                    <span *ngIf="this.navAccountExpanded">Password</span>
+               </div>
+               <div [class.sidebarItemExpanded]="this.navAccountExpanded" [class.sidebarItemCollapsed]="!this.navAccountExpanded" routerLink="/identities" routerLinkActive="sidebarItemActive" title="Identities" *ngIf="authService.isLoggedIn">
+                    <i class="material-icons" style="font-size: 1.85rem">supervised_user_circle</i>
+                    <span *ngIf="this.navAccountExpanded">Identities</span>
+               </div>
+               <div [class.sidebarItemExpanded]="this.navAccountExpanded" [class.sidebarItemCollapsed]="!this.navAccountExpanded" routerLink="/centers" routerLinkActive="sidebarItemActive" title="Centers" *ngIf="authService.isLoggedIn">
+                    <i class="material-icons" style="font-size: 1.85rem">adjust</i>
+                    <span *ngIf="this.navAccountExpanded">Centers</span>
+               </div>
+               <div [class.sidebarItemExpanded]="this.navAccountExpanded" [class.sidebarItemCollapsed]="!this.navAccountExpanded" routerLink="/settings" routerLinkActive="sidebarItemActive" title="Settings" *ngIf="authService.isLoggedIn">
+                    <i class="material-icons" style="font-size: 1.85rem">settings</i>
+                    <span *ngIf="this.navAccountExpanded">Settings</span>
+               </div>
          </div>
           <div class="menuButton" (click)="toggleNavAccount()" *ngIf="authService.isLoggedIn" style="width: 100%; height: 48px;">
                <div>

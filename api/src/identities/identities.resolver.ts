@@ -14,7 +14,7 @@ import {
 import { plainToClass } from "class-transformer";
 import { identity, identities_add } from "./identity";
 
-import { GremlinHelper } from '../../../gremlin'
+import { GremlinHelper } from '../gremlin'
 import { checkAccess } from '../checkAccess';
 
 import { Args,ArgsType, Field, Int } from 'type-graphql'
@@ -78,8 +78,8 @@ export class IdentityResolver {
                let i = new identity();
                i.id = doc.id[0];
                i.email = doc.email[0] || "not found";
-               i.name_given = this.gremlin.getPropertyValue(doc, "name_given");
-               i.name_family = this.gremlin.getPropertyValue(doc, "name_family");
+               i.name_given = this.gremlin.getPropertyValue(doc, "name_given", "[not set]");
+               i.name_family = this.gremlin.getPropertyValue(doc, "name_family", "[not set]");
 
                console.log(i);
                // await gremlin.close();
@@ -178,8 +178,8 @@ export class IdentityResolver {
           // console.log(item.id);
           i.id = parseInt(item.id);
           i.email = item.email[0] || "not found";
-          i.name_given = this.gremlin.getPropertyValue(item, "name_given");
-          i.name_family = this.gremlin.getPropertyValue(item, "name_family");
+          i.name_given = this.gremlin.getPropertyValue(item, "name_given", "");
+          i.name_family = this.gremlin.getPropertyValue(item, "name_family", "");
           return i;
      }
 }

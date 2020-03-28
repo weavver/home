@@ -13,7 +13,7 @@ import {
 import { plainToClass } from "class-transformer";
 import { application } from "./application";
 
-import { GremlinHelper } from '../../../gremlin';
+import { GremlinHelper } from '../gremlin';
 let gremlin = new GremlinHelper();
 
 @Resolver(of => application)
@@ -22,26 +22,27 @@ export class ApplicationsResolver {
      @Authorized()
      @Query(() => [application])
      async applications(): Promise<Array<application>> {
-
+          console.log("....");
           var query = gremlin.g.V()
-               .has('cid', '0')
-               .has('label','application');
+               .hasLabel("application")
+               .valueMap(true);
 
           var docs = await gremlin.command(query);
+          console.log(docs);
 
           var items : Array<application> = [];
-          if (docs.length > 0) {
-               (docs as any)._items.forEach( (vertex: any) => {
-                    var properties = vertex.properties;
+          if (docs.result.length > 0) {
+               docs.result.forEach((vertex : any) => {
+                    // console.log(vertex);
                     let item = new application();
                     item.id = vertex.id;
-                    item.cid = gremlin.getPropertyValue(properties, "cid") as unknown as Number;
-                    item.name = gremlin.getPropertyValue(properties, "name") || "not found";
+                    item.name = gremlin.getPropertyValue(item, "name", "[not set]");
                     items.push(item);
                     return item;  
                });
           }
-
+          
+          console.log(items);
           // await gremlin.close();
           return items;
      }

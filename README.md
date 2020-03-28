@@ -6,7 +6,8 @@ Description: This software is designed to provide a good authentication system.
 Problem:  
 1. Each application needs it's own authentication database.  
 2. Maintenance of user systems across apps is redundant.  
-Solution: Home generates a JWT token to authenticate each user.  
+
+Solution: Home generates a JWT token to authenticate each user and supports oAuth2 authentication with client applications.  
 
 Software Stack: Angular, Fastify, AWS Lambda (optional), AWS API Gateway (optional), AWS S3 (optional)  
 

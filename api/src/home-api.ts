@@ -14,7 +14,7 @@ import { TokensDelRoute } from './tokens/tokens_del';
 import { PasswordsGetRoute } from './password/passwords_get';
 import { PasswordsPutRoute } from './password/passwords_put';
 import { IdentitiesPutRoute } from './identities/identities_put';
-import { HomeApolloServer } from './graphql/home-apollo-server';
+import { HomeApolloServer } from './home-apollo-server';
 
 import * as promclient from 'prom-client';
 import { Http2SecureServer, Http2ServerResponse } from 'http2';
@@ -53,10 +53,9 @@ function format(seconds : any){
      return pad(hours) + ' hour(s) ' + pad(minutes) + ' minute(s) ' + pad(seconds) + ' second(s)';
 }
 
-
 interface Query {
      foo?: number
-   }
+}
 
 // const app: fastify.FastifyInstance = fastify({})
 // app.register(fastifyPlugin);

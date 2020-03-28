@@ -20,7 +20,7 @@ var nock = require('nock');
 nock.disableNetConnect();
 
 // import gremlin from '../../gremlin';
-import { GremlinHelper } from '../../gremlin';
+import { GremlinHelper } from '../gremlin';
 import { Context, APIGatewayProxyEvent } from 'aws-lambda';
 
 describe('API', function() {

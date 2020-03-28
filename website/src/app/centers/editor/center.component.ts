@@ -1,4 +1,4 @@
-import { DataService } from '../data.service';
+import { DataService } from '../../data.service';
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map, finalize } from 'rxjs/operators';
@@ -17,12 +17,12 @@ import {
   } from '@angular/forms';
 
 @Component({
-     selector: 'app-identity',
-     templateUrl: './identity.component.html',
-     styleUrls: ['./identity.component.scss']
+     selector: 'center',
+     templateUrl: './center.component.html',
+     styleUrls: ['./center.component.scss']
 })
 
-export class IdentityComponent implements OnInit {
+export class CenterComponent implements OnInit {
      processing : Boolean = false;
 
      I$: Observable<any>;

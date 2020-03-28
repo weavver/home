@@ -12,10 +12,13 @@ import { AppRoutingModule }             from './app-routing.module';
 import { AuthModule }                   from './auth/auth.module';
 
 import { AppComponent }                 from './app.component';
-import { IdentityComponent }            from './identities/identity.component';
+
+import { CenterComponent }              from './centers/editor/center.component';
+import { CentersComponent }             from './centers/list/centers.component';
+import { IdentityComponent }            from './identities/editor/identity.component';
 import { IdentitiesComponent }          from './identities/list/identities.component';
 import { ApplicationsComponent }        from './applications/list/applications.component';
-import { ApplicationComponent }         from './applications/edit/application.component';
+import { ApplicationComponent }         from './applications/editor/application.component';
 import { PageNotFoundComponent }        from './page-not-found/page-not-found.component';
 
 import { WeavverCardModule }            from './shared/card/card.module';
@@ -58,6 +61,8 @@ import { environment } from 'src/environments/environment';
           ApplicationComponent,
           IdentityComponent,
           IdentitiesComponent,
+          CenterComponent,
+          CentersComponent,
           PageNotFoundComponent
      ],
      providers: [

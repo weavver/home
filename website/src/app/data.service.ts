@@ -125,7 +125,7 @@ export class DataService {
      }
 
      public getApplications() {
-          return this.apollo.watchQuery<any>({ query: gql`{ applications { id, cid, name } }` }).valueChanges;
+          return this.apollo.watchQuery<any>({ query: gql`{ applications { id, name } }` }).valueChanges;
      }
 
      public Application_add() {

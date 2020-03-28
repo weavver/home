@@ -1,4 +1,4 @@
-import { GremlinHelper } from '../../gremlin';
+import { GremlinHelper } from '../gremlin';
 import { APIGatewayProxyEvent, Context } from "aws-lambda";
 import { HTTPResponseType } from '../common/http-response-type';
 

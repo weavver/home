@@ -1,4 +1,4 @@
-import { GremlinHelper } from '../../gremlin';
+import { GremlinHelper } from '../gremlin';
 import { APIGatewayProxyEvent, Context, APIGatewayProxyResult } from "aws-lambda";
 import { HTTPResponseType } from '../common/http-response-type';
 import * as fastifyCookie from "fastify-cookie";
@@ -61,7 +61,7 @@ export class TokensGetRoute {
 
                var qGetIdentity : any = gremlin.g.V()
                     .hasLabel('identity')
-                    .has('cid', '0')
+                    // .has('cid', '0')
                     .has('email', query.email.toLowerCase())
                     .valueMap(true);
 

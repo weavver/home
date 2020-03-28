@@ -12,7 +12,7 @@ import { plainToClass } from "class-transformer";
 @Resolver()
 export class CenterResolver {
      @Query(() => String)
-     async centers() {
+     async centers() {     
           return "Hello";
      }
 }

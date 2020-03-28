@@ -1,4 +1,4 @@
-import { GremlinHelper } from '../../gremlin';
+import { GremlinHelper } from '../gremlin';
 import { APIGatewayProxyEvent, Context } from "aws-lambda";
 import { HTTPResponseType } from '../common/http-response-type';
 import * as fastifyCookie from "fastify-cookie";
@@ -52,7 +52,7 @@ export class EchoRoute {
           // var result2 = await gremlin.command(qCreate); 
 
           var query = gremlin.g.V().limit(5).valueMap(true);
-          var result = await gremlin.command(query); 
+          var result = await gremlin.command(query);
           response.statusCode = 200;
           response.body = {
                     message: 'Hello World ' + this.counter,

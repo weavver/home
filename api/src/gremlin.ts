@@ -1,3 +1,7 @@
+import { config } from 'dotenv';
+import { resolve } from "path";
+config({ path: resolve(__dirname, "../../.env") });
+
 var now = require("performance-now");
 import * as Gremlin from 'gremlin';
 
@@ -17,14 +21,16 @@ export class GremlinHelper {
                     });
           } else {
                const DriverRemoteConnection = Gremlin.driver.DriverRemoteConnection;
-               this._client = new DriverRemoteConnection((process.env.GREMLIN_ENDPOINT || "ws://localhost:8182/gremlin"),
+               const url = process.env.GREMLIN_ENDPOINT || "ws://localhost:8182/gremlin";
+               console.log(url);
+               this._client = new DriverRemoteConnection(url,
                { 
                     traversalsource: "g",
                     mimeType : "application/vnd.gremlin-v2.0+json"
                });
           }
           const traversal = Gremlin.process.AnonymousTraversalSource.traversal;
-          this._g = traversal().withRemote(this.client)
+          this._g = traversal().withRemote(this.client);
      }
 
      private _client : any = null;
@@ -39,6 +45,8 @@ export class GremlinHelper {
      }
 
      public async command(command : Gremlin.process.GraphTraversal) : Promise<any> {
+          console.log(this.client.url);
+
           var t0 = now();
           var result = await command.toList();
           var t1 = now();
@@ -48,11 +56,11 @@ export class GremlinHelper {
           };
      }
 
-     public getPropertyValue(doc : any, property_name : string) : undefined {
+     public getPropertyValue(doc: any, property_name: string, default_value: string) : string {
           if (doc && doc[property_name])
                return doc[property_name][0];
           else
-               return undefined;
+               return default_value;
      }
 
      public async close() {

@@ -1,0 +1,23 @@
+<card [loading]="processing" maxWidth="700px">
+     <div fxLayout="row" style="display:flex; font-size: 22px;  align-items: left; justify-content: left;">
+          <div id="card_title">
+               <span style="vertical-align: middle !important;">Centers</span>
+          </div>
+     </div>
+     <hr />
+     <!-- <div *ngFor="let identity of identities | async">{{ identity.id | json }} </div> -->
+     <ag-grid-angular
+     style="width: 100;"
+          class="ag-theme-balham"
+          pagination="true"
+          paginationPageSize="30"
+          domLayout="autoHeight"
+          [rowMultiSelectWithClick]="false"
+          [rowData]="identities | async"
+          [columnDefs]="columnDefs"
+          (gridReady)="onGridReady($event)"
+          (rowDoubleClicked)="onrowDoubleClickedEvent($event)"
+          (onGridSizeChanged)="onGridSizeChangedEvent($event)"
+          >
+     </ag-grid-angular>
+</card>
