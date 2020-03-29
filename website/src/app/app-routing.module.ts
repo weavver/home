@@ -13,7 +13,7 @@ import { AuthGuard }                          from './auth/auth.guard';
 import { SelectivePreloadingStrategyService } from './selective-preloading-strategy.service';
 
 const appRoutes: Routes = [
-     { path: 'application/:id',    component: ApplicationComponent,   canActivate: [AuthGuard] },
+     { path: 'application',        component: ApplicationComponent,   canActivate: [AuthGuard] },
      { path: 'applications',       component: ApplicationsComponent,  canActivate: [AuthGuard] },
      { path: 'centers',            component: CentersComponent,       canActivate: [AuthGuard] },
      { path: 'center',             component: CenterComponent,        canActivate: [AuthGuard] },

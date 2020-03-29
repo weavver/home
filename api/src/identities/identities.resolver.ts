@@ -1,14 +1,20 @@
 var bcrypt = require('bcryptjs');
 
+import { Filter } from '../common/filter';
+
 import {
      Resolver,
+     Root,
      Query,
      FieldResolver,
      Arg,
-     Root,
+     Args,
+     ArgsType,
      Mutation,
      Authorized,
-     UseMiddleware
+     UseMiddleware,
+     Field,
+     Int
    } from "type-graphql";
 
 import { plainToClass } from "class-transformer";
@@ -16,32 +22,6 @@ import { identity, identities_add } from "./identity";
 
 import { GremlinHelper } from '../gremlin'
 import { checkAccess } from '../checkAccess';
-
-import { Args,ArgsType, Field, Int } from 'type-graphql'
-import { Min, Max } from "class-validator";
-
-@ArgsType()
-export class IdentitiesArgs {
-     @Field(type => Int, { defaultValue: 0 })
-     @Min(0)
-     skip: number;
-
-     @Field(type => Int)
-     @Min(1)
-     @Max(50)
-     take = 25;
-
-     @Field(type => Int, { nullable: true })
-     id?: string;
-
-     // helpers - index calculations
-     get startIndex(): number {
-          return this.skip;
-     }
-     get endIndex(): number {
-          return this.skip + this.take;
-     }
-}
 
 @Resolver(of => identity)
 export class IdentityResolver {
@@ -59,34 +39,20 @@ export class IdentityResolver {
      @Authorized(["ADMIN"])
      // @UseMiddleware(checkAccess)
      @Query(() => identity)
-     async I(): Promise<identity | undefined> {
+     async I(): Promise<identity> {
           var qIdentityGet = this.gremlin.g.V()
                .hasLabel('identity')
-               .has('cid', 0)
-               .has("email", "is_in_use@example.com")
                .valueMap(true)
                .limit(1);
-               // .property('name_given', "John")
-               // .property('name_family', "Doe");
 
           var docs = await this.gremlin.command(qIdentityGet);
           console.log(docs);
           
           if (docs.result.length == 1) {
                var doc = docs.result[0];
-               console.log(doc.email);
-               let i = new identity();
-               i.id = doc.id[0];
-               i.email = doc.email[0] || "not found";
-               i.name_given = this.gremlin.getPropertyValue(doc, "name_given", "[not set]");
-               i.name_family = this.gremlin.getPropertyValue(doc, "name_family", "[not set]");
-
-               console.log(i);
-               // await gremlin.close();
-               return i;
+               return this.getObject(doc);
           }
-          // await gremlin.close();
-          return undefined;
+          throw new Error("an identity session is not available");
      }
 
      @Mutation(() => identity)
@@ -97,24 +63,19 @@ export class IdentityResolver {
      }
 
      @Mutation(() => String)
-     async identity_property_set(          
+     async identity_property_set(
           @Arg("property") property: string,
           @Arg("value") value: string
-     ): Promise<String> {
-          console.log(property + ": " + value);
-
+     ): Promise<Boolean> {
+          const I = await this.I();          
           let gremlin = new GremlinHelper();
-          var q2 = gremlin.g.V()
-               .has('label','identity')
-               .has('cid', '0')
-               .has("email", "is_in_use@example.com")
-               .property(property, value);
+          var result = await gremlin.command(gremlin.g.V(I.id)
+               .property(property, value));
 
-          var result = await gremlin.command(q2);
           await gremlin.close();
           // console.log(result);
 
-          return "done";
+          return true;
      }
 
      @Mutation(() => Boolean)
@@ -122,34 +83,31 @@ export class IdentityResolver {
           @Arg("password_current") password_current: string,
           @Arg("password_new") password_new: string
      ): Promise<Boolean> {
-          var q2 = this.gremlin.g.V()
-               .has('label','identity')
-               .has('cid', '0')
-               .has("email", "is_in_use@example.com")
-               .property("password_hash", bcrypt.hashSync(password_new, 10));
+          const I = await this.I();
+          var q2 = this.gremlin.g.V(I.id)
+                       .property("password_hash", bcrypt.hashSync(password_new, 10));
 
           var result = await this.gremlin.command(q2);
-          // await gremlin.close();
           // console.log(result);
-
           return true;
      }
 
      @Mutation(() => String)
      async identity_email_reset_code(
           @Arg("email") email: string,
-          @Arg("center_id") center_id: number
-     ): Promise<Boolean> {
+          @Arg("center_id") center_id: number): Promise<Boolean> {
           return true;
      }
 
      @Authorized(["ADMIN"])
      // @UseMiddleware(checkAccess)
      @Query(() => [identity], { nullable: true })
-     async identities(@Args() { id, startIndex, endIndex }: IdentitiesArgs): Promise<[identity] | undefined> {
+     async identities(@Args() { id, skip, limit }: Filter): Promise<[identity] | undefined> {
           var qIdentitiesGet;
+
           if (id) {
-               qIdentitiesGet = this.gremlin.g.V(id)
+               // multiple ids not yet supported
+               qIdentitiesGet = this.gremlin.g.V(id[0])
                     .hasLabel('identity')
                     .has('cid', 0)
                     // .property("id")
@@ -165,12 +123,12 @@ export class IdentityResolver {
 
           var docs = await this.gremlin.command(qIdentitiesGet);
           // return docs.result;
-          var identities : any = [];
+          var items : any = [];
           docs.result.forEach((item:any) => {
                     console.log(item.email);
-                    identities.push(this.getObject(item));
+                    items.push(this.getObject(item));
                });
-          return identities;
+          return items;
      }
 
      private getObject(item : any) : identity {
@@ -183,7 +141,6 @@ export class IdentityResolver {
           return i;
      }
 }
-
 
 // @FieldResolver()
 // async name(@Root() parent: identity) {

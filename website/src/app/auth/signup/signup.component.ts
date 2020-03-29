@@ -45,8 +45,8 @@ export class SignUpComponent {
                     private fb: FormBuilder) {
           this.signupForm = this.fb.group({
                email: new FormControl('', [Validators.required, Validators.minLength(3), Validators.email]),
-               password: new FormControl('', [Validators.required, Validators.minLength(6)]),
-               password_confirm: new FormControl('', [Validators.required, Validators.minLength(6)])
+               password: new FormControl('', [Validators.required, Validators.minLength(6), Validators.maxLength(30)]),
+               password_confirm: new FormControl('', [Validators.required, Validators.minLength(6), Validators.maxLength(30)])
           }, {
               // updateOn: "blur",
                validator: this.checkPasswords

@@ -1,4 +1,4 @@
-<card>
+<card [loading]="processing">
      <div fxLayout="row" style="display:flex; font-size: 22px;  align-items: left; justify-content: left;">
           <div id="card_title">
                <span style="vertical-align: middle !important;">Application</span>
@@ -32,27 +32,27 @@
           </div>
           <div class="form-group">
                <div class="form-header">
-                    <label for="giver_email">Giver Email</label>
-                    <small class="form-text text-muted form-header-required" *ngIf="giver_email.invalid && !giver_email.pristine && errorGet(giver_email.errors) == 'required'">
+                    <label for="host_email">Host Email</label>
+                    <small class="form-text text-muted form-header-required" *ngIf="host_email.invalid && !host_email.pristine && errorGet(host_email.errors) == 'required'">
                          Required
                     </small>
-                    <small class="form-text text-muted form-header-required" [hidden]="giver_email.valid || giver_email.pristine" *ngIf="(giver_email.invalid && errorGet(giver_email.errors) == 'giver_email')">
+                    <small class="form-text text-muted form-header-required" [hidden]="host_email.valid || host_email.pristine" *ngIf="(host_email.invalid && errorGet(host_email.errors) == 'giver_email')">
                          A valid email is required.
                     </small>
                </div>
-               <input formControlName="giver_email" type="text" class="form-control" placeholder="email" name="giver_email" required>
+               <input formControlName="host_email" type="text" class="form-control" placeholder="email" name="host_email" required>
           </div>
           <div class="form-group">
                <div class="form-header">
-                    <label for="giver_website">Giver Website</label>
-                    <small class="form-text text-muted form-header-required" *ngIf="giver_website.invalid && !giver_website.pristine && errorGet(giver_website.errors) == 'required'">
+                    <label for="giver_website">Host Website</label>
+                    <small class="form-text text-muted form-header-required" *ngIf="host_website.invalid && !host_website.pristine && errorGet(host_website.errors) == 'required'">
                          Required
                     </small>
-                    <small class="form-text text-muted form-header-required" [hidden]="giver_website.valid || giver_website.pristine" *ngIf="(giver_website.invalid && errorGet(giver_website.errors) == 'email')">
+                    <small class="form-text text-muted form-header-required" [hidden]="host_website.valid || host_website.pristine" *ngIf="(host_website.invalid && errorGet(host_website.errors) == 'email')">
                          A valid email is required.
                     </small>
                </div>
-               <input formControlName="giver_website" type="text" class="form-control" placeholder="email" name="giver_website" required>
+               <input formControlName="host_website" type="text" class="form-control" placeholder="email" name="host_website" required>
           </div>
           <div style="text-align: center;">
                <button type="button" class="btn btn-primary" style="min-width: 200px; margin: 15px;" (click)="onSubmit()">Save</button>

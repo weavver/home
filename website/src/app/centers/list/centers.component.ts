@@ -20,34 +20,36 @@ export class CentersComponent implements OnInit {
 
      columnDefs = [
                {headerName: 'Id', field: 'id', sortable: true, maxWidth: 100, filter: true },
-               {
-                    headerName: "Name",
-                    children: [
-                         {headerName: 'Given', field: 'name_given', filter: true, sortable: true },
-                         {headerName: 'Family', field: 'name_family', filter: true, sortable: true }
-                    ]},
-               {headerName: 'Email', field: 'email' }
+               // {
+                    // headerName: "Stats",
+                    // children: [
+                    //      {headerName: 'Users', field: 'name', filter: true, sortable: true },
+                    // ]},
+               {headerName: 'Name', field: 'name' }
           ];
 
      constructor(private cd: ChangeDetectorRef, private graph: DataService, public router: Router) { }
 
      ngOnInit() {
           this.processing = true;
-          this.identities = this.graph.identities()
-               .pipe(
-                    map(result => { 
-                         return result.data.identities;
-                    }),
+          this.identities = this.graph.centers()
+                    .pipe(
+                         map(result => { 
+                              return result.data.centers;
+                         }
+                    ),
                     tap(() => this.processing = false),
                     tap(() => {
-                         if (this.gridApi) this.gridApi.sizeColumnsToFit()
-                    }),
+                              if (this.gridApi) this.gridApi.sizeColumnsToFit()
+                         }
+                    ),
                     finalize(() => { this.processing = false })
-               )
+               );
      }
 
      onGridReady(params) {
           this.gridApi = params.api;
+          this.gridApi.sizeColumnsToFit();
      }
 
      onrowDoubleClickedEvent(event) {

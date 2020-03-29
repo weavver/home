@@ -86,6 +86,10 @@ export class DataService {
                .valueChanges;
      }
 
+     public centers() {
+          return this.apollo.watchQuery<any>({ query: gql`{ centers { name } }` }).valueChanges;
+     }
+
      public identities() {
           return this.apollo.watchQuery<any>({ query: gql`{ identities { id, email, name_given, name_family } }` }).valueChanges;
      }
@@ -126,6 +130,16 @@ export class DataService {
 
      public getApplications() {
           return this.apollo.watchQuery<any>({ query: gql`{ applications { id, name } }` }).valueChanges;
+     }
+
+     public getApplication(idarg : [Number]) {
+          return this.apollo.watchQuery<any>({
+               query: gql`
+                    query applications($id: [Int!]) {
+                         applications(id: $id) { id, name, client_id, host_name, host_email, host_website } 
+                    }`,
+               variables: { id: idarg }
+          }).valueChanges;
      }
 
      public Application_add() {

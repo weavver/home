@@ -26,7 +26,7 @@ export class ApplicationsComponent implements OnInit {
      }
 
      openApp(application) {
-          this.router.navigateByUrl("/application/" + application.id);
+          this.router.navigateByUrl("/application?id=" + application.id);
      }
 
      getInitials(application) {

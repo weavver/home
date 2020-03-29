@@ -1,13 +1,20 @@
 var bcrypt = require('bcryptjs');
 
+import { Filter } from '../common/filter';
+
 import {
      Resolver,
+     Root,
      Query,
      FieldResolver,
      Arg,
-     Root,
+     Args,
+     ArgsType,
      Mutation,
-     Authorized
+     Authorized,
+     UseMiddleware,
+     Field,
+     Int
    } from "type-graphql";
 
 import { plainToClass } from "class-transformer";
@@ -21,14 +28,21 @@ export class ApplicationsResolver {
 
      @Authorized()
      @Query(() => [application])
-     async applications(): Promise<Array<application>> {
-          console.log("....");
-          var query = gremlin.g.V()
-               .hasLabel("application")
-               .valueMap(true);
+     async applications(@Args() { id, skip, limit }: Filter): Promise<Array<application>> {
+          console.log("....", id);
+
+          var query;
+          if (id)
+               query = gremlin.g.V(id[0])
+                    .valueMap(true);
+          else
+               query = gremlin.g.V()
+                    .hasLabel("application")
+                    .limit(limit)
+                    .valueMap(true);
 
           var docs = await gremlin.command(query);
-          console.log(docs);
+          // console.log(docs);
 
           var items : Array<application> = [];
           if (docs.result.length > 0) {
@@ -42,8 +56,7 @@ export class ApplicationsResolver {
                });
           }
           
-          console.log(items);
-          // await gremlin.close();
+          // console.log(items);
           return items;
      }
 

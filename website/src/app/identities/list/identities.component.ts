@@ -2,7 +2,7 @@ import { DataService } from '../../data.service';
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { Observable, Subscription } from 'rxjs';
 import { tap, map, finalize } from 'rxjs/operators';
-import { Router } from '@angular/router';
+import { Event, Router } from '@angular/router';
 
 @Component({
      selector: 'app-identities',
@@ -48,6 +48,7 @@ export class IdentitiesComponent implements OnInit {
 
      onGridReady(params) {
           this.gridApi = params.api;
+          this.gridApi.sizeColumnsToFit();
      }
 
      onrowDoubleClickedEvent(event) {
