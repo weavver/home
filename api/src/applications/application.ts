@@ -13,8 +13,8 @@ import {
 
 @ObjectType("application")
 export class application {
-     @Field(() => String)
-     id: string;
+     @Field(() => Number)
+     id: Number;
 
      @Field(() => String)
      name: string;
@@ -29,7 +29,7 @@ export class application {
      host_email: string;
 
      @Field(() => String, { nullable: true })
-     host_website: string;
+     host_url: string;
 
      @Field()
      name_initials(@Root() parent: application): String {

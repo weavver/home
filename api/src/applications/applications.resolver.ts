@@ -21,11 +21,16 @@ import { plainToClass } from "class-transformer";
 import { application } from "./application";
 
 import { GremlinHelper } from '../gremlin';
-let gremlin = new GremlinHelper();
+import { Application } from 'express';
 
 @Resolver(of => application)
 export class ApplicationsResolver {
+     gremlin : GremlinHelper;
 
+     constructor() {
+          this.gremlin = new GremlinHelper();
+     }
+     
      @Authorized()
      @Query(() => [application])
      async applications(@Args() { id, skip, limit }: Filter): Promise<Array<application>> {
@@ -33,29 +38,22 @@ export class ApplicationsResolver {
 
           var query;
           if (id)
-               query = gremlin.g.V(id[0])
+               query = this.gremlin.g.V(id[0])
                     .valueMap(true);
           else
-               query = gremlin.g.V()
+               query = this.gremlin.g.V()
                     .hasLabel("application")
                     .limit(limit)
                     .valueMap(true);
 
-          var docs = await gremlin.command(query);
+          var docs = await this.gremlin.command(query);
           // console.log(docs);
 
           var items : Array<application> = [];
-          if (docs.result.length > 0) {
-               docs.result.forEach((vertex : any) => {
-                    // console.log(vertex);
-                    let item = new application();
-                    item.id = vertex.id;
-                    item.name = gremlin.getPropertyValue(item, "name", "[not set]");
-                    items.push(item);
-                    return item;  
-               });
-          }
-          
+          docs.result.forEach((item : any) => {
+               items.push(this.getObject(item));
+          });
+
           // console.log(items);
           return items;
      }
@@ -66,11 +64,22 @@ export class ApplicationsResolver {
           @Arg("data") data: String
      ): Promise<String> {
           // let gremlin = new GremlinHelper();
-          let query = gremlin.g.addV("application")
+          let query = this.gremlin.g.addV("application")
                .property('cid', '0')
-               .property("name", "I Serve Law");
-          gremlin.command(query);
+               .property("name", "Example Application");
+          this.gremlin.command(query);
 
           return data;
+     }
+
+     private getObject(item : any) : application {
+          let i = new application();
+          i.id = parseInt(item.id);
+          i.name = this.gremlin.getPropertyValue(item, "name", "");
+          i.client_id = this.gremlin.getPropertyValue(item, "client_id", "");
+          i.host_email = this.gremlin.getPropertyValue(item, "host_email", "");
+          i.host_name = this.gremlin.getPropertyValue(item, "host_name", "");
+          i.host_url = this.gremlin.getPropertyValue(item, "host_url", "");
+          return i;
      }
 }

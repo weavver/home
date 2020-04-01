@@ -3,9 +3,10 @@
 <!--</nav>-->
 <header>
      <div fxLayout="row" fxLayoutAlign="space-between center" style="display: flex; align-content: center; align-items: center;">
-          <div fxLayout="row" fxLayoutAlign="start center" style="padding-left: 20px; height: 48px;">
+          <div fxLayout="row" fxLayoutAlign="start center" style="padding-left: 10px; height: 48px;">
                <div style="background-color: transparent; border: none; margin-right: 10px; cursor: pointer;" routerLink="/">
-                    <img src="assets/logo.png" style="width: 255px; margin-top: 0px;" />
+                    <img class="d-none d-md-block" src="assets/logo.png" style="width: 255px; margin-top: 0px;" />
+                    <img class="d-md-none" src="assets/logo-compact.png" style="width: 85px; margin-top: 0px;" />
                </div>
           </div>
           <div fxLayout="row" fxLayoutAlign="end center" style="padding-left: 20px; height: 48px;">
@@ -17,7 +18,7 @@
                     <p>Sign Up</p>
                </div>&nbsp;
                <div *ngIf="authService.isLoggedIn && (I$ | async) as I" class="navButton" routerLink="/identity">
-                    <p>{{ I.email }}</p>
+                    <p>{{ I.name }}</p>
                </div>&nbsp;
                <div class="navButton" *ngIf="authService.isLoggedIn" (click)="logOut()">
                     <p>Log Out</p>

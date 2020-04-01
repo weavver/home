@@ -1,12 +1,9 @@
-<card [loading]="signUpProcessing" [maxWidth]="500">
-     <form [formGroup]="signupForm"  (ngSubmit)="onSubmit()">
-          <div fxLayout="row" style="display:flex; font-size: 22px;  align-items: left; justify-content: left;">
-               <div>
-                    <i class="material-icons" style="vertical-align: middle !important; padding-right: 10px;">person_add</i>
-                    <span style="vertical-align: middle !important;">Sign Up</span>
-               </div>
-          </div>
-          <hr />
+<card title="Sign Up"
+     icon="person_add"
+     [loading]="signUpProcessing"
+     [maxWidth]="500">
+     <card-body>
+          <form [formGroup]="signupForm"  (ngSubmit)="onSubmit()">
           <div class="form-group">
                <div class="form-header">
                     <label for="email">Email</label>
@@ -50,5 +47,6 @@
                </div>
                <button type="submit" class="btn btn-primary" style="min-width: 300px; margin: 15px;" [disabled]="!signupForm.valid || signUpProcessing">Submit</button>
           </div>
-     </form>
+          </form>
+     </card-body>
 </card>

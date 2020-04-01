@@ -28,11 +28,7 @@ export class identity {
      name_family: string | undefined;
 
      @Field()
-     @IsEmail()
-     name: String
-
-     @Field()
-     name2(@Root() parent: identity): String {
+     name(@Root() parent: identity): String {
           return `${parent.name_given} ${parent.name_family}`;
      }
 

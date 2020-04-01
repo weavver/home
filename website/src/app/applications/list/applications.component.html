@@ -1,19 +1,15 @@
-<card [loading]="processing">
-     <div fxLayout="row" style="display:flex; font-size: 22px;  align-items: left; justify-content: left;">
-          <div id="card_title">
-               <span style="vertical-align: middle !important;">Applications</span>
-          </div>
-     </div>
-     <hr />
-     <div class="applications-wrapper">
-     <div class="applications-box">
-          <div class="application-icon" *ngFor="let application of applications | async" (click)="openApp(application)">
-               <!-- <img src="assets/applications-icon-blank.png" style="max-width: 75px;" /><br /> -->
-               <div class="icon">
-                    {{ getInitials(application) }}
+<card [loading]="processing" title="Applications">
+     <card-body>
+          <div class="applications-wrapper">
+          <div class="applications-box">
+               <div class="application-icon" *ngFor="let application of applications | async" (click)="openApp(application)">
+                    <!-- <img src="assets/applications-icon-blank.png" style="max-width: 75px;" /><br /> -->
+                    <div class="icon">
+                         {{ getInitials(application) }}
+                    </div>
+                    {{ application.name }}
                </div>
-               {{ application.name }}
           </div>
-     </div>
-     </div>
+          </div>
+     </card-body>
 </card>

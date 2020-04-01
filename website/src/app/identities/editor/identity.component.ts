@@ -6,7 +6,8 @@ import { map, finalize } from 'rxjs/operators';
 import {
      Event,
      Router,
-     NavigationExtras
+     NavigationExtras,
+     ActivatedRoute
 }
 from '@angular/router';
 import {
@@ -37,7 +38,11 @@ export class IdentityComponent implements OnInit {
      get name_family() { return this.form.get('name_family'); }
      get email() { return this.form.get('email'); }
 
-     constructor(private cd: ChangeDetectorRef, private graph: DataService, public router: Router, private fb: FormBuilder) { 
+     constructor(private cd: ChangeDetectorRef,
+                 private graph: DataService,
+                 public router: Router,
+                 private fb: FormBuilder,
+                 private route: ActivatedRoute) { 
           this.form = this.fb.group({
                name_given: new FormControl('', [Validators.required]),
                name_family: new FormControl('', [Validators.required]),
@@ -49,13 +54,39 @@ export class IdentityComponent implements OnInit {
      }
 
      ngOnInit() {
-          this.graph.I().subscribe(x => {
-               this.name_given.setValue(x.data.I.name_given);
-               this.name_family.setValue(x.data.I.name_family);
-               this.email.setValue(x.data.I.email);
+          console.log("navigated");
+          
+          this.route.queryParams.subscribe(params => {
+               if (!params.id) {
+                    this.graph.I().subscribe(x => {
+                         this.name_given.setValue(x.data.I.name_given);
+                         this.name_family.setValue(x.data.I.name_family);
+                         this.email.setValue(x.data.I.email);
 
-               this.processing = false;
-               this.cd.markForCheck();
+                         this.processing = false;
+                         this.cd.markForCheck();
+                    });
+               } else if (params.id == "new") {
+                    this.name_given.setValue("");
+                    this.name_family.setValue("");
+                    this.email.setValue("");
+                    this.processing = false;
+                    this.cd.markForCheck();
+               }
+               else {
+                    this.graph.identities([ Number(params.id) ]).subscribe(response => {
+                         console.log(response.data);
+                         if (response.data.identities.length > 0) {
+                              this.name_given.setValue(response.data.identities[0].name_given);
+                              this.name_family.setValue(response.data.identities[0].name_family);
+                              this.email.setValue(response.data.identities[0].email);
+                         } else {
+                              alert("Identity not found.");
+                         }
+                         this.processing = false;
+                         this.cd.markForCheck();
+                    });
+               }
           });
      }
 

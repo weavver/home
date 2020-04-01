@@ -16,6 +16,7 @@ export class CentersComponent implements OnInit {
      processing : Boolean = false;
      identities: Observable<any>;
 
+     menu : {};
      gridApi;
 
      columnDefs = [
@@ -28,7 +29,13 @@ export class CentersComponent implements OnInit {
                {headerName: 'Name', field: 'name' }
           ];
 
-     constructor(private cd: ChangeDetectorRef, private graph: DataService, public router: Router) { }
+     constructor(private cd: ChangeDetectorRef, private graph: DataService, public router: Router) {
+          this.menu = {
+               buttons: [
+                    { text: "Add" } 
+                    ]
+               };
+     }
 
      ngOnInit() {
           this.processing = true;
@@ -45,6 +52,11 @@ export class CentersComponent implements OnInit {
                     ),
                     finalize(() => { this.processing = false })
                );
+     }
+
+     menuitem_clicked(item) {
+          console.log(item);
+          this.router.navigateByUrl("/center");
      }
 
      onGridReady(params) {

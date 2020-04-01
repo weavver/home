@@ -68,18 +68,18 @@ import { environment } from 'src/environments/environment';
      providers: [
           AuthService,
           {
-          provide: APOLLO_OPTIONS,
-          useFactory: (httpLink: HttpBatchLink) => {
-                    return {
-                         cache: new InMemoryCache(),
-                         link: httpLink.create({
-                              uri: environment.graphql_url,
-                              withCredentials: true
-                         })
-                    }
-               },
-          deps: [HttpBatchLink]
-        }],
+               provide: APOLLO_OPTIONS,
+               useFactory: (httpLink: HttpBatchLink) => {
+                         return {
+                              cache: new InMemoryCache(),
+                              link: httpLink.create({
+                                   uri: environment.graphql_url,
+                                   withCredentials: true
+                              })
+                         }
+                    },
+               deps: [HttpBatchLink]
+          }],
      bootstrap: [AppComponent]
 })
 export class AppModule { }

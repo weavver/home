@@ -16,4 +16,12 @@ console.log("weavver home server starting..");
           console.log("starting... " + address);
           app.log.info("weavver-home server listening on ${address}");
      });
+
 })();
+
+process.once('SIGUSR2', () => {
+     app.close(() => {
+          console.log("weavver-home-api exiting gracefully...");
+          process.exit();
+     });
+});

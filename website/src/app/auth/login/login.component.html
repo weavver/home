@@ -1,43 +1,40 @@
-<card [loading]="processing">
-     <div fxLayout="row" style="display:flex; font-size: 22px;  align-items: left; justify-content: left;">
-          <div id="card_title">
-               <i class="material-icons" style="vertical-align: middle !important; padding-right: 10px;">assignment_ind</i>
-               <span style="vertical-align: middle !important;">Log In</span>
-          </div>
-     </div>
-     <hr />
-     <form [formGroup]="loginForm"  (ngSubmit)="logIn()">
-          <div class="form-group">
-               <div class="form-header">
-                    <label for="email">Email</label>
-                    <small class="form-text text-muted form-header-required" *ngIf="email.invalid && !email.pristine && errorGet(email.errors) == 'required'">
-                         Required
-                    </small>
-                    <small class="form-text text-muted form-header-required" [hidden]="email.valid || email.pristine" *ngIf="(email.invalid && errorGet(email.errors) == 'email')">
-                         A valid email is required.
-                    </small>
+<card title="Log In"
+     icon="assignment_ind"
+     [loading]="processing">
+     <card-body>
+          <form [formGroup]="loginForm"  (ngSubmit)="logIn()">
+               <div class="form-group">
+                    <div class="form-header">
+                         <label for="email">Email</label>
+                         <small class="form-text text-muted form-header-required" *ngIf="email.invalid && !email.pristine && errorGet(email.errors) == 'required'">
+                              Required
+                         </small>
+                         <small class="form-text text-muted form-header-required" [hidden]="email.valid || email.pristine" *ngIf="(email.invalid && errorGet(email.errors) == 'email')">
+                              A valid email is required.
+                         </small>
+                    </div>
+                    <input formControlName="email" fullWidth type="email" class="form-control" placeholder="john@doe.com" name="email" required>
                </div>
-               <input formControlName="email" fullWidth type="email" class="form-control" placeholder="john@doe.com" name="email" required>
-          </div>
-          <div class="form-group">
-               <div class="form-header">
-                    <label for="password">Password</label>
-                    <small class="form-text text-muted form-header-required" *ngIf="password.invalid && !password.pristine && errorGet(password.errors) == 'required'">
-                         Required
-                    </small>
-                    <small class="form-text text-muted form-header-required" *ngIf="password.invalid && errorGet(password.errors) == 'minlength'">
-                         Password must be over 6 characters.
-                    </small>
+               <div class="form-group">
+                    <div class="form-header">
+                         <label for="password">Password</label>
+                         <small class="form-text text-muted form-header-required" *ngIf="password.invalid && !password.pristine && errorGet(password.errors) == 'required'">
+                              Required
+                         </small>
+                         <small class="form-text text-muted form-header-required" *ngIf="password.invalid && errorGet(password.errors) == 'minlength'">
+                              Password must be over 6 characters.
+                         </small>
+                    </div>
+                    <input formControlName="password" class="form-control required" type="password" placeholder="Password" name="password" required>
                </div>
-               <input formControlName="password" class="form-control required" type="password" placeholder="Password" name="password" required>
-          </div>
-          <div style="text-align: center;">
-               <div *ngIf="error" style="padding: 10px; color: red;">
-                    Log in error. Maybe check your email and/or password.
+               <div style="text-align: center;">
+                    <div *ngIf="error" style="padding: 10px; color: red;">
+                         Log in error. Maybe check your email and/or password.
+                    </div>
+                    <button id="login" class="btn btn-primary" style="min-width: 300px; margin: 15px;">{{ logInText }}</button>
+                    <br />
+                    <a routerLink="/login/resetpassword">Reset Password</a>
                </div>
-               <button id="login" class="btn btn-primary" style="min-width: 300px; margin: 15px;">{{ logInText }}</button>
-               <br />
-               <a routerLink="/login/resetpassword">Reset Password</a>
-          </div>
-     </form>
+          </form>
+     </card-body>
 </card>

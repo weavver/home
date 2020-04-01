@@ -15,6 +15,7 @@ import { Event, Router } from '@angular/router';
 export class IdentitiesComponent implements OnInit {
      processing : Boolean = false;
      identities: Observable<any>;
+     menu: {};
 
      gridApi;
 
@@ -29,7 +30,13 @@ export class IdentitiesComponent implements OnInit {
                {headerName: 'Email', field: 'email' }
           ];
 
-     constructor(private cd: ChangeDetectorRef, private graph: DataService, public router: Router) { }
+     constructor(private cd: ChangeDetectorRef, private graph: DataService, public router: Router) {
+          this.menu = {
+               buttons: [
+                    { text: "Add" } 
+                    ]
+               };
+     }
 
      ngOnInit() {
           this.processing = true;
@@ -43,7 +50,12 @@ export class IdentitiesComponent implements OnInit {
                          if (this.gridApi) this.gridApi.sizeColumnsToFit()
                     }),
                     finalize(() => { this.processing = false })
-               )
+               );
+     }
+
+     menuitem_clicked(item) {
+          console.log(item);
+          this.router.navigateByUrl("/identity?id=new");
      }
 
      onGridReady(params) {

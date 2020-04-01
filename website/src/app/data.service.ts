@@ -73,25 +73,32 @@ export class DataService {
           return this.httpClient.put<any>(this.API_PROFILE, { params: params });
      }
 
-     public I() {
-          return this.apollo.watchQuery<any>({
-               query: gql`{
-                              I {
-                                   email,
-                                   name_given,
-                                   name_family
-                              }
-                          }`            
-                    })
-               .valueChanges;
-     }
-
      public centers() {
           return this.apollo.watchQuery<any>({ query: gql`{ centers { name } }` }).valueChanges;
      }
 
-     public identities() {
-          return this.apollo.watchQuery<any>({ query: gql`{ identities { id, email, name_given, name_family } }` }).valueChanges;
+     I_query = {
+               query: gql`{
+                         I {
+                              id,
+                              email,
+                              name,
+                              name_given,
+                              name_family
+                         }
+                     }`,
+               variables: {}
+          };
+
+     public I() {
+          return this.apollo.watchQuery<any>(this.I_query).valueChanges;
+     }
+
+     public identities(idarg? : [Number]) {
+          return this.apollo.watchQuery<any>({
+               query: gql`query identities($id: [Int!]) { identities(id: $id) { id, email, name_given, name_family } }`,
+               variables: { id: idarg}
+          }).valueChanges;
      }
 
      public identity_property_set(property : string, value : string) : Observable<any> {
@@ -104,7 +111,8 @@ export class DataService {
                     variables: {
                          property: property,
                          value: value
-                    }
+                    },
+                    refetchQueries: [ this.I_query ]
                });
      }
 
@@ -136,7 +144,7 @@ export class DataService {
           return this.apollo.watchQuery<any>({
                query: gql`
                     query applications($id: [Int!]) {
-                         applications(id: $id) { id, name, client_id, host_name, host_email, host_website } 
+                         applications(id: $id) { id, name, client_id, host_name, host_email, host_url } 
                     }`,
                variables: { id: idarg }
           }).valueChanges;

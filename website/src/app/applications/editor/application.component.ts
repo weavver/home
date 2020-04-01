@@ -36,7 +36,7 @@ export class ApplicationComponent implements OnInit {
      get name() { return this.form.get('name'); }
      get client_id() { return this.form.get('client_id'); }
      get host_email() { return this.form.get('host_email'); }
-     get host_website() { return this.form.get('host_website'); }
+     get host_url() { return this.form.get('host_url'); }
 
      constructor(private route : ActivatedRoute,
                  private cd : ChangeDetectorRef,
@@ -47,7 +47,7 @@ export class ApplicationComponent implements OnInit {
                name: new FormControl('', [Validators.required]),
                client_id: new FormControl('', [Validators.required]),
                host_email: new FormControl('', [Validators.required]),
-               host_website: new FormControl('', [Validators.required])
+               host_url: new FormControl('', [Validators.required])
           }, {
                updateOn: "blur"
           });
@@ -61,7 +61,7 @@ export class ApplicationComponent implements OnInit {
                     this.name.setValue(response.data.applications[0].name);
                     this.client_id.setValue(response.data.applications[0].client_id);
                     this.host_email.setValue(response.data.applications[0].host_email);
-                    this.host_website.setValue(response.data.applications[0].host_website);
+                    this.host_url.setValue(response.data.applications[0].host_url);
 
                     this.processing = false;
                     this.cd.markForCheck();
@@ -73,7 +73,7 @@ export class ApplicationComponent implements OnInit {
           this.setProperty("name", this.name.value);
           this.setProperty("client_id", this.client_id.value);
           this.setProperty("host_email", this.host_email.value);
-          this.setProperty("host_website", this.host_website.value);
+          this.setProperty("host_website", this.host_url.value);
      }
 
      setProperty(property, value) {
