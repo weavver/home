@@ -48,11 +48,6 @@ export class CenterComponent implements OnInit {
      }
 
      ngOnInit() {
-          // this.I$ = this.graph.I()
-          //      .pipe(
-          //           map(result => result.data.I),
-          //         );
-
           this.graph.I().subscribe(x => {
                this.name_given.setValue(x.data.I.name_given);
                this.name_family.setValue(x.data.I.name_family);

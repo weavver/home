@@ -1,0 +1,53 @@
+type application {
+  id: Float!
+  name: String!
+  client_id: String
+  host_name: String
+  host_email: String
+  host_url: String
+  name_initials: String!
+  added_at: DateTime!
+}
+
+"""Object representing a center."""
+type center {
+  name: String!
+
+  """Identities originate from a center."""
+  description: String
+}
+
+"""
+The javascript `Date` as string. Type represents date and time as the ISO Date string.
+"""
+scalar DateTime
+
+input identities_add {
+  email: String!
+}
+
+type identity {
+  id: Float!
+  email: String!
+  name_given: String
+  name_family: String
+  name: String!
+  added_at: DateTime!
+}
+
+type Mutation {
+  echo(data: String!): String!
+  identities_add(data: identities_add!): identity!
+  identity_property_set(value: String!, property: String!): String!
+  identity_password_set(password_new: String!, password_current: String!): Boolean!
+  identity_email_reset_code(center_id: Float!, email: String!): String!
+  applications_add(host_url: String!, host_name: String!, host_email: String!, client_id: String!, name: String!): Boolean!
+}
+
+type Query {
+  centers: [center!]
+  I: identity!
+  identities(skip: Int = 0, limit: Int = 25, id: [Int!]): [identity!]
+  applications(skip: Int = 0, limit: Int = 25, id: [Int!]): [application!]!
+}
+

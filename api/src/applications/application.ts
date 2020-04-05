@@ -8,10 +8,12 @@ import {
      Field,
      FieldResolver,
      Root,
-     InputType
+     InputType,
+     ArgsType
    } from "type-graphql";
 
 @ObjectType("application")
+// @ArgsType()
 export class application {
      @Field(() => Number)
      id: Number;
@@ -38,4 +40,25 @@ export class application {
 
      @Field(() => Date)
      added_at: Date;
+}
+
+@InputType()
+export class application_input implements Partial<application> {
+     @Field(() => Number, { nullable: true })
+     id: Number;
+
+     @Field(() => String, { nullable: true })
+     name: string;
+
+     @Field(() => String, { nullable: true })
+     client_id: string;
+
+     @Field(() => String, { nullable: true })
+     host_name: string;
+
+     @Field(() => String, { nullable: true })
+     host_email: string;
+     
+     @Field(() => String, { nullable: true })
+     host_url: string;
 }

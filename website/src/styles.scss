@@ -37,19 +37,6 @@ html {
      flex-direction: column;
 }
 
-.application-body {
-     display: flex;
-     flex: 1;
-     // background-color: #494949;
-     // background-color: #eeeeee;
-}
-
-.application-content {
-     padding-left: 20px;
-     padding-right: 20px;
-     min-width: 100%;
-     overflow: auto;
-}
 
 .application-nav {
      background: #FFFFFF;
@@ -62,14 +49,16 @@ html {
      overflow: auto;
 }
 
-
 .application-body {
+     display: flex;
+     flex: 1;
+     // background-color: #494949;
+     // background-color: #eeeeee;
      position: absolute;
      top: 50px;
      right: 0;
      bottom: 0;
      left: 0;
-
      display: flex;
 }
 
@@ -79,13 +68,13 @@ html {
      flex-direction: column;
      padding: 0px;
      margin: 0px;
-     width: 100%;
 }
 
+
 .application-content {
+     overflow: auto;
      flex: 1;
      display: flex;
-     overflow: auto;
      padding: 0px;
      margin: 0px;
 }
@@ -96,4 +85,10 @@ html {
      width: 100%;
      background-color: #FFFFFF;
      flex-shrink: 0;
+}
+
+@media only screen and (min-width: 768px) {
+     .application-content-body {
+          padding: 20px;
+     }
 }

@@ -4,6 +4,19 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 import {
+          EchoGQL,
+          MutationEchoArgs,
+          Application,
+          Application_Input,
+          Applications_SetGQL,
+          Applications_SetMutationVariables,
+          Applications_DeleteGQL,
+          Applications_DeleteMutationVariables,
+          ApplicationsGQL,
+          ApplicationsQueryVariables
+     } from '../../../generated/graphql';
+
+import {
     Router,
     NavigationExtras,
     ActivatedRoute
@@ -33,6 +46,8 @@ export class ApplicationComponent implements OnInit {
           return Object.keys(obj)[0];
      }
 
+     application : any;
+
      get name() { return this.form.get('name'); }
      get client_id() { return this.form.get('client_id'); }
      get host_email() { return this.form.get('host_email'); }
@@ -40,10 +55,14 @@ export class ApplicationComponent implements OnInit {
 
      constructor(private route : ActivatedRoute,
                  private cd : ChangeDetectorRef,
+                 public echo : EchoGQL,
+                 public applications : ApplicationsGQL,
+                 public applications_set : Applications_SetGQL,
+                 public applications_delete : Applications_DeleteGQL,
                  private graph : DataService,
                  public router : Router,
-                 private fb : FormBuilder) { 
-          this.form = this.fb.group({
+                 private formBuilder : FormBuilder) {
+          this.form = this.formBuilder.group({
                name: new FormControl('', [Validators.required]),
                client_id: new FormControl('', [Validators.required]),
                host_email: new FormControl('', [Validators.required]),
@@ -51,40 +70,71 @@ export class ApplicationComponent implements OnInit {
           }, {
                updateOn: "blur"
           });
-          this.processing = true;
      }
 
      ngOnInit() {
+          this.processing = true;
           this.route.queryParams.subscribe(params => {
                console.log(params);
-               this.graph.getApplication([ Number(params.id) ]).subscribe(response => {
-                    this.name.setValue(response.data.applications[0].name);
-                    this.client_id.setValue(response.data.applications[0].client_id);
-                    this.host_email.setValue(response.data.applications[0].host_email);
-                    this.host_url.setValue(response.data.applications[0].host_url);
+               if (params.id) {
+                    var filter : ApplicationsQueryVariables = {
+                         filter_input: {
+                              id: [ Number(params.id) ]
+                         }
+                    }
+                    this.applications.watch(filter).valueChanges.subscribe(result => {
+                         console.log(result);
+                         if (result.data.applications.length > 0) {
+                              this.application = result.data.applications[0];
+                              this.form.patchValue(result.data.applications[0]);
 
+                              this.processing = false;
+                              this.cd.markForCheck();
+                         } else { // application not found
+                              alert("An application with that ID is not available.");
+                              this.router.navigateByUrl("applications");
+                         }
+                    });
+               } else {
                     this.processing = false;
                     this.cd.markForCheck();
-               });
+               }
           });
      }
 
-     onSubmit() {
-          this.setProperty("name", this.name.value);
-          this.setProperty("client_id", this.client_id.value);
-          this.setProperty("host_email", this.host_email.value);
-          this.setProperty("host_website", this.host_url.value);
+     submit() {
+          this.processing = true;
+
+          var app_input : Application_Input = this.form.value;
+          app_input.id = Number(this.route.snapshot.queryParams.id);
+          var add_args : Applications_SetMutationVariables = {
+               application: app_input
+          };
+          this.applications_set.mutate(add_args).subscribe(result => console.log("asdfasdf", result));
+          this.processing = false;
+          this.cd.markForCheck();
      }
 
-     setProperty(property, value) {
+     launch() {
+          alert("launching");
+     }
+
+     delete() {
           this.processing = true;
-          this.graph.identity_property_set(property, value)
-                    .subscribe(({ data }) => {
-                         console.log('got data', data);
-                         this.processing = false;
-                         this.cd.markForCheck();
-                    },(error) => {
-                         console.log('there was an error sending the query', error);
-                    });
+          var delete_arg : Applications_DeleteMutationVariables = {
+               application: {
+                    id: Number(this.route.snapshot.queryParams.id)
+               }
+          }
+          this.applications_delete.mutate(delete_arg).subscribe(result => {
+               console.log("delete result", result)
+
+               this.processing = false;
+               this.cd.markForCheck();
+
+               if (result.data.applications_delete) {
+                    this.router.navigateByUrl("applications");
+               }
+          });
      }
 }

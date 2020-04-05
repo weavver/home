@@ -1,6 +1,6 @@
 var bcrypt = require('bcryptjs');
 
-import { Filter } from '../common/filter';
+import { filter_input } from '../common/filter';
 
 import {
      Resolver,
@@ -9,6 +9,7 @@ import {
      FieldResolver,
      Arg,
      Args,
+     ArgOptions,
      ArgsType,
      Mutation,
      Authorized,
@@ -17,8 +18,8 @@ import {
      Int
    } from "type-graphql";
 
-import { plainToClass } from "class-transformer";
-import { application } from "./application";
+import { plainToClass, Type } from "class-transformer";
+import { application, application_input } from "./application";
 
 import { GremlinHelper } from '../gremlin';
 import { Application } from 'express';
@@ -33,7 +34,7 @@ export class ApplicationsResolver {
      
      @Authorized()
      @Query(() => [application])
-     async applications(@Args() { id, skip, limit }: Filter): Promise<Array<application>> {
+     async applications(@Arg("filter_input") { id, skip, limit }: filter_input): Promise<Array<application>> {
           console.log("....", id);
 
           var query;
@@ -57,19 +58,27 @@ export class ApplicationsResolver {
           // console.log(items);
           return items;
      }
-
+     
      @Authorized()
-     @Mutation(() => String)
-     async applications_add(
-          @Arg("data") data: String
-     ): Promise<String> {
-          // let gremlin = new GremlinHelper();
-          let query = this.gremlin.g.addV("application")
-               .property('cid', '0')
-               .property("name", "Example Application");
-          this.gremlin.command(query);
-
-          return data;
+     @Mutation(() => Boolean)
+     async applications_set(@Arg("application") { id, name, client_id, host_email, host_url } : application_input): Promise<Boolean> {
+          if (id) {
+               let qUpdate = this.gremlin.g.V(id)
+                    .property("name", name)
+                    .property("client_id", client_id)
+                    .property("host_email", host_email)
+                    .property("host_url", host_url);
+               await this.gremlin.command(qUpdate);
+          } else {
+               let qAdd = this.gremlin.g.addV("application")
+                    .property("name", name)
+                    .property("client_id", client_id)
+                    .property("host_email", host_email)
+                    .property("host_url", host_url);
+                    // .addE
+               await this.gremlin.command(qAdd);
+          }
+          return true;
      }
 
      private getObject(item : any) : application {
@@ -81,5 +90,12 @@ export class ApplicationsResolver {
           i.host_name = this.gremlin.getPropertyValue(item, "host_name", "");
           i.host_url = this.gremlin.getPropertyValue(item, "host_url", "");
           return i;
+     }
+
+     @Mutation(() => Boolean)
+     async applications_delete(@Arg("application") { id } : application_input): Promise<Boolean> {
+          let qApplicationDelete = this.gremlin.g.V(id).drop();
+          await this.gremlin.command(qApplicationDelete);
+          return true;
      }
 }

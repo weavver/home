@@ -1,4 +1,6 @@
 import { DataService } from '../../data.service';
+import { IGQL, IdentitiesGQL, IdentitiesQueryVariables } from '../../../generated/graphql';
+
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map, finalize } from 'rxjs/operators';
@@ -38,11 +40,13 @@ export class IdentityComponent implements OnInit {
      get name_family() { return this.form.get('name_family'); }
      get email() { return this.form.get('email'); }
 
-     constructor(private cd: ChangeDetectorRef,
-                 private graph: DataService,
-                 public router: Router,
-                 private fb: FormBuilder,
-                 private route: ActivatedRoute) { 
+     constructor(private cd : ChangeDetectorRef,
+                 public I : IGQL,
+                 public identities : IdentitiesGQL,
+                 private graph : DataService,
+                 public router : Router,
+                 private fb : FormBuilder,
+                 private route : ActivatedRoute) { 
           this.form = this.fb.group({
                name_given: new FormControl('', [Validators.required]),
                name_family: new FormControl('', [Validators.required]),
@@ -54,15 +58,13 @@ export class IdentityComponent implements OnInit {
      }
 
      ngOnInit() {
-          console.log("navigated");
-          
           this.route.queryParams.subscribe(params => {
                if (!params.id) {
-                    this.graph.I().subscribe(x => {
-                         this.name_given.setValue(x.data.I.name_given);
-                         this.name_family.setValue(x.data.I.name_family);
-                         this.email.setValue(x.data.I.email);
-
+                    this.I.watch().valueChanges.subscribe(results => {
+                         console.log(results);
+                         this.name_given.setValue(results.data.I.name_given);
+                         this.name_family.setValue(results.data.I.name_family);
+                         this.email.setValue(results.data.I.email);
                          this.processing = false;
                          this.cd.markForCheck();
                     });
@@ -74,7 +76,12 @@ export class IdentityComponent implements OnInit {
                     this.cd.markForCheck();
                }
                else {
-                    this.graph.identities([ Number(params.id) ]).subscribe(response => {
+                    var args : IdentitiesQueryVariables = {
+                         filter_input: {
+                              id: [ Number(params.id) ]
+                         }
+                    }
+                    this.identities.watch(args).valueChanges.subscribe(response => {
                          console.log(response.data);
                          if (response.data.identities.length > 0) {
                               this.name_given.setValue(response.data.identities[0].name_given);
@@ -82,6 +89,7 @@ export class IdentityComponent implements OnInit {
                               this.email.setValue(response.data.identities[0].email);
                          } else {
                               alert("Identity not found.");
+                              this.router.navigateByUrl("/identities");
                          }
                          this.processing = false;
                          this.cd.markForCheck();

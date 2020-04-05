@@ -19,6 +19,7 @@ import { take, first, tap, map, catchError } from 'rxjs/operators';
 export class LoginComponent {
      processing: boolean = false;
      error: boolean = false;
+     error504: boolean = false;
 
      logInText: string = "Log In";
 
@@ -61,6 +62,7 @@ export class LoginComponent {
 
      logIn() {
           this.error = false;
+          this.error504 = false;
           this.processing = true;
           this.logInText = 'Trying to log in ...';
           this.authService.tokenGet(this.email.value, this.password.value).subscribe(() => {
@@ -79,9 +81,12 @@ export class LoginComponent {
                (error) => {
                     this.processing = false;
                     this.logInText = "Log In";
-                    this.error = error // error path
-                    // console.log(error);
-                    this.error = true;
+                    // this.error = error // error path
+                    console.log(error);
+                    if (error.status == 504)
+                         this.error504 = true;
+                    else
+                         this.error = true;
                     this.cd.markForCheck();
                }
           );

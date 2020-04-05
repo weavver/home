@@ -1,8 +1,16 @@
-<card [loading]="processing" title="Applications">
+<card
+     title="Applications"
+     [loading]="processing"
+     [menu]="menu"
+     (menuitem_clicked)="menuitem_clicked($event)">
      <card-body>
+          <!-- <button type="button" class="btn btn-secondary d-flex justify-content-center align-content-between" (click)="refresh()" [disabled]="loading">
+               <i class="material-icons mr-1">refresh</i> <span class="pt-1">Refresh</span>
+           </button> -->
           <div class="applications-wrapper">
           <div class="applications-box">
-               <div class="application-icon" *ngFor="let application of applications | async" (click)="openApp(application)">
+               <div class="application-icon" *ngFor="let application of applications | async" (click)="openApp(application)" title="Application Id: {{ application.id }}">
+                    <!-- {{ application | json}} -->
                     <!-- <img src="assets/applications-icon-blank.png" style="max-width: 75px;" /><br /> -->
                     <div class="icon">
                          {{ getInitials(application) }}

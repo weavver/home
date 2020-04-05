@@ -1,6 +1,6 @@
 var bcrypt = require('bcryptjs');
 
-import { Filter } from '../common/filter';
+import { filter_input } from '../common/filter';
 
 import {
      Resolver,
@@ -102,7 +102,7 @@ export class IdentityResolver {
      @Authorized(["ADMIN"])
      // @UseMiddleware(checkAccess)
      @Query(() => [identity], { nullable: true })
-     async identities(@Args() { id, skip, limit }: Filter): Promise<[identity] | undefined> {
+     async identities(@Arg("filter_input") { id, skip, limit }: filter_input): Promise<[identity] | undefined> {
           var qIdentitiesGet;
 
           if (id) {

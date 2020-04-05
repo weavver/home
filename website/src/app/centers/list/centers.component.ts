@@ -1,8 +1,10 @@
 import { DataService } from '../../data.service';
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
-import { Observable, Subscription } from 'rxjs';
-import { tap, map, finalize } from 'rxjs/operators';
+import { Observable, Subscription, of } from 'rxjs';
+import { tap, map, finalize, catchError } from 'rxjs/operators';
 import { Router } from '@angular/router';
+
+import { CentersGQL, CentersQueryVariables } from '../../../generated/graphql';
 
 @Component({
      selector: 'centers',
@@ -14,7 +16,7 @@ import { Router } from '@angular/router';
 })
 export class CentersComponent implements OnInit {
      processing : Boolean = false;
-     identities: Observable<any>;
+     centers: Observable<any>;
 
      menu : {};
      gridApi;
@@ -29,7 +31,9 @@ export class CentersComponent implements OnInit {
                {headerName: 'Name', field: 'name' }
           ];
 
-     constructor(private cd: ChangeDetectorRef, private graph: DataService, public router: Router) {
+     constructor(private cd: ChangeDetectorRef,
+                 public centersg : CentersGQL,
+                 public router: Router) {
           this.menu = {
                buttons: [
                     { text: "Add" } 
@@ -39,12 +43,12 @@ export class CentersComponent implements OnInit {
 
      ngOnInit() {
           this.processing = true;
-          this.identities = this.graph.centers()
-                    .pipe(
-                         map(result => { 
-                              return result.data.centers;
-                         }
-                    ),
+          var filter : CentersQueryVariables = {
+               filter_input: { }
+          }
+          this.centers = this.centersg.watch(filter).valueChanges.pipe(
+                    map(result => result.data.centers),
+                    // catchError(err => of([])),
                     tap(() => this.processing = false),
                     tap(() => {
                               if (this.gridApi) this.gridApi.sizeColumnsToFit()

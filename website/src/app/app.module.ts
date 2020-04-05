@@ -22,6 +22,7 @@ import { ApplicationComponent }         from './applications/editor/application.
 import { PageNotFoundComponent }        from './page-not-found/page-not-found.component';
 
 import { WeavverCardModule }            from './shared/card/card.module';
+import { WeavverTabsModule }            from './shared/tabs/tabs.module';
 
 import { ApolloModule, APOLLO_OPTIONS } from "apollo-angular";
 import { InMemoryCache }                from "apollo-cache-inmemory";
@@ -52,6 +53,7 @@ import { environment } from 'src/environments/environment';
           ApolloModule,
           // HttpLinkModule,
           WeavverCardModule,
+          WeavverTabsModule,
           HttpBatchLinkModule,
           AgGridModule
      ],
@@ -70,14 +72,14 @@ import { environment } from 'src/environments/environment';
           {
                provide: APOLLO_OPTIONS,
                useFactory: (httpLink: HttpBatchLink) => {
-                         return {
-                              cache: new InMemoryCache(),
-                              link: httpLink.create({
-                                   uri: environment.graphql_url,
-                                   withCredentials: true
-                              })
-                         }
-                    },
+                    return {
+                         cache: new InMemoryCache(),
+                         link: httpLink.create({
+                              uri: environment.graphql_url,
+                              withCredentials: true
+                         })
+                    }
+               },
                deps: [HttpBatchLink]
           }],
      bootstrap: [AppComponent]

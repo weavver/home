@@ -1,62 +1,79 @@
 <card [loading]="processing" title="Application">
      <card-body>
-     <form [formGroup]="form" (ngSubmit)="onSubmit()">
-          <div class="form-group">
-               <div class="form-header">
-                    <label for="name_given">Name</label>
-                    <small class="form-text text-muted form-header-required" *ngIf="name.invalid && !name.pristine && errorGet(name.errors) == 'required'">
-                         Required
-                    </small>
-                    <small class="form-text text-muted form-header-required" [hidden]="name.valid || name.pristine" *ngIf="(name.invalid && errorGet(name.errors) == 'name')">
-                         A valid email is required.
-                    </small>
-               </div>
-               <input formControlName="name" type="text" class="form-control" placeholder="name" name="name" required>
-          </div>
-          <div class="form-group">
-               <div class="form-header">
-                    <label for="client_id">Client ID</label>
-                    <small class="form-text text-muted form-header-required" *ngIf="client_id.invalid && !client_id.pristine && errorGet(client_id.errors) == 'required'">
-                         Required
-                    </small>
-                    <small class="form-text text-muted form-header-required" [hidden]="client_id.valid || client_id.pristine" *ngIf="(client_id.invalid && errorGet(client_id.errors) == 'client_id')">
-                         A valid email is required.
-                    </small>
-               </div>
-               <input formControlName="client_id" type="text" class="form-control required" placeholder="id" name="client_id" required>
-          </div>
-          <div class="card">
-               <h4 style="padding-bottom: 8px;">Host</h4>
-               <div class="form-group">
-                    <div class="form-header">
-                         <label for="host_email">Email</label>
-                         <small class="form-text text-muted form-header-required" *ngIf="host_email.invalid && !host_email.pristine && errorGet(host_email.errors) == 'required'">
-                              Required
-                         </small>
-                         <small class="form-text text-muted form-header-required" [hidden]="host_email.valid || host_email.pristine" *ngIf="(host_email.invalid && errorGet(host_email.errors) == 'giver_email')">
-                              A valid email is required.
-                         </small>
-                    </div>
-                    <input formControlName="host_email" type="text" class="form-control" placeholder="email" name="host_email" required>
-               </div>
-               <div class="form-group">
-                    <div class="form-header">
-                         <label for="giver_website">URL</label>
-                         <small class="form-text text-muted form-header-required" *ngIf="host_url.invalid && !host_url.pristine && errorGet(host_url.errors) == 'required'">
-                              Required
-                         </small>
-                         <small class="form-text text-muted form-header-required" [hidden]="host_url.valid || host_url.pristine" *ngIf="(host_url.invalid && errorGet(host_url.errors) == 'url')">
-                              A valid url is required.
-                         </small>
-                    </div>
-                    <input formControlName="host_url" type="text" class="form-control" placeholder="url" name="host_url" required>
-               </div>
-          </div>
-          <div style="text-align: center;">
-               <button type="button" class="btn btn-primary" style="min-width: 200px; margin: 15px;" (click)="onSubmit()">Save</button>
-          </div>
-          <!-- {{ I$ | async | json }} -->
-     </form>
+          <form [formGroup]="form" (ngSubmit)="onSubmit()">
+               <tabs>
+                    <tab title="Overview">
+                         <div style="text-align: center;">
+                              <button type="button" class="btn btn-info" style="min-width: 200px; margin: 15px;" (click)="launch()">Launch</button>
+                         </div>
+                    </tab>
+                    <tab title="Info">
+                         <div class="form-group">
+                              <div class="form-header">
+                                   <label for="name_given">Name</label>
+                                   <small class="form-text text-muted form-header-required" *ngIf="name.invalid && !name.pristine && errorGet(name.errors) == 'required'">
+                                        Required
+                                   </small>
+                                   <small class="form-text text-muted form-header-required" [hidden]="name.valid || name.pristine" *ngIf="(name.invalid && errorGet(name.errors) == 'name')">
+                                        A valid email is required.
+                                   </small>
+                              </div>
+                              <input formControlName="name" type="text" class="form-control" placeholder="name" name="name" required>
+                         </div>
+                         <div class="form-group">
+                              <div class="form-header">
+                                   <label for="client_id">Client ID</label>
+                                   <small class="form-text text-muted form-header-required" *ngIf="client_id.invalid && !client_id.pristine && errorGet(client_id.errors) == 'required'">
+                                        Required
+                                   </small>
+                                   <small class="form-text text-muted form-header-required" [hidden]="client_id.valid || client_id.pristine" *ngIf="(client_id.invalid && errorGet(client_id.errors) == 'client_id')">
+                                        A valid email is required.
+                                   </small>
+                              </div>
+                              <input formControlName="client_id" type="text" class="form-control required" placeholder="id" name="client_id" required>
+                         </div>
+                         <div style="padding: 8px; border: solid 1px #CCCCCC;  border-radius: 3px;">
+                              <h4 style="padding-bottom: 8px;">Host</h4>
+                              <div class="form-group">
+                                   <div class="form-header">
+                                        <label for="host_email">Email</label>
+                                        <small class="form-text text-muted form-header-required" *ngIf="host_email.invalid && !host_email.pristine && errorGet(host_email.errors) == 'required'">
+                                             Required
+                                        </small>
+                                        <small class="form-text text-muted form-header-required" [hidden]="host_email.valid || host_email.pristine" *ngIf="(host_email.invalid && errorGet(host_email.errors) == 'giver_email')">
+                                             A valid email is required.
+                                        </small>
+                                   </div>
+                                   <input formControlName="host_email" type="text" class="form-control" placeholder="email" name="host_email" required>
+                              </div>
+                              <div class="form-group">
+                                   <div class="form-header">
+                                        <label for="giver_website">URL</label>
+                                        <small class="form-text text-muted form-header-required" *ngIf="host_url.invalid && !host_url.pristine && errorGet(host_url.errors) == 'required'">
+                                             Required
+                                        </small>
+                                        <small class="form-text text-muted form-header-required" [hidden]="host_url.valid || host_url.pristine" *ngIf="(host_url.invalid && errorGet(host_url.errors) == 'url')">
+                                             A valid url is required.
+                                        </small>
+                                   </div>
+                                   <input formControlName="host_url" type="text" class="form-control" placeholder="url" name="host_url" required>
+                              </div>
+                         </div>
+                         <div style="text-align: center;">
+                              <button type="button" class="btn btn-primary" style="min-width: 200px; margin: 15px;" (click)="submit()">Save</button>
+                         </div>
+                    </tab>
+                    <tab title="Advanced">
+                         <div style="text-align: center;">
+                              <button type="button" class="btn btn-danger" style="min-width: 200px; margin: 15px;" (click)="delete()">
+                                   <i class="material-icons">delete</i>
+                                   Delete
+                              </button>
+                         </div>
+                    </tab>
+               </tabs>
+               <!-- {{ I$ | async | json }} -->
+          </form>
      </card-body>
 </card>
 

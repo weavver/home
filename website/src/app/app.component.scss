@@ -15,6 +15,11 @@
      display: flex;
 }
 
+.menuButtonToggle {
+     border-right: solid 1px #CCCCCC;
+     border-top: solid 1px #CCCCCC;
+}
+
 .navButton {
      height: 100%;
      padding-left: 15px;
@@ -122,18 +127,11 @@
      flex-basis: auto;
 }
 
-
-:host {
-     ::ng-deep .ui-card-body {
-     //     padding-top: 10px !important;
-     }
- }
-
- hr {
+hr {
      padding: 0px;
      margin: 0px;
      margin-bottom: 10px;
      height: 5px;
      background: black; 
      border: none;
- }
+}

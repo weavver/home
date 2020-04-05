@@ -3,6 +3,7 @@ import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { Observable, Subscription } from 'rxjs';
 import { tap, map, finalize } from 'rxjs/operators';
 import { Event, Router } from '@angular/router';
+import { IdentitiesGQL, QueryIdentitiesArgs } from '../../../generated/graphql';
 
 @Component({
      selector: 'app-identities',
@@ -30,7 +31,10 @@ export class IdentitiesComponent implements OnInit {
                {headerName: 'Email', field: 'email' }
           ];
 
-     constructor(private cd: ChangeDetectorRef, private graph: DataService, public router: Router) {
+     constructor(private cd: ChangeDetectorRef,
+                 public identitiesg : IdentitiesGQL,
+                 private graph: DataService,
+                 public router: Router) {
           this.menu = {
                buttons: [
                     { text: "Add" } 
@@ -40,11 +44,11 @@ export class IdentitiesComponent implements OnInit {
 
      ngOnInit() {
           this.processing = true;
-          this.identities = this.graph.identities()
-               .pipe(
-                    map(result => { 
-                         return result.data.identities;
-                    }),
+          var filter : QueryIdentitiesArgs = {
+               filter_input: { }
+          }
+          this.identities = this.identitiesg.watch(filter).valueChanges.pipe(
+                    map(result => result.data.identities),
                     tap(() => this.processing = false),
                     tap(() => {
                          if (this.gridApi) this.gridApi.sizeColumnsToFit()

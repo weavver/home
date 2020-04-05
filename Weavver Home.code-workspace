@@ -20,6 +20,35 @@
 		"mochaExplorer.timeout": 10000,
 		"testExplorer.hideEmptyLog": false,
 		"testExplorer.showOnRun": true,
-		"testExplorer.mergeSuites": true
+		"testExplorer.mergeSuites": true,
+		"actionButtons": {
+			"defaultColor": "#FFFFFF", // Can also use string color names.
+			"loadNpmCommands":false, // Disables automatic generation of actions for npm commands.
+			"reloadButton":"♻️", // Custom reload button text or icon (default ↻). null value enables automatic reload on configuration change
+			"commands": [
+				// {
+				// 	"cwd": "/home/custom_folder", 	// Terminal initial folder ${workspaceFolder} and os user home as defaults
+				// 	"name": "Run Cargo",
+				// 	"singleInstance": true,
+				// 	"command": "cargo run ${file}", // This is executed in the terminal.
+				// },
+				{
+					// "cwd": "${workspaceFolder}", 
+					"name": "Deploy API to EB (staging)",
+					"command": "cd api & eb deploy staging",
+				}
+			]
+		},
+		"workbench.colorCustomizations": {
+			// "activityBar.background": "#0C3332",
+			"activityBar.background": "#686767",
+			"titleBar.activeBackground": "#114746",
+			"titleBar.activeForeground": "#F2FCFC",
+			// "sideBar.background": "#CCCCCC"
+		},
+		"editor.minimap.enabled": false,
+		"workbench.sideBar.location": "right",
+		"workbench.tree.indent": 7,
+		"workbench.tree.renderIndentGuides": "always"
 	}
 }

@@ -7,6 +7,8 @@ import {
      Mutation
    } from "type-graphql";
 
+import { filter_input } from '../common/filter';
+
 import { plainToClass } from "class-transformer";
 import { center } from "./center";
 
@@ -24,7 +26,7 @@ export class CenterResolver {
      }
 
      @Query(() => [center], { nullable: true })
-     async centers() : Promise<[center]> {
+     async centers(@Arg("filter_input") { id, skip, limit }: filter_input) : Promise<[center]> {
           var qCenters = this.gremlin.g.V()
                .hasLabel('center')
                .valueMap(true);
@@ -42,7 +44,7 @@ export class CenterResolver {
      private getObject(item : any) : center {
           let i = new center();
           // console.log(item.id);
-          // i.id = parseInt(item.id);
+          i.id = parseInt(item.id);
           i.name = this.gremlin.getPropertyValue(item, "name", "");
           return i;
      }

@@ -1,0 +1,14 @@
+query I { I { name, name_given, name_family, email } }
+
+query identities($filter_input: filter_input!)
+{
+     identities(filter_input: $filter_input)
+     {
+          id,
+          email,
+          name_given,
+          name_family
+     }
+}
+
+mutation echo($data: String!) { echo(data: $data) }

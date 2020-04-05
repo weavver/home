@@ -5,8 +5,13 @@
      "main": "app.js",
      "watch": {
           "start": {
-               "patterns": [ "src" ],
-               "extensions": "ts"
+               "patterns": [
+                    "app.ts",
+                    "src"
+               ],
+               "extensions": "ts",
+               "quiet": true,
+               "delay": 1000
           }
      },
      "scripts": {
@@ -14,7 +19,9 @@
           "deploy": "echo \"WARNING: serverless-typescript 1.1.8 and 1.1.9 are broken on OSX\" && dotenv -e ../.env-aws-dev serverless deploy",
           "start": "dotenv -e ../.env ts-node app.ts",
           "serverless-offline": "dotenv -e ../.env serverless offline start --useSeparateProcesses",
-          "watch": "npm-watch"
+          "watch-old": "npm-watch",
+          "watch-osx": "dotenv -e ../.env nodemon app.ts",
+          "watch": "nodemon app.ts"
      },
      "author": "Mitchel Constantin",
      "license": "MIT",

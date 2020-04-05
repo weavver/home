@@ -31,6 +31,9 @@
                     <div *ngIf="error" style="padding: 10px; color: red;">
                          Log in error. Maybe check your email and/or password.
                     </div>
+                    <div *ngIf="error504" style="padding: 10px; color: red;">
+                         Server not responding. Maybe try again later.
+                    </div>
                     <button id="login" class="btn btn-primary" style="min-width: 300px; margin: 15px;">{{ logInText }}</button>
                     <br />
                     <a routerLink="/login/resetpassword">Reset Password</a>

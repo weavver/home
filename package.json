@@ -4,7 +4,9 @@
   "description": "a centering",
   "main": "app.ts",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "apollogen": "graphql-codegen --config apollo-generateclient.yml",
+    "codegen": "graphql-codegen --config apollo-codegen.yml"
   },
   "repository": {
     "type": "git",
@@ -23,8 +25,17 @@
   },
   "homepage": "https://gitlab.com/weavver/weavver-home#readme",
   "devDependencies": {
+    "@graphql-codegen/cli": "^1.13.1",
+    "@graphql-codegen/introspection": "^1.13.1",
+    "@graphql-codegen/typescript": "1.13.1",
+    "@graphql-codegen/typescript-apollo-angular": "1.13.1",
+    "@graphql-codegen/typescript-document-nodes": "^1.13.1",
+    "@graphql-codegen/typescript-graphql-files-modules": "^1.13.1",
+    "@graphql-codegen/typescript-operations": "1.13.1",
     "@types/gremlin": "^3.4.6",
     "@types/mocha": "^7.0.2",
+    "graphql": "^15.0.0",
+    "graphql-codegen": "^0.4.0",
     "tslib": "^1.11.1",
     "typescript": "^3.8.3"
   },

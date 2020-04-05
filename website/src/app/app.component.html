@@ -49,15 +49,15 @@
                     <i class="material-icons" style="font-size: 1.85rem">adjust</i>
                     <span *ngIf="this.navAccountExpanded">Centers</span>
                </div>
-               <div [class.sidebarItemExpanded]="this.navAccountExpanded" [class.sidebarItemCollapsed]="!this.navAccountExpanded" routerLink="/settings" routerLinkActive="sidebarItemActive" title="Settings" *ngIf="authService.isLoggedIn">
+               <div [class.sidebarItemExpanded]="this.navAccountExpanded" [class.sidebarItemCollapsed]="!this.navAccountExpanded" routerLink="/center" routerLinkActive="sidebarItemActive" title="Settings" *ngIf="authService.isLoggedIn">
                     <i class="material-icons" style="font-size: 1.85rem">settings</i>
                     <span *ngIf="this.navAccountExpanded">Settings</span>
                </div>
          </div>
-          <div class="menuButton" (click)="toggleNavAccount()" *ngIf="authService.isLoggedIn" style="width: 100%; height: 48px;">
+          <div class="menuButton menuButtonToggle" (click)="toggleNavAccount()" *ngIf="authService.isLoggedIn" style="width: 100%; height: 48px;">
                <div>
                     <i *ngIf="!this.navAccountExpanded" class="material-icons" style="font-size: 1.85rem">chevron_right</i>
-                    <p *ngIf="this.navAccountExpanded" style="display: flex; align-items: left; align-content: left;">
+                    <p *ngIf="this.navAccountExpanded" style="display: flex; align-items: left; align-content: left; padding-top: 5px;">
                          <i class="material-icons" style="font-size: 1.85rem">chevron_left</i>
                          Collapse
                    </p>
@@ -66,7 +66,7 @@
     </nav>
     <main class="application-main">
          <div class="application-content" fxLayout="column" fxLayoutAlign="space-between stretch" [@routeAnimation]="getAnimationData(routerOutlet)">
-              <div style="padding: 20px;">
+              <div class="application-content-body">
                     <router-outlet #routerOutlet="outlet"></router-outlet>
                     <router-outlet name="popup"></router-outlet>
               </div>

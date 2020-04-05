@@ -11,6 +11,9 @@ import {
 
 @ObjectType({ description: "Object representing a center." })
 export class center {
+     @Field(() => Number)
+     id: Number;
+
      @Field()
      name: string;
 
