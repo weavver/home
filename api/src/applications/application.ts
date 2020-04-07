@@ -25,6 +25,9 @@ export class application {
      client_id: string;
 
      @Field(() => String, { nullable: true })
+     client_secret: string;
+
+     @Field(() => String, { nullable: true })
      host_name: string;
 
      @Field(() => String, { nullable: true })
@@ -52,6 +55,9 @@ export class application_input implements Partial<application> {
 
      @Field(() => String, { nullable: true })
      client_id: string;
+
+     @Field(() => String, { nullable: true })
+     client_secret: string;
 
      @Field(() => String, { nullable: true })
      host_name: string;

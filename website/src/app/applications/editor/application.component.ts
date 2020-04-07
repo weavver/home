@@ -1,6 +1,5 @@
-import { DataService } from '../../data.service';
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Component, OnInit, ChangeDetectorRef, Directive } from '@angular/core';
+import { Observable, Subject } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 import {
@@ -31,96 +30,120 @@ import {
   } from '@angular/forms';
 
 @Component({
-     selector: 'application',
-     templateUrl: './application.component.html',
+     selector: 'test',
+     template: `<weavver-form
+          [model]="model"
+          [datasource]="applications"
+          [processing]="processing"
+          (set)="set($event)"
+          (delete)="delete($event)">
+          <dashboard>
+               <div style="text-align: center; padding-top: 25px; padding-bottom: 25px;">
+                    <button type="button" class="btn btn-info" style="min-width: 200px; margin: 15px;" (click)="launch()">Launch</button>
+               </div>
+          </dashboard>
+     </weavver-form>
+     `,
      styleUrls: ['./application.component.scss']
 })
-
 export class ApplicationComponent implements OnInit {
-     processing : Boolean = false;
-
-     I$: Observable<any>;
-     form: FormGroup;
+     processing:Subject<Boolean> = new Subject();
+     model : {};
 
      errorGet(obj) {
           return Object.keys(obj)[0];
      }
 
-     application : any;
-
-     get name() { return this.form.get('name'); }
-     get client_id() { return this.form.get('client_id'); }
-     get host_email() { return this.form.get('host_email'); }
-     get host_url() { return this.form.get('host_url'); }
 
      constructor(private route : ActivatedRoute,
-                 private cd : ChangeDetectorRef,
-                 public echo : EchoGQL,
                  public applications : ApplicationsGQL,
                  public applications_set : Applications_SetGQL,
                  public applications_delete : Applications_DeleteGQL,
-                 private graph : DataService,
-                 public router : Router,
-                 private formBuilder : FormBuilder) {
-          this.form = this.formBuilder.group({
-               name: new FormControl('', [Validators.required]),
-               client_id: new FormControl('', [Validators.required]),
-               host_email: new FormControl('', [Validators.required]),
-               host_url: new FormControl('', [Validators.required])
-          }, {
-               updateOn: "blur"
-          });
+                 private cd : ChangeDetectorRef,
+                 public router : Router) {
+
+          this.model = {
+               route: "/applications",
+               title_plural: "Applications",
+               title: "Application",
+               label: "application",
+               set: "applications",
+               data: [
+                    {
+                         name: "name",
+                         title: "Name",
+                         placeholder: "name"
+                    },
+                    {
+                         title: "Host",
+                         fields: [
+                              {
+                                   name: "host_email",
+                                   title: "Email",
+                                   placeholder: "email"
+                              },
+                              {
+                                   name: "host_url",
+                                   title: "URL",
+                                   placeholder: "https://example.com/"
+                              }
+                         ]
+                    },
+                    {
+                         title: "oAuth2 Credentials",
+                         fields: [
+                              {
+                                   name: "client_id",
+                                   title: "Client ID",
+                                   placeholder: "client id placeholder"
+                              },
+                              {
+                                   name: "client_secret",
+                                   title: "Client Secret",
+                                   placeholder: "client secret placeholder"
+                              },
+                              // {
+                              //      name: "client_secret2",
+                              //      title: "Client Checkbox",
+                              //      placeholder: "client secret placeholder",
+                              //      type: "textarea",
+                              //      textarea_rows: 5
+                              // }
+                         ]
+                    }
+               ],
+               let: {
+                    save: true,
+                    delete: true
+               }
+          };
      }
 
      ngOnInit() {
-          this.processing = true;
-          this.route.queryParams.subscribe(params => {
-               console.log(params);
-               if (params.id) {
-                    var filter : ApplicationsQueryVariables = {
-                         filter_input: {
-                              id: [ Number(params.id) ]
-                         }
-                    }
-                    this.applications.watch(filter).valueChanges.subscribe(result => {
-                         console.log(result);
-                         if (result.data.applications.length > 0) {
-                              this.application = result.data.applications[0];
-                              this.form.patchValue(result.data.applications[0]);
-
-                              this.processing = false;
-                              this.cd.markForCheck();
-                         } else { // application not found
-                              alert("An application with that ID is not available.");
-                              this.router.navigateByUrl("applications");
-                         }
-                    });
-               } else {
-                    this.processing = false;
-                    this.cd.markForCheck();
-               }
-          });
      }
 
-     submit() {
-          this.processing = true;
+     item_selected(data) {
+          this.item = data;
+     }
 
-          var app_input : Application_Input = this.form.value;
+     set(data) {
+          var app_input : Application_Input = data.data;
           app_input.id = Number(this.route.snapshot.queryParams.id);
           var add_args : Applications_SetMutationVariables = {
                application: app_input
           };
-          this.applications_set.mutate(add_args).subscribe(result => console.log("asdfasdf", result));
-          this.processing = false;
-          this.cd.markForCheck();
+          this.applications_set.mutate(add_args).subscribe(result => {
+               console.log("asdfasdf", result);
+               this.processing.next(false);
+          });
      }
 
      launch() {
-          alert("launching");
+          alert("launch");
      }
 
-     delete() {
-          this.processing = true;
+     delete(data) {
+          console.log("delete", data);
           var delete_arg : Applications_DeleteMutationVariables = {
                application: {
                     id: Number(this.route.snapshot.queryParams.id)
@@ -129,9 +152,7 @@ export class ApplicationComponent implements OnInit {
           this.applications_delete.mutate(delete_arg).subscribe(result => {
                console.log("delete result", result)
 
-               this.processing = false;
-               this.cd.markForCheck();
-
+               this.processing.next(false);
                if (result.data.applications_delete) {
                     this.router.navigateByUrl("applications");
                }

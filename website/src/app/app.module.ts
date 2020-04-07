@@ -21,6 +21,7 @@ import { ApplicationsComponent }        from './applications/list/applications.c
 import { ApplicationComponent }         from './applications/editor/application.component';
 import { PageNotFoundComponent }        from './page-not-found/page-not-found.component';
 
+import { WeavverFormModule }            from './shared/form/form.module';
 import { WeavverCardModule }            from './shared/card/card.module';
 import { WeavverTabsModule }            from './shared/tabs/tabs.module';
 
@@ -54,6 +55,7 @@ import { environment } from 'src/environments/environment';
           // HttpLinkModule,
           WeavverCardModule,
           WeavverTabsModule,
+          WeavverFormModule,
           HttpBatchLinkModule,
           AgGridModule
      ],

@@ -4,7 +4,11 @@ query applications($filter_input: filter_input!)
      {
           id,
           name,
-          host_name
+          host_name,
+          host_url,
+          host_email,
+          client_id,
+          client_secret
      }
 }
 

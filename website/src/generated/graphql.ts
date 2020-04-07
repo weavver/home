@@ -19,6 +19,7 @@ export type Application = {
   id: Scalars['Float'];
   name: Scalars['String'];
   client_id?: Maybe<Scalars['String']>;
+  client_secret?: Maybe<Scalars['String']>;
   host_name?: Maybe<Scalars['String']>;
   host_email?: Maybe<Scalars['String']>;
   host_url?: Maybe<Scalars['String']>;
@@ -30,6 +31,7 @@ export type Application_Input = {
   id?: Maybe<Scalars['Float']>;
   name?: Maybe<Scalars['String']>;
   client_id?: Maybe<Scalars['String']>;
+  client_secret?: Maybe<Scalars['String']>;
   host_name?: Maybe<Scalars['String']>;
   host_email?: Maybe<Scalars['String']>;
   host_url?: Maybe<Scalars['String']>;
@@ -144,7 +146,7 @@ export type ApplicationsQuery = (
   { __typename?: 'Query' }
   & { applications: Array<(
     { __typename?: 'application' }
-    & Pick<Application, 'id' | 'name' | 'host_name'>
+    & Pick<Application, 'id' | 'name' | 'host_name' | 'host_url' | 'host_email' | 'client_id' | 'client_secret'>
   )> }
 );
 
@@ -221,6 +223,10 @@ export const ApplicationsDocument = gql`
     id
     name
     host_name
+    host_url
+    host_email
+    client_id
+    client_secret
   }
 }
     `;
@@ -331,6 +337,10 @@ export const Applications = gql`
     id
     name
     host_name
+    host_url
+    host_email
+    client_id
+    client_secret
   }
 }
     `;
