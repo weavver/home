@@ -1,30 +1,33 @@
-.form-header {
-     align-content: space-between;
-     display: flex; 
-     justify-content: space-between;
+.authorize {
+     color: #000000;
+     background-color: rgb(233, 255, 227);
+     border-color: rgb(197, 205, 197);
+     min-width: 150px;
+}
+.authorize:hover {
+     background-color: rgb(185, 201, 181);
 }
 
-.form-header-required {
-     color: #d32b3f !important;
+.authorize:active {
+     background-color: rgb(126, 150, 119) !important;
 }
 
-input.ng-untouched {
-     border-bottom: 2px outset rgb(216, 216, 216) !important;
+.cancel {
+     color: #000000;
+     background-color: rgb(255, 192, 191);
+     border-color: rgb(206, 194, 194);
+     min-width: 150px;
+     margin: 10px;
 }
 
-input.ng-touched {
-     // background-color: blue;
+.cancel:hover {
+     background-color: rgb(215, 169, 168);
 }
 
-input.ng-invalid {
-     border-bottom: 2px outset red;
+.cancel:active {
+     background-color: rgb(159, 114, 113) !important;
 }
 
-input.ng-valid {
-     border-bottom: 2px outset greenyellow;
+.form-group {
+     padding: 10px;
 }
-
-// .ng-pristine {
-//      border-bottom: none;
-// }
-

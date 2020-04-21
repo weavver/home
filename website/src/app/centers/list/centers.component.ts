@@ -36,7 +36,7 @@ export class CentersComponent implements OnInit {
                  public router: Router) {
           this.menu = {
                buttons: [
-                    { text: "Add" } 
+                    { text: "Add", visible: true } 
                     ]
                };
      }

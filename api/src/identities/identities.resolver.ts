@@ -36,7 +36,6 @@ export class IdentityResolver {
           return data;
      }
 
-     @Authorized(["ADMIN"])
      // @UseMiddleware(checkAccess)
      @Query(() => identity)
      async I(): Promise<identity> {
@@ -99,7 +98,7 @@ export class IdentityResolver {
           return true;
      }
 
-     @Authorized(["ADMIN"])
+     @Authorized(["root"])
      // @UseMiddleware(checkAccess)
      @Query(() => [identity], { nullable: true })
      async identities(@Arg("filter_input") { id, skip, limit }: filter_input): Promise<[identity] | undefined> {

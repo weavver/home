@@ -75,7 +75,7 @@ export class TokensGetRoute {
 
                var doc = cmdResponse.result[0];
 
-               console.log("validating password...");
+               console.log("validating password...", doc);
                // console.log(doc.password_hash[0]);
                // console.log(query.password);
                // var passwordhashed = bcrypt.hashSync(query.password); // doc.password_hash[0]);
@@ -85,8 +85,8 @@ export class TokensGetRoute {
                     console.log("it matches...");
                     response.statusCode = 200;
                     var token_data = {
-                         sub: "123123123",
-                         name: "Gen Apple",
+                         sub: doc.id,
+                         // name: "not implemented",
                          email: query.email // to remove later
                     };
 

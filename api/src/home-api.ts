@@ -60,14 +60,13 @@ interface Query {
 // const app: fastify.FastifyInstance = fastify({})
 // app.register(fastifyPlugin);
 
-const app: fastify.FastifyInstance<Server, CustomIncomingMessage, ServerResponse> = fastify();
-// const app: any = fastify({
-//      // http2: true,
-//      https: {
-//        key: fs.readFileSync(path.join(__dirname, 'server.key')),
-//        cert: fs.readFileSync(path.join(__dirname, 'server.cert'))
-//      }
-// });
+const app: fastify.FastifyInstance<Server, CustomIncomingMessage, ServerResponse> = fastify({
+     // http2: true,
+     https: {
+       key: fs.readFileSync(path.join(__dirname, 'server.key')),
+       cert: fs.readFileSync(path.join(__dirname, 'server.cert'))
+     }
+}) as fastify.FastifyInstance<Server, CustomIncomingMessage, ServerResponse>;
 
 const opts: fastify.RouteShorthandOptions = {
      // schema: {
@@ -129,6 +128,63 @@ app.register(require('fastify-cors'), {
           credentials: true
      });
 
+// required to process oauth2 content-type of "application/x-www-form-urlencoded"
+app.register(require('fastify-formbody'))
+
+var jwt = require('jsonwebtoken');
+export interface jwt_access_token {
+     iss: string,
+     azp: string, // client_id
+     aud: string, // client_id
+     sub: string,
+     hd: string,
+     email: string,
+     email_verified: boolean,
+     at_hash: string,
+     name: string,
+     picture: string,
+     given_name: string,
+     family_name: string,
+     locale: string,
+     iat?: number,
+     exp?: number
+}
+
+// TODO: add brute force protection
+app.post('/flow/oauth2/token', async (request, reply) => {
+     console.log(request.body);
+
+     // var data : {} = {
+     //           grant_type: request.body.grant_type,
+     //           redirect_uri: request.body.redirect_uri,
+     //           client_id: request.body.client_id,
+     //           client_secret: request.body.client_secret,
+     //           code: request.body.code
+     //      };
+     
+     console.log("getting access token");
+
+     var data : jwt_access_token = {
+          iss: process.env.WEBSITE_DOMAIN as string,
+          sub: "0",
+          azp: "temp_client_id",
+          aud: "temp_client_id",
+          hd: "",
+          email: "test@example.com",
+          email_verified: true,
+          at_hash: "not implemented",
+          name: "First Last",
+          picture : "",
+          given_name: "Last",
+          family_name: "First",
+          locale: "en",
+     };
+     var token = jwt.sign(data, process.env.COOKIE_JWT_SIGNING_SECRET);
+     var response = { access_token: 'temporary_access_token', refresh_token: 'temporary_refresh_token', id_token: token };
+     reply.code(200).type('application/json').send(response);
+     // reply.code(404);
+});
+
 // app.get('/', opts, async (request, reply) => {
 //      reply.code(200).send({
 //           message: "we are online",
@@ -145,12 +201,16 @@ let passwords_set = new PasswordsPutRoute(app, opts);
 let identities_post = new IdentitiesPutRoute(app, opts);
 let home = new HomeApolloServer().getFastifyServer(app);
 
+// app.get('*', async (request, reply) => {
+//      console.log("catch all");
+// });
+
 // aws lambda helper method
 export const handler = async function (event : APIGatewayProxyEvent, context : Context) : Promise<any> {
      // performance help
      context.callbackWaitsForEmptyEventLoop = false;
 
-     // console.log(event.path);
+     console.log(event.path);
      const injection_data = {
           url: event.path,
           method: event.httpMethod as HTTPMethod,

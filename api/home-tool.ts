@@ -2,17 +2,15 @@ const argv = require('yargs').usage(
           'Usage: --drop'
      )
      .describe('all', "list all graph nodes")
-     .describe('center-add', "add a center")
+     .describe('center-add', "add a default center")
+     .describe('identity-add', "add a default identity")
      .describe('drop', "drop all data in graph [ DANGEROUS!!! ]")
      .argv;
 
-
-var bcrypt = require('bcryptjs');
-
+const bcrypt = require('bcryptjs');
 const readline = require('readline');
 
-import { GremlinHelper } from './gremlin';
-import * as Gremlin from 'gremlin';
+import { GremlinHelper } from './src/gremlin';
 
 function prettyJSON(obj : any) {
      console.log(JSON.stringify(obj, null, 2));
@@ -38,7 +36,7 @@ function prettyJSON(obj : any) {
           process.exit();
      };
 
-     if (argv["test-identity-add"]) {
+     if (argv["identity-add"]) {
           var addCenterVertex = await gremlin.g.addV("identity")
                .property("cid", 0)
                .property("email", "is_in_use@example.com")
@@ -74,9 +72,9 @@ function prettyJSON(obj : any) {
 })();
 
 const rl = readline.createInterface({
-     input: process.stdin,
-     output: process.stdout
- });
+          input: process.stdin,
+          output: process.stdout
+     });
 
 function askQuestion(q:any){
      var response:any;

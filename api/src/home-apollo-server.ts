@@ -46,13 +46,21 @@ export class HomeApolloServer {
                               ],
                     // emitSchemaFile: path.resolve(__dirname, "schema.gql"),
                     authChecker: ({ root, args, context, info }, roles) => {
-                         // console.log(args);
-                         // console.log(roles);
-                         // console.log(info);
-                         if (context.user)
-                              return true;
-                         else
+                         console.log("args", args);
+                         console.log("roles", roles);
+                         console.log("info", info.fieldName);
+                         // console.log("context", context);
+                         if (context.user) {
+                              console.log("context roles", context.user.roles);
+                              if (roles.length == 0 || roles.indexOf("root") > -1) {
+                                   return true;
+                              }
+                              else
+                                   return false;
+                         }
+                         else {
                               return false;
+                         }
                     },
                }),
                playground: {
@@ -69,23 +77,25 @@ export class HomeApolloServer {
 
      public async getUser(ctx : any) : Promise<any> {
           ctx.callbackWaitsForEmptyEventLoop = false;
-          return true;
           
-          // console.log(ctx.headers.cookie);
-          if (!ctx || !ctx.headers || !ctx.headers.cookie || ctx.headers.cookie.length < 1)
-               return null;
+          if (!ctx?.headers?.cookie || ctx?.headers?.cookie?.length < 1) {
+               return false;
+          }
+          else {
+               // console.log(ctx.headers.cookie);
+               var cookieHeader = ctx.headers.cookie;
+               var cookies = cookie.parse(cookieHeader);
+               console.log(process.env.COOKIE_JWT_SIGNING_SECRET);
 
-          // console.log(event.multiValueHeaders.Cookie[0]);
-          // console.log(cookies["SessionToken"]);
+               // console.log(event.multiValueHeaders.Cookie[0]);
+               // console.log(cookies["SessionToken"]);
+     
+               var decoded_token = jwt.verify(cookies["SessionToken"], process.env.COOKIE_JWT_SIGNING_SECRET);
+               // console.log("decoded token", decoded_token);
 
-          var cookieHeader = ctx.headers.cookie;
-          var cookies = cookie.parse(cookieHeader);
-          console.log(process.env.COOKIE_JWT_SIGNING_SECRET);
-
-          // var decoded_token = jwt.verify(cookies["SessionToken"], process.env.COOKIE_JWT_SIGNING_SECRET);
-          // console.log("decoded token", decoded_token);
-          // return decoded_token;
-          return true;
+               decoded_token.roles = ["root"];
+               return decoded_token;
+          }
      }
 
 };

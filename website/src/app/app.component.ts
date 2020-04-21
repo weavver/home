@@ -1,4 +1,5 @@
 import { environment } from '../environments/environment';
+// import { CommonModule } from '@angular/common';  
 import {
      ChangeDetectionStrategy,
      OnInit,
@@ -22,8 +23,6 @@ import { map } from 'rxjs/operators';
      animations: [slideInAnimation]
 })
 export class AppComponent implements OnInit {
-     I$: Observable<any>;
-
      navGeneral: boolean = false;
      navAccountExpanded: boolean = false;
 
@@ -32,10 +31,6 @@ export class AppComponent implements OnInit {
      }
      
      ngOnInit() {
-          this.I$ = this.graph.I()
-               .pipe(
-                    map(result => result.data.I)
-                  );
      }
 
      toggleNavAccount() {

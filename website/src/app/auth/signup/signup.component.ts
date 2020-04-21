@@ -4,7 +4,8 @@ import { Observable } from 'rxjs'
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component } from '@angular/core';
 import {
     Router,
-    NavigationExtras
+    NavigationExtras,
+    ActivatedRoute
 }
 from '@angular/router';
 import {
@@ -38,11 +39,12 @@ export class SignUpComponent {
           return Object.keys(obj)[0];
      }
 
-     constructor(   private cd: ChangeDetectorRef,
-                    private dataService: DataService,
-                    public authService: AuthService,
-                    public router: Router,
-                    private fb: FormBuilder) {
+     public constructor(private cd : ChangeDetectorRef,
+                        public route : ActivatedRoute,
+                        private dataService : DataService,
+                        public authService : AuthService,
+                        public router : Router,
+                        private fb: FormBuilder) {
           this.signupForm = this.fb.group({
                email: new FormControl('', [Validators.required, Validators.minLength(3), Validators.email]),
                password: new FormControl('', [Validators.required, Validators.minLength(6), Validators.maxLength(30)]),
@@ -54,6 +56,9 @@ export class SignUpComponent {
      }
 
      ngOnInit() {
+          if (this.authService.isLoggedIn && this.route.snapshot.queryParams["client_id"]) {
+               this.router.navigate(["/consent"], { queryParamsHandling: "merge" })
+          }
      }
 
      checkPasswords(group: FormGroup) { // here we have the 'passwords' group

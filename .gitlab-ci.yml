@@ -1,8 +1,9 @@
-image: node:latest
+image: node:13.10.1-alpine3.11
 
 cache:
   paths:
     - node_modules/
+    - .npm
 
 stages:
   - build
@@ -33,7 +34,7 @@ test:
     - echo $CI_JOB_STAGE # calls a predefined variable
     - echo $TEST
     - cd api
-    - npm ci
+    - npm ci --cache .npm
     - npm install -g mocha
     - npm test
 

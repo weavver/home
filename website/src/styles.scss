@@ -10,6 +10,18 @@
      font-family: sans-serif;
 }
 
+.ag-root {
+     border: none !important;
+}
+
+// .ag-row.ag-row-last {
+//      border-bottom-width: 0px !important;
+// }
+
+.ag-paging-panel {
+     justify-content: center !important;
+}
+
 a {
      cursor: pointer;
      cursor: hand;

@@ -21,7 +21,7 @@ export class IdentitiesComponent implements OnInit {
      gridApi;
 
      columnDefs = [
-               {headerName: 'Id', field: 'id', sortable: true, maxWidth: 100, filter: true },
+               {headerName: 'Id', field: 'id', sortable: true, minWidth: 60, maxWidth: 100, filter: true },
                {
                     headerName: "Name",
                     children: [
@@ -37,7 +37,7 @@ export class IdentitiesComponent implements OnInit {
                  public router: Router) {
           this.menu = {
                buttons: [
-                    { text: "Add" } 
+                    { text: "Add", visible: true } 
                     ]
                };
      }

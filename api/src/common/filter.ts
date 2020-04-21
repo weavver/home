@@ -37,10 +37,10 @@ export class filter_input implements Partial<filter> {
 
      @Field(type => Int, { defaultValue: 0 })
      @Min(0)
-     skip: number = 0;
+     skip?: number = 0;
 
      @Field(type => Int)
      @Min(1)
      @Max(50)
-     limit = 25;
+     limit? = 25;
 }

@@ -12,7 +12,8 @@ import {
           Applications_DeleteGQL,
           Applications_DeleteMutationVariables,
           ApplicationsGQL,
-          ApplicationsQueryVariables
+          ApplicationsQueryVariables,
+          ApplicationsDocument
      } from '../../../generated/graphql';
 
 import {
@@ -28,39 +29,44 @@ import {
     Validators,
     FormControl
   } from '@angular/forms';
+import { FormModel } from 'src/app/shared/form/form.component';
+import { WeavverFormService } from 'src/app/shared/form/form.service';
+import { Subscription } from 'rxjs';
 
 @Component({
-     selector: 'test',
-     template: `<weavver-form
-          [model]="model"
-          [datasource]="applications"
-          [processing]="processing"
-          (set)="set($event)"
-          (delete)="delete($event)">
+     selector: 'application',
+     template: `
+          <weavver-form
+               [model]="model"
+               [datasource]="applications"
+               (delete)="delete($event)">
           <dashboard>
+               <span *ngIf="!node">Loading...</span>
+               <div style="text-align: center; padding-top: 20px; border: solid 1px #CCCCCC; max-width: 275px; margin: auto; margin-bottom: 20px;" *ngIf="node"><h2>{{ node.name }}</h2>
                <div style="text-align: center; padding-top: 25px; padding-bottom: 25px;">
                     <button type="button" class="btn btn-info" style="min-width: 200px; margin: 15px;" (click)="launch()">Launch</button>
-               </div>
+               </div></div>
           </dashboard>
-     </weavver-form>
+          </weavver-form>
      `,
      styleUrls: ['./application.component.scss']
 })
 export class ApplicationComponent implements OnInit {
-     processing:Subject<Boolean> = new Subject();
-     model : {};
+     model : FormModel;
+     node: Application;
 
      errorGet(obj) {
           return Object.keys(obj)[0];
      }
 
-
-     constructor(private route : ActivatedRoute,
+     constructor(public formService : WeavverFormService,
+                 private route : ActivatedRoute,
                  public applications : ApplicationsGQL,
                  public applications_set : Applications_SetGQL,
                  public applications_delete : Applications_DeleteGQL,
                  private cd : ChangeDetectorRef,
                  public router : Router) {
+
 
           this.model = {
                route: "/applications",
@@ -72,7 +78,9 @@ export class ApplicationComponent implements OnInit {
                     {
                          name: "name",
                          title: "Name",
-                         placeholder: "name"
+                         placeholder: "name",
+                         required: true,
+                         let_edit: true
                     },
                     {
                          title: "Host",
@@ -80,12 +88,14 @@ export class ApplicationComponent implements OnInit {
                               {
                                    name: "host_email",
                                    title: "Email",
-                                   placeholder: "email"
+                                   placeholder: "email",
+                                   let_edit: true
                               },
                               {
                                    name: "host_url",
                                    title: "URL",
-                                   placeholder: "https://example.com/"
+                                   placeholder: "https://example.com/",
+                                   let_edit: true
                               }
                          ]
                     },
@@ -95,12 +105,14 @@ export class ApplicationComponent implements OnInit {
                               {
                                    name: "client_id",
                                    title: "Client ID",
-                                   placeholder: "client id placeholder"
+                                   placeholder: "client id placeholder",
+                                   let_edit: false
                               },
                               {
                                    name: "client_secret",
                                    title: "Client Secret",
-                                   placeholder: "client secret placeholder"
+                                   placeholder: "client secret placeholder",
+                                   let_edit: false
                               },
                               // {
                               //      name: "client_secret2",
@@ -119,40 +131,69 @@ export class ApplicationComponent implements OnInit {
           };
      }
 
+     sub_node_updated : Subscription = null;
+     sub_node_set : Subscription = null;
+
      ngOnInit() {
+          this.sub_node_updated = this.formService.node_updated.subscribe(data =>
+               {
+                    this.node = data as Application;
+               });
+
+          this.sub_node_set = this.formService.node_set.subscribe(data => {
+               this.node = data as Application;
+               this.form_node_set(data);
+          });
      }
 
-     item_selected(data) {
-          this.item = data;
+     ngOnDestroy() {
+          this.sub_node_set.unsubscribe();
+          this.sub_node_updated.unsubscribe();
      }
 
-     set(data) {
-          var app_input : Application_Input = data.data;
+     form_node_active(node : Application) {
+          this.node = node;
+     }
+
+     form_node_set(node) {
+          console.log("form_node_set");
+          var app_input : Application_Input = node;
           app_input.id = Number(this.route.snapshot.queryParams.id);
           var add_args : Applications_SetMutationVariables = {
                application: app_input
           };
-          this.applications_set.mutate(add_args).subscribe(result => {
-               console.log("asdfasdf", result);
-               this.processing.next(false);
+          this.applications_set.mutate(add_args, {
+               refetchQueries: [ {
+                    query: ApplicationsDocument,
+                    variables: { filter_input: {} } } ],
+               awaitRefetchQueries: true
+          }).subscribe(result => {
+          console.log("applications mutation result:", result);
+               this.formService.processing.next(false);
+               this.formService.node_updated.next(result.data.applications_set);
           });
      }
 
      launch() {
-          alert("launch");
+          window.open(this.node["host_url"], "_blank");
      }
 
-     delete(data) {
-          console.log("delete", data);
+     delete(node) {
+          console.log("delete", node);
           var delete_arg : Applications_DeleteMutationVariables = {
                application: {
                     id: Number(this.route.snapshot.queryParams.id)
                }
           }
-          this.applications_delete.mutate(delete_arg).subscribe(result => {
+          this.applications_delete.mutate(delete_arg, {
+               refetchQueries: [ {
+                    query: ApplicationsDocument,
+                    variables: { filter_input: {} } } ],
+               awaitRefetchQueries: true }
+          ).subscribe(result => {
                console.log("delete result", result)
-
-               this.processing.next(false);
+               this.cd.markForCheck();
+               this.formService.processing.next(false);
                if (result.data.applications_delete) {
                     this.router.navigateByUrl("applications");
                }

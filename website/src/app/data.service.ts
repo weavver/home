@@ -116,10 +116,27 @@ export class DataService {
                });
      }
 
+     public center_set(property : string, value : string) : Observable<any> {
+          const identity_property_set = gql`mutation center_set($id: Number!, $name: String!) {
+                    center_set(id: $id, name: $name)
+               }`;
+
+          return this.apollo.mutate({
+                    mutation: identity_property_set,
+                    variables: {
+                         property: property,
+                         value: value
+                    },
+                    refetchQueries: [ this.I_query ]
+               });
+     }
+
      public identity_password_set(password_current : string, password_new : string) {
-          const identity_password_set = gql`mutation identity_password_set($password_current: String!, $password_new: String!) {
+          const identity_password_set = gql`
+                    mutation identity_password_set($password_current: String!, $password_new: String!) {
                               identity_password_set(password_current: $password_current, password_new: $password_new)
-                         }`;
+                         }
+                    `;
 
           this.apollo.mutate({
                     mutation: identity_password_set,
@@ -150,14 +167,17 @@ export class DataService {
           }).valueChanges;
      }
 
-     public Application_add() {
-          const mutation = gql`mutation($text: String) {
-                    Application_add(text: $text)
+     public application_add(name, client_id, host_email, host_url) {
+          const mutation = gql`mutation application_add($name: String, client_id: Int, host_email: String, host_url: String) {
+                    application_add(name: $name, client_id: $client_id, $host_email, $host_url)
                }`;
           this.apollo.mutate({
                mutation: mutation,
                variables: {
-                    text: 'apollographql/apollo-client'
+                    name: name,
+                    client_id: client_id,
+                    host_email: host_email,
+                    host_url: host_url
                }
           })
           .subscribe(

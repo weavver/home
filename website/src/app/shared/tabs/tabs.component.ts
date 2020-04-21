@@ -6,18 +6,24 @@ import {
      ViewChild,
      ComponentFactoryResolver,
      ViewContainerRef,
+     Input
 } from "@angular/core";
 
 import { WeavverTabComponent } from "./tab.component";
+import { Router, ActivatedRoute } from '@angular/router';
 
 @Component({
      selector: "tabs",
      template: `
-          <button 
-               *ngFor="let tab of tabs" type="button" class="btn" [class.btn-secondary]="tab.active"
-               (click)="selectTab(tab)"
-          >{{ tab.title}}</button>
-          <ng-content></ng-content>
+               <button *ngFor="let tab of tabs"
+                         type="button" class="btn"
+                         [class.btn-secondary]="tab.active"
+                         (click)="selectTab(tab)"
+                         style="padding-left: 30px; padding-right: 30px; margin-left: 10px;margin-right: 10px;"
+                         >
+                    {{ tab.title}}
+               </button>
+               <ng-content></ng-content>
      `,
      styles: [
      `
@@ -28,7 +34,9 @@ import { WeavverTabComponent } from "./tab.component";
 export class WeavverTabsComponent implements AfterContentInit {
      @ContentChildren(WeavverTabComponent) tabs: QueryList<WeavverTabComponent>;
 
-     // contentChildren are set
+     constructor(private route : ActivatedRoute) {
+     }
+
      ngAfterContentInit() {
           let activeTabs = this.tabs.filter((tab) => tab.active);
 
@@ -42,17 +50,3 @@ export class WeavverTabsComponent implements AfterContentInit {
           tab.active = true;
      }
 }
-
-// 
-
-// <ul class="nav nav-pills">
-// <li class="nav-item">
-//      <a class="nav-link active" href="#">Dash</a>
-// </li>
-// <li class="nav-item">
-//      <a class="nav-link" href="#">Link</a>
-// </li>
-// <li class="nav-item">
-//      <a class="nav-link" href="#advanced">Advanced</a>
-// </li>
-// </ul>

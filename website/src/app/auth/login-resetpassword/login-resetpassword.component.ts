@@ -40,7 +40,7 @@ export class LogInResetPasswordComponent {
           this.message = 'Requesting a reset code...';
 
           this.authService.passwordsReset(this.email.value).subscribe(() => {
-                    this.router.navigate(["/login/resetpassword/confirm"]);
+                    this.router.navigate(["/login/resetpassword/confirm"], { queryParamsHandling: "merge"});
         });
     }
 }

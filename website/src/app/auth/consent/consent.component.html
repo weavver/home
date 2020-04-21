@@ -1,37 +1,36 @@
-<card [loading]="processing" [maxWidth]="500">
-     <div fxLayout="row" style="display:flex; font-size: 22px;  align-items: left; justify-content: left;">
-          <div id="card_title">
-               <i class="material-icons" style="vertical-align: middle !important; padding-right: 10px;">lock</i>
-               <span style="vertical-align: middle !important;">App Consent of "{{ data.app_name }}" needed</span>
+<card [title]="title"
+     icon="lock"
+     [loading]="processing">
+     <card-body padding="false">
+          <div *ngIf="error">
+               {{ error }}
           </div>
-     </div>
-     <hr />
-     <form [formGroup]="form"  (ngSubmit)="authorize()">
-          <div class="form-group">
-               <label for="email">May an application named "{{ data.app_name }}" use this Weavver Identity to help simplify usage?</label><br />
-               <br />
-               By clicking authorize that app will be give access to:<br />
-               <br />
-               <ul>
-                    <li>Numeric identitifier: {{ data.identifier }}</li>
-                    <li>Email address: {{ data.email }}</li>
-               </ul>
-               <br />
-               App information:<br />
-               <br />
-               <ul>
-                    <li>Application Giver: {{ data.app_giver}} </li>
-                    <li>Website: {{ data.website }}</li>
-                    <li>Privacy Policy: {{ data.privacy_policy }}</li>
-                    <li>Added to our Catalogue: {{ data.catalogued_at }}</li>
-               </ul>
-          </div>
-          <div style="text-align: center; margin-top: 15px;">
-               <hr />
-               <div *ngIf="error" style="padding: 10px; color: red;">
-                    Log in error. Maybe check your email and/or password.
+          <form *ngIf="!error" [formGroup]="form">
+               <div class="form-group">
+                    <label for="email">May "{{ application ? application.name : "unknown" }}" access this identity?</label><br />
+                    <br />
+                    Information about "{{ application ? application.name : "unknown" }}":<br />
+                    <br />
+                    <ul>
+                         <li>Given by: {{ data.app_giver}} </li>
+                         <li>Website: {{ data.website }}</li>
+                         <li>Privacy Policy: {{ data.privacy_policy }}</li>
+                         <li>Added to our application store: {{ data.catalogued_at }}</li>
+                    </ul>
+                    Clicking authorize will give access to:<br />
+                    <br />
+                    <ul *ngIf="authService.isLoggedIn && (authService.I | async) as I" >
+                         <li>Id: {{ I.id }}</li>
+                         <li>Name: {{ I.name }}</li>
+                         <li>Email address: {{ I.email }}</li>
+                    </ul>
                </div>
-               <button id="login" class="btn btn-primary" style="font-weight: bold; background-color: orange; color: white; min-width: 300px; margin: 15px;">{{ submitText }}</button>
-          </div>
-     </form>
+               <div style="text-align: center; margin: 20px;">
+                    <button class="btn btn-primary authorize" (click)="authorize()">{{ submitText }}</button>
+                    <br />
+                    <br />
+                    <button class="btn btn-danger cancel" (click)="cancel()">Cancel</button>
+               </div>
+          </form>
+     </card-body>
 </card>

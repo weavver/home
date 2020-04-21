@@ -1,63 +1,62 @@
 {
-  "name": "weavver-home",
-  "version": "0.0.1",
-  "description": "a centering",
-  "main": "app.ts",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "apollogen": "graphql-codegen --config apollo-generateclient.yml",
-    "codegen": "graphql-codegen --config apollo-codegen.yml"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://gitlab.com/weavver/weavver-home.git"
-  },
-  "keywords": [
-    "nodejs",
-    "authentication",
-    "system",
-    "oauth2"
-  ],
-  "author": "Mitchel Constantin",
-  "license": "MIT",
-  "bugs": {
-    "url": "https://gitlab.com/weavver/weavver-home/issues"
-  },
-  "homepage": "https://gitlab.com/weavver/weavver-home#readme",
-  "devDependencies": {
-    "@graphql-codegen/cli": "^1.13.1",
-    "@graphql-codegen/introspection": "^1.13.1",
-    "@graphql-codegen/typescript": "1.13.1",
-    "@graphql-codegen/typescript-apollo-angular": "1.13.1",
-    "@graphql-codegen/typescript-document-nodes": "^1.13.1",
-    "@graphql-codegen/typescript-graphql-files-modules": "^1.13.1",
-    "@graphql-codegen/typescript-operations": "1.13.1",
-    "@types/gremlin": "^3.4.6",
-    "@types/mocha": "^7.0.2",
-    "graphql": "^15.0.0",
-    "tslib": "^1.11.1",
-    "typescript": "^3.8.3"
-  },
-  "dependencies": {
-    "apollo-server-fastify": "^2.11.0",
-    "apollo-server-lambda": "^2.11.0",
-    "bcryptjs": "^2.4.3",
-    "class-transformer": "^0.2.3",
-    "dotenv": "^8.2.0",
-    "dotenv-safe": "^8.2.0",
-    "fastify": "^2.13.0",
-    "fastify-cookie": "^3.6.0",
-    "fastify-server-timeout": "^0.1.1",
-    "fastify-static": "^2.6.0",
-    "gremlin": "^3.4.6",
-    "jsonpath": "^1.0.2",
-    "jsonwebtoken": "^8.5.1",
-    "moment": "^2.24.0",
-    "performance-now": "^2.1.0",
-    "prom-client": "^12.0.0",
-    "reflect-metadata": "^0.1.13",
-    "twilio": "^3.41.1",
-    "type-graphql": "^0.17.6",
-    "uuid": "^7.0.2"
-  }
+     "name": "weavver-home",
+     "version": "0.0.1",
+     "description": "a centering",
+     "main": "app.ts",
+     "scripts": {
+          "test": "echo \"Error: no test specified\" && exit 1",
+          "codegen": "export NODE_TLS_REJECT_UNAUTHORIZED=0 && graphql-codegen --config apollo-codegen.yml -K true"
+     },
+     "repository": {
+          "type": "git",
+          "url": "git+https://gitlab.com/weavver/weavver-home.git"
+     },
+     "keywords": [
+          "nodejs",
+          "authentication",
+          "system",
+          "oauth2"
+     ],
+     "author": "Mitchel Constantin",
+     "license": "MIT",
+     "bugs": {
+          "url": "https://gitlab.com/weavver/weavver-home/issues"
+     },
+     "homepage": "https://gitlab.com/weavver/weavver-home#readme",
+     "devDependencies": {
+          "@graphql-codegen/cli": "^1.13.1",
+          "@graphql-codegen/introspection": "^1.13.1",
+          "@graphql-codegen/typescript": "1.13.1",
+          "@graphql-codegen/typescript-apollo-angular": "1.13.1",
+          "@graphql-codegen/typescript-document-nodes": "^1.13.1",
+          "@graphql-codegen/typescript-graphql-files-modules": "^1.13.1",
+          "@graphql-codegen/typescript-operations": "1.13.1",
+          "@types/gremlin": "^3.4.6",
+          "@types/mocha": "^7.0.2",
+          "graphql": "^15.0.0",
+          "tslib": "^1.11.1",
+          "typescript": "^3.8.3"
+     },
+     "dependencies": {
+          "apollo-server-fastify": "^2.11.0",
+          "apollo-server-lambda": "^2.11.0",
+          "bcryptjs": "^2.4.3",
+          "class-transformer": "^0.2.3",
+          "dotenv": "^8.2.0",
+          "dotenv-safe": "^8.2.0",
+          "fastify": "^2.13.0",
+          "fastify-cookie": "^3.6.0",
+          "fastify-server-timeout": "^0.1.1",
+          "fastify-static": "^2.6.0",
+          "gremlin": "^3.4.6",
+          "jsonpath": "^1.0.2",
+          "jsonwebtoken": "^8.5.1",
+          "moment": "^2.24.0",
+          "performance-now": "^2.1.0",
+          "prom-client": "^12.0.0",
+          "reflect-metadata": "^0.1.13",
+          "twilio": "^3.41.1",
+          "type-graphql": "^0.17.6",
+          "uuid": "^7.0.2"
+     }
 }

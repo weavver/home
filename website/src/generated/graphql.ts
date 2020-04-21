@@ -39,9 +39,24 @@ export type Application_Input = {
 
 export type Center = {
    __typename?: 'center';
-  id: Scalars['Float'];
-  name: Scalars['String'];
+  id?: Maybe<Scalars['Float']>;
+  name?: Maybe<Scalars['String']>;
   description?: Maybe<Scalars['String']>;
+  smtp_server?: Maybe<Scalars['String']>;
+  smtp_port?: Maybe<Scalars['String']>;
+  smtp_user?: Maybe<Scalars['String']>;
+  smtp_password: Scalars['String'];
+  twilio_api_key?: Maybe<Scalars['String']>;
+};
+
+export type Center_Input = {
+  id?: Maybe<Scalars['Float']>;
+  name?: Maybe<Scalars['String']>;
+  smtp_server?: Maybe<Scalars['String']>;
+  smtp_port?: Maybe<Scalars['String']>;
+  smtp_user?: Maybe<Scalars['String']>;
+  smtp_password?: Maybe<Scalars['String']>;
+  twilio_api_key?: Maybe<Scalars['String']>;
 };
 
 
@@ -67,13 +82,27 @@ export type Identity = {
 
 export type Mutation = {
    __typename?: 'Mutation';
+  centers_set: Center;
+  centers_delete: Scalars['Boolean'];
   echo: Scalars['String'];
   identities_add: Identity;
   identity_property_set: Scalars['String'];
   identity_password_set: Scalars['Boolean'];
   identity_email_reset_code: Scalars['String'];
-  applications_set: Scalars['Boolean'];
+  application_getByClientId: Application;
+  application_giveConsent: Oauth2_Uriparams;
+  applications_set: Application;
   applications_delete: Scalars['Boolean'];
+};
+
+
+export type MutationCenters_SetArgs = {
+  center: Center_Input;
+};
+
+
+export type MutationCenters_DeleteArgs = {
+  center: Center_Input;
 };
 
 
@@ -105,6 +134,16 @@ export type MutationIdentity_Email_Reset_CodeArgs = {
 };
 
 
+export type MutationApplication_GetByClientIdArgs = {
+  client_id: Scalars['String'];
+};
+
+
+export type MutationApplication_GiveConsentArgs = {
+  client_id: Scalars['String'];
+};
+
+
 export type MutationApplications_SetArgs = {
   application: Application_Input;
 };
@@ -112,6 +151,15 @@ export type MutationApplications_SetArgs = {
 
 export type MutationApplications_DeleteArgs = {
   application: Application_Input;
+};
+
+export type Oauth2_Uriparams = {
+   __typename?: 'oauth2_uriparams';
+  code: Scalars['String'];
+  scope: Scalars['String'];
+  authuser?: Maybe<Scalars['String']>;
+  hd?: Maybe<Scalars['String']>;
+  prompt?: Maybe<Scalars['String']>;
 };
 
 export type Query = {
@@ -157,7 +205,10 @@ export type Applications_SetMutationVariables = {
 
 export type Applications_SetMutation = (
   { __typename?: 'Mutation' }
-  & Pick<Mutation, 'applications_set'>
+  & { applications_set: (
+    { __typename?: 'application' }
+    & Pick<Application, 'id' | 'name' | 'host_url' | 'client_id' | 'client_secret'>
+  ) }
 );
 
 export type Applications_DeleteMutationVariables = {
@@ -168,6 +219,32 @@ export type Applications_DeleteMutationVariables = {
 export type Applications_DeleteMutation = (
   { __typename?: 'Mutation' }
   & Pick<Mutation, 'applications_delete'>
+);
+
+export type Application_GetByClientIdMutationVariables = {
+  client_id: Scalars['String'];
+};
+
+
+export type Application_GetByClientIdMutation = (
+  { __typename?: 'Mutation' }
+  & { application_getByClientId: (
+    { __typename?: 'application' }
+    & Pick<Application, 'id' | 'name'>
+  ) }
+);
+
+export type Application_GiveConsentMutationVariables = {
+  client_id: Scalars['String'];
+};
+
+
+export type Application_GiveConsentMutation = (
+  { __typename?: 'Mutation' }
+  & { application_giveConsent: (
+    { __typename?: 'oauth2_uriparams' }
+    & Pick<Oauth2_Uriparams, 'code' | 'scope' | 'authuser' | 'hd' | 'prompt'>
+  ) }
 );
 
 export type CentersQueryVariables = {
@@ -183,6 +260,29 @@ export type CentersQuery = (
   )>> }
 );
 
+export type Centers_SetMutationVariables = {
+  center: Center_Input;
+};
+
+
+export type Centers_SetMutation = (
+  { __typename?: 'Mutation' }
+  & { centers_set: (
+    { __typename?: 'center' }
+    & Pick<Center, 'id' | 'name' | 'smtp_server' | 'smtp_port' | 'smtp_password' | 'twilio_api_key'>
+  ) }
+);
+
+export type Centers_DeleteMutationVariables = {
+  center: Center_Input;
+};
+
+
+export type Centers_DeleteMutation = (
+  { __typename?: 'Mutation' }
+  & Pick<Mutation, 'centers_delete'>
+);
+
 export type IQueryVariables = {};
 
 
@@ -190,7 +290,7 @@ export type IQuery = (
   { __typename?: 'Query' }
   & { I: (
     { __typename?: 'identity' }
-    & Pick<Identity, 'name' | 'name_given' | 'name_family' | 'email'>
+    & Pick<Identity, 'id' | 'name' | 'name_given' | 'name_family' | 'email'>
   ) }
 );
 
@@ -203,7 +303,7 @@ export type IdentitiesQuery = (
   { __typename?: 'Query' }
   & { identities?: Maybe<Array<(
     { __typename?: 'identity' }
-    & Pick<Identity, 'id' | 'email' | 'name_given' | 'name_family'>
+    & Pick<Identity, 'id' | 'name' | 'email' | 'name_given' | 'name_family'>
   )>> }
 );
 
@@ -240,7 +340,13 @@ export const ApplicationsDocument = gql`
   }
 export const Applications_SetDocument = gql`
     mutation applications_set($application: application_input!) {
-  applications_set(application: $application)
+  applications_set(application: $application) {
+    id
+    name
+    host_url
+    client_id
+    client_secret
+  }
 }
     `;
 
@@ -264,6 +370,41 @@ export const Applications_DeleteDocument = gql`
     document = Applications_DeleteDocument;
     
   }
+export const Application_GetByClientIdDocument = gql`
+    mutation application_getByClientId($client_id: String!) {
+  application_getByClientId(client_id: $client_id) {
+    id
+    name
+  }
+}
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class Application_GetByClientIdGQL extends Apollo.Mutation<Application_GetByClientIdMutation, Application_GetByClientIdMutationVariables> {
+    document = Application_GetByClientIdDocument;
+    
+  }
+export const Application_GiveConsentDocument = gql`
+    mutation application_giveConsent($client_id: String!) {
+  application_giveConsent(client_id: $client_id) {
+    code
+    scope
+    authuser
+    hd
+    prompt
+  }
+}
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class Application_GiveConsentGQL extends Apollo.Mutation<Application_GiveConsentMutation, Application_GiveConsentMutationVariables> {
+    document = Application_GiveConsentDocument;
+    
+  }
 export const CentersDocument = gql`
     query centers($filter_input: filter_input!) {
   centers(filter_input: $filter_input) {
@@ -281,9 +422,43 @@ export const CentersDocument = gql`
     document = CentersDocument;
     
   }
+export const Centers_SetDocument = gql`
+    mutation centers_set($center: center_input!) {
+  centers_set(center: $center) {
+    id
+    name
+    smtp_server
+    smtp_port
+    smtp_password
+    twilio_api_key
+  }
+}
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class Centers_SetGQL extends Apollo.Mutation<Centers_SetMutation, Centers_SetMutationVariables> {
+    document = Centers_SetDocument;
+    
+  }
+export const Centers_DeleteDocument = gql`
+    mutation centers_delete($center: center_input!) {
+  centers_delete(center: $center)
+}
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class Centers_DeleteGQL extends Apollo.Mutation<Centers_DeleteMutation, Centers_DeleteMutationVariables> {
+    document = Centers_DeleteDocument;
+    
+  }
 export const IDocument = gql`
     query I {
   I {
+    id
     name
     name_given
     name_family
@@ -303,6 +478,7 @@ export const IdentitiesDocument = gql`
     query identities($filter_input: filter_input!) {
   identities(filter_input: $filter_input) {
     id
+    name
     email
     name_given
     name_family
@@ -346,12 +522,37 @@ export const Applications = gql`
     `;
 export const Applications_Set = gql`
     mutation applications_set($application: application_input!) {
-  applications_set(application: $application)
+  applications_set(application: $application) {
+    id
+    name
+    host_url
+    client_id
+    client_secret
+  }
 }
     `;
 export const Applications_Delete = gql`
     mutation applications_delete($application: application_input!) {
   applications_delete(application: $application)
+}
+    `;
+export const Application_GetByClientId = gql`
+    mutation application_getByClientId($client_id: String!) {
+  application_getByClientId(client_id: $client_id) {
+    id
+    name
+  }
+}
+    `;
+export const Application_GiveConsent = gql`
+    mutation application_giveConsent($client_id: String!) {
+  application_giveConsent(client_id: $client_id) {
+    code
+    scope
+    authuser
+    hd
+    prompt
+  }
 }
     `;
 export const Centers = gql`
@@ -363,9 +564,27 @@ export const Centers = gql`
   }
 }
     `;
+export const Centers_Set = gql`
+    mutation centers_set($center: center_input!) {
+  centers_set(center: $center) {
+    id
+    name
+    smtp_server
+    smtp_port
+    smtp_password
+    twilio_api_key
+  }
+}
+    `;
+export const Centers_Delete = gql`
+    mutation centers_delete($center: center_input!) {
+  centers_delete(center: $center)
+}
+    `;
 export const I = gql`
     query I {
   I {
+    id
     name
     name_given
     name_family
@@ -377,6 +596,7 @@ export const Identities = gql`
     query identities($filter_input: filter_input!) {
   identities(filter_input: $filter_input) {
     id
+    name
     email
     name_given
     name_family

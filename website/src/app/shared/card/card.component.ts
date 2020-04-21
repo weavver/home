@@ -10,70 +10,67 @@ import {
      EventEmitter,
      Output,
      QueryList} from '@angular/core';
+import { Subject } from 'rxjs';
 
+
+import { PipeTransform, Pipe } from '@angular/core';
 
 @Directive({ selector: 'card-buttons' })
 export class WeavverCardButtons { }
 
-@Directive({ selector: 'card-body' })
-export class WeavverCardBody { }
+@Component({ selector: 'card-body', template: `
+     <div [class.pl-3]="!padding || padding==true" [class.pr-3]="padding==true" [class.mt-3]="padding==true">
+          <ng-content></ng-content>
+     </div>
+` })
+// @Input() title : String = null; })
+export class WeavverCardBody {
+     @Input() padding : Boolean = true;
+}
 
+// <tab title="Advanced" *ngIf="this._state=='view' && model.let.delete">
+// <div style="text-align: center;">
+//      <button type="button" class="btn btn-danger" style="min-width: 200px; margin: 15px;" (click)="delete_click()">
+//           <i class="material-icons">delete</i>
+//           Delete
+//      </button>
+// </div>
+// </tab>     
 @Component({
   selector: 'card',
   template: `
      <div class="card" [style.max-width.px]="maxWidth" style="padding: 0px; margin: auto;">
           <div class="overlay" *ngIf="loading"></div>
           <div class="loader" *ngIf="loading"></div>
-          <div *ngIf="title" class="card-header pt-1 pb-2 pl-3 pr-3" style="padding-bottom: 5px; margin-bottom: 15px; background-color: #FFFFFF">
+          <div *ngIf="title" class="card-header pt-1 pb-2 pl-3 pr-3" style="padding-bottom: 5px; background-color: #FFFFFF">
                <div class="d-flex align-items-center">
                     <span class="mr-auto pt-1" style="font-size: 22px;" *ngIf="title">
                          <i *ngIf="icon" class="material-icons" style="vertical-align: middle !important; padding-right: 6px; padding-bottom: 5px;">{{ icon }}</i>
                          {{ title }}
                     </span>
                     <div *ngIf="menu" class="btn-group" role="group">
-                         <button *ngFor="let button of menu.buttons"
-                              class="btn btn-primary" (click)="click(button)">{{ button.text }} </button>
+                         <button *ngFor="let button of menu.buttons | callback: filterVisible"
+                              type="button"
+                              class="btn"
+                              style="min-width: 75px;"
+                              [title]="button.title"
+                              [class.btn-secondary]="button.warn!=true"
+                              [class.btn-danger]="button.warn==true"
+                              (click)="click(button)">
+                              <span [ngSwitch]="button.text">
+                                   <i *ngSwitchCase="'Edit'" class="material-icons">edit</i>
+                                   <i *ngSwitchCase="'Delete'" class="material-icons">delete</i>
+                                   <span *ngSwitchDefault>
+                                        {{ button.text }}
+                                   </span>
+                              </span>
+                         </button>
                     </div>
                </div>
           </div>
-          <div class="pl-3 pr-3">
-               <ng-content select="card-body"></ng-content>
-          </div>
+          <ng-content select="card-body"></ng-content>
      </div>`,
-  styles: [`
-     .card {
-          padding: 10px;
-          // max-width: 500px;
-          margin: auto;
-     }
-     .overlay {
-          background: rgba(0, 0, 0, .15);
-          position: absolute;
-          width: 100%;
-          height: 100%;
-          left: 0px;
-          top: 0px;
-     }
-     .loader {
-          border: 16px solid #f3f3f3;
-          border-top: 16px solid #3498db;
-          border-radius: 50%;
-          animation: spin 2s linear infinite;
-          margin: auto;
-          width: 60px;
-          height: 60px;
-          // border: solid black;
-          position: absolute;
-          top: 0;
-          bottom: 0;
-          left: 0;
-          right: 0
-     }
-     @keyframes spin {
-          0% { transform: rotate(0deg); }
-          100% { transform: rotate(360deg); }
-     }
-  `],
+  styleUrls: ["./card.component.scss"],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class WeavverCardComponent {
@@ -83,11 +80,31 @@ export class WeavverCardComponent {
      @Input() icon : String = null;
      @Input() maxWidth : any = 500;
 
+     @Input() state : Subject<string> = new Subject();
+
      @Input() menu : any = null;
 
      @Output() menuitem_clicked = new EventEmitter();
 
+     filterVisible(button: { visible: true}) {
+          return button.visible;
+        }
+
      click(item) {
           this.menuitem_clicked.emit(item);
      }
+}
+
+
+@Pipe({
+    name: 'callback',
+    pure: false
+})
+export class CallbackPipe implements PipeTransform {
+    transform(items: any[], callback: (item: any) => boolean): any {
+        if (!items || !callback) {
+            return items;
+        }
+        return items.filter(item => callback(item));
+    }
 }

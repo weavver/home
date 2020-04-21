@@ -2,6 +2,9 @@
      icon="assignment_ind"
      [loading]="processing">
      <card-body>
+          <div *ngIf="queryParams && queryParams.client_id && application" style="text-align: center; max-width: 275px; margin: auto; padding: 20px; margin-top: 20px; margin-bottom: 20px;">
+               <h2>{{ application.name }}</h2>
+          </div>
           <form [formGroup]="loginForm"  (ngSubmit)="logIn()">
                <div class="form-group">
                     <div class="form-header">
@@ -27,7 +30,7 @@
                     </div>
                     <input formControlName="password" class="form-control required" type="password" placeholder="Password" name="password" required>
                </div>
-               <div style="text-align: center;">
+               <div style="text-align: center; margin-bottom: 25px;">
                     <div *ngIf="error" style="padding: 10px; color: red;">
                          Log in error. Maybe check your email and/or password.
                     </div>
@@ -36,7 +39,7 @@
                     </div>
                     <button id="login" class="btn btn-primary" style="min-width: 300px; margin: 15px;">{{ logInText }}</button>
                     <br />
-                    <a routerLink="/login/resetpassword">Reset Password</a>
+                    <a routerLink="/login/resetpassword" queryParamsHandling="merge">Reset Password</a>
                </div>
           </form>
      </card-body>

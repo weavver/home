@@ -4,6 +4,15 @@ import {
   FormGroup,
 } from '@angular/forms';
 
+export interface field {
+     name: string,
+     title: string,
+     type: string,
+     textarea_rows: number,
+     placeholder: string,
+     let_edit : boolean
+ }
+
 @Component({
      selector: 'weavver-form-field>',
      styleUrls: ["./form.component.scss"],
@@ -24,16 +33,16 @@ import {
                     </div>
                     <div *ngSwitchCase="'checkbox'">
                          <input [formControlName]="field.name" type="checkbox" class="form-control" [placeholder]="field.placeholder" [name]="field.name" required>
-                         <label class="form-check-label" for="exampleCheck1">{{ input.text }}</label>
+                         <label class="form-check-label" for="exampleCheck1">{{ field.title }}</label>
                     </div>
-                    <input *ngSwitchDefault [formControlName]="field.name" type="text" class="form-control" [placeholder]="field.placeholder" [name]="field.name" required>
+                    <input *ngSwitchDefault [formControlName]="field.name" type="text" class="form-control" [placeholder]="field.placeholder" [name]="field.name" [readonly]="!field.let_edit">
                </div>
           </div>
      `
 })
 export class WeavverFormFieldComponent {
      @Input('group') group: FormGroup;
-     @Input('field') field: {};
+     @Input('field') field: field;
      // @Input() active = false;
 
      constructor() {

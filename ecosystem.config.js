@@ -23,7 +23,7 @@ module.exports = {
                // env_production: {
                //      NODE_ENV: 'dev'
                // },
-               args: 'run server'
+               args: 'run watch'
           }
      ]
 };

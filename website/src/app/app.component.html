@@ -4,20 +4,20 @@
 <header>
      <div fxLayout="row" fxLayoutAlign="space-between center" style="display: flex; align-content: center; align-items: center;">
           <div fxLayout="row" fxLayoutAlign="start center" style="padding-left: 10px; height: 48px;">
-               <div style="background-color: transparent; border: none; margin-right: 10px; cursor: pointer;" routerLink="/">
+               <div style="background-color: transparent; border: none; cursor: pointer;" routerLink="/" queryParamsHandling="merge">
                     <img class="d-none d-md-block" src="assets/logo.png" style="width: 255px; margin-top: 0px;" />
                     <img class="d-md-none" src="assets/logo-compact.png" style="width: 85px; margin-top: 0px;" />
                </div>
           </div>
-          <div fxLayout="row" fxLayoutAlign="end center" style="padding-left: 20px; height: 48px;">
+          <div fxLayout="row" fxLayoutAlign="end center" style="height: 48px;">
                <!-- fxShow [fxHide.lt-md]="true"  -->
-               <div class="navButton" *ngIf="!authService.isLoggedIn" routerLink="/login" routerLinkActive="navButtonActive">
+               <div class="navButton" *ngIf="!authService.isLoggedIn" routerLink="/login" routerLinkActive="navButtonActive" queryParamsHandling="merge">
                     <p>Log In</p>
                </div>&nbsp;
-               <div class="navButton" *ngIf="!authService.isLoggedIn" routerLink="/signup" routerLinkActive="navButtonActive">
+               <div class="navButton" *ngIf="!authService.isLoggedIn" routerLink="/signup" routerLinkActive="navButtonActive" queryParamsHandling="merge">
                     <p>Sign Up</p>
                </div>&nbsp;
-               <div *ngIf="authService.isLoggedIn && (I$ | async) as I" class="navButton" routerLink="/identity">
+               <div *ngIf="authService.isLoggedIn && (authService.I | async) as I" class="navButton" routerLink="/identity" queryParamsHandling="merge">
                     <p>{{ I.name }}</p>
                </div>&nbsp;
                <div class="navButton" *ngIf="authService.isLoggedIn" (click)="logOut()">
@@ -59,7 +59,7 @@
                     <i *ngIf="!this.navAccountExpanded" class="material-icons" style="font-size: 1.85rem">chevron_right</i>
                     <p *ngIf="this.navAccountExpanded" style="display: flex; align-items: left; align-content: left; padding-top: 5px;">
                          <i class="material-icons" style="font-size: 1.85rem">chevron_left</i>
-                         Collapse
+                         <span style="padding-top:2px;">Collapse</span>
                    </p>
               </div>
           </div>

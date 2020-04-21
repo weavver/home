@@ -8,11 +8,18 @@ query centers($filter_input: filter_input!)
      }
 }
 
-# mutation applications_set($application: application_input!)
-# {
-#      applications_set(application: $application)
-# }
+mutation centers_set($center: center_input!)
+{
+     centers_set(center: $center) {
+          id,
+          name,
+          smtp_server,
+          smtp_port,
+          smtp_password,
+          twilio_api_key
+     }
+}
 
-# mutation applications_delete($application: application_input!) {
-#      applications_delete(application: $application)
-# }
+mutation centers_delete($center: center_input!) {
+     centers_delete(center: $center)
+}

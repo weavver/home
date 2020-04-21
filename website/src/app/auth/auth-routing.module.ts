@@ -1,7 +1,6 @@
 import { NgModule }                               from '@angular/core';
 import { RouterModule, Routes }                   from '@angular/router';
 import { AuthGuard }                              from './auth.guard';
-import { AuthService }                            from './auth.service';
 import { LoginComponent }                         from './login/login.component';
 import { LogInResetPasswordComponent }            from './login-resetpassword/login-resetpassword.component';
 import { LogInResetPasswordConfirmComponent }     from './login-resetpassword-confirm/login-resetpassword-confirm.component';
@@ -14,18 +13,18 @@ const authRoutes: Routes = [
      { path: 'login',                        component: LoginComponent },
      { path: 'login/resetpassword',          component: LogInResetPasswordComponent },
      { path: 'login/resetpassword/confirm',  component: LogInResetPasswordConfirmComponent },
-     { path: 'consent',                      component: ConsentComponent, canActivate: [AuthGuard] },
      { path: 'signup',                       component: SignUpComponent },
      { path: 'signup/confirm',               component: SignUpConfirmComponent },
+     { path: 'consent',                      component: ConsentComponent, canActivate: [AuthGuard] },
      { path: 'password',                     component: PasswordComponent, canActivate: [AuthGuard] },
 ];
 
 @NgModule({
-  imports: [
-    RouterModule.forChild(authRoutes)
-  ],
-  exports: [
-    RouterModule
-  ]
+     imports: [
+          RouterModule.forChild(authRoutes)
+     ],
+     exports: [
+          RouterModule
+     ]
 })
 export class AuthRoutingModule {}

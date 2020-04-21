@@ -1,10 +1,11 @@
 import { DataService } from '../../data.service';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { Observable, Subscription } from 'rxjs';
 import { tap, map, finalize } from 'rxjs/operators';
 import { Router } from '@angular/router';
 
 import { ApplicationsGQL, Application, QueryApplicationsArgs } from '../../../generated/graphql';
+import { AuthService } from 'src/app/auth/auth.service';
 
 @Component({
   selector: 'applications',
@@ -16,10 +17,16 @@ export class ApplicationsComponent implements OnInit {
      applications: Observable<any>;
      menu: {};
 
-     constructor(public apps : ApplicationsGQL, public router: Router, private data_app: DataService) {
+     constructor(public authService: AuthService,
+                 private cd : ChangeDetectorRef,
+                 public apps : ApplicationsGQL,
+                 public router: Router,
+                 private data_app: DataService) {
+          this.authService.showSidebar = true;
+
           this.menu = {
                buttons: [
-                    { text: "Add" } 
+                    { text: "Add", visible: true } 
                     ]
                };
      }
@@ -34,12 +41,16 @@ export class ApplicationsComponent implements OnInit {
 
      ngOnInit() {
           this.processing = true;
-          var args: QueryApplicationsArgs = { filter_input: { limit: 10 } };
+          var args: QueryApplicationsArgs = { filter_input: { } };
           this.applications = this.apps.watch(args).valueChanges.pipe(
                     map(result => result.data.applications.sort(this.sortByName)),
+                    tap((data) => console.log("aaaa values updating", data)),
+                    tap(() => this.cd.markForCheck()),
                     tap(() => this.processing = false),
                     finalize(() => { this.processing = false })
                );
+
+               // this.apps.watch(
      }
 
      menuitem_clicked(item) {

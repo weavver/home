@@ -45,8 +45,6 @@ export class GremlinHelper {
      }
 
      public async command(command : Gremlin.process.GraphTraversal) : Promise<any> {
-          console.log(this.client.url);
-
           var t0 = now();
           var result = await command.toList();
           var t1 = now();

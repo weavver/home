@@ -1,0 +1,45 @@
+query applications($filter_input: filter_input!)
+{
+     applications(filter_input: $filter_input)
+     {
+          id,
+          name,
+          host_name,
+          host_url,
+          host_email,
+          client_id,
+          client_secret
+     }
+}
+
+mutation applications_set($application: application_input!)
+{
+     applications_set(application: $application) {
+          id,
+          name,
+          host_url,
+          client_id,
+          client_secret
+     }
+}
+
+mutation applications_delete($application: application_input!) {
+     applications_delete(application: $application)
+}
+
+mutation application_getByClientId($client_id: String!) {
+     application_getByClientId(client_id: $client_id) {
+          id,
+          name
+     }
+}
+
+mutation application_giveConsent($client_id: String!) {
+     application_giveConsent(client_id: $client_id) {
+          code,
+          scope,
+          authuser,
+          hd,
+          prompt
+     }
+}

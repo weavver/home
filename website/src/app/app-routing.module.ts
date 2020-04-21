@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { NgModule, Component, Type } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
 import { CenterComponent }                    from './centers/editor/center.component';
@@ -11,26 +11,23 @@ import { PageNotFoundComponent }              from './page-not-found/page-not-fo
 
 import { AuthGuard }                          from './auth/auth.guard';
 import { SelectivePreloadingStrategyService } from './selective-preloading-strategy.service';
+import { AuthModule } from './auth/auth.module';
 
 const appRoutes: Routes = [
-     { path: 'application',        component: ApplicationComponent,   canActivate: [AuthGuard] },
-     { path: 'applications',       component: ApplicationsComponent,  canActivate: [AuthGuard] },
-     { path: 'centers',            component: CentersComponent,       canActivate: [AuthGuard] },
-     { path: 'center',             component: CenterComponent,        canActivate: [AuthGuard] },
-     { path: 'identities',         component: IdentitiesComponent,    canActivate: [AuthGuard] },
-     { path: 'identity',           component: IdentityComponent,      canActivate: [AuthGuard] },
-     {
-          path: '',
-          redirectTo: '/login',
-          pathMatch: 'full'
-     },
+     { path: '',              component: ApplicationsComponent,  canActivate: [AuthGuard] },
+     { path: 'application',   component: ApplicationComponent,   canActivate: [AuthGuard] },
+     { path: 'applications',  component: ApplicationsComponent,  canActivate: [AuthGuard] },
+     { path: 'centers',       component: CentersComponent,       canActivate: [AuthGuard] },
+     { path: 'center',        component: CenterComponent,        canActivate: [AuthGuard] },
+     { path: 'identities',    component: IdentitiesComponent,    canActivate: [AuthGuard] },
+     { path: 'identity',      component: IdentityComponent,      canActivate: [AuthGuard] },
      { path: '**', component: PageNotFoundComponent }
 ];
 
 @NgModule({
      imports: [
-     RouterModule.forRoot(
-          appRoutes,
+          RouterModule.forRoot(
+               appRoutes,
                {
                     enableTracing: false, // <-- debugging purposes only
                     preloadingStrategy: SelectivePreloadingStrategyService,
