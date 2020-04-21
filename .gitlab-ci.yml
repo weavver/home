@@ -39,8 +39,8 @@ test:
     - npm ci --cache .npm
     - npm install -g ts-node
     - export GREMLIN_ENDPOINT=ws://janusgraph-janusgraph:8182/gremlin
-    - ts-node api/home-tool.ts --center-add
-    - ts-node api/home-tool.ts --identity-add
+    - ts-node home-tool.ts --center-add
+    - ts-node home-tool.ts --identity-add
     - npm install -g mocha
     - npm test
 
