@@ -63,8 +63,8 @@ interface Query {
 const app: fastify.FastifyInstance<Server, CustomIncomingMessage, ServerResponse> = fastify({
      // http2: true,
      https: {
-       key: fs.readFileSync(path.join(__dirname, 'server.key')),
-       cert: fs.readFileSync(path.join(__dirname, 'server.cert'))
+       key: fs.readFileSync(path.join(__dirname, '../certificates/server.key')),
+       cert: fs.readFileSync(path.join(__dirname, '../certificates/server.cert'))
      }
 }) as fastify.FastifyInstance<Server, CustomIncomingMessage, ServerResponse>;
 

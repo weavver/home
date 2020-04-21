@@ -1,4 +1,4 @@
-image: node:13.10.1-alpine3.11
+image: registry.gitlab.com/weavver/home/ci
 
 cache:
   paths:
@@ -41,6 +41,9 @@ test:
     - export GREMLIN_ENDPOINT=ws://janusgraph-janusgraph:8182/gremlin
     - ts-node home-tool.ts --center-add
     - ts-node home-tool.ts --identity-add
+    - cd certificates
+    - ./generate.sh
+    - cd ..
     - npm install -g mocha
     - npm test
 

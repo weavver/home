@@ -8,11 +8,10 @@ ST = California
 L = Location
 O = Organization Name
 OU = Organizational Unit 
-CN = home.weavver.internal
+CN = localhost
 [v3_req]
 keyUsage = critical, digitalSignature, keyAgreement
 extendedKeyUsage = serverAuth
 subjectAltName = @alt_names
 [alt_names]
-DNS.1 = api.home.weavver.internal
-DNS.2 = localhost
+DNS.1 = localhost

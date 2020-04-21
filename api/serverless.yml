@@ -36,7 +36,7 @@ plugins:
 
 custom:
   serverless-offline:
-    httpsProtocol: "dev-certs"
+    httpsProtocol: "certificates"
     port: 3000
 
 #   customDomain:

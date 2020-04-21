@@ -15,7 +15,6 @@ awsconfiguration.json
 _scratchpad
 terraform.*
 .terraform*
-infrastructure/*
 
 
 # Elastic Beanstalk Files
