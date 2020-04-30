@@ -18,7 +18,7 @@
           {
                "label": "start_api",
                "type": "npm",
-               "script": "watch start",
+               "script": "debug",
                "path": "api/",
                "problemMatcher": [],
                "group": "test",

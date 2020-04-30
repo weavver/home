@@ -18,6 +18,7 @@ function prettyJSON(obj : any) {
 
 (async function () {
      let gremlin = new GremlinHelper();
+     await gremlin.init();
      let counter = 0;
 
      if (argv.drop) {
@@ -33,7 +34,6 @@ function prettyJSON(obj : any) {
                .property("name", "Home")
                .toList();
           prettyJSON(addCenterVertex);
-          process.exit();
      };
 
      if (argv["identity-add"]) {
@@ -43,14 +43,12 @@ function prettyJSON(obj : any) {
                .property("password_hash", bcrypt.hashSync("asdfasdf1234"))
                .toList();
           prettyJSON(addCenterVertex);
-          process.exit();
      };
 
      if (argv["count"]) {
           var centerVertexCount = gremlin.g.V().hasLabel('center').count();
           var result = await gremlin.command(centerVertexCount);
           prettyJSON(result);
-          process.exit();
      }
 
      if (argv["vertex"]) {
@@ -58,7 +56,6 @@ function prettyJSON(obj : any) {
                          .valueMap(true).toList() as any;
 
           prettyJSON(vertex[0]);
-          process.exit();
      }
 
      if (argv["all"]) {
@@ -67,8 +64,8 @@ function prettyJSON(obj : any) {
                     .valueMap(true).toList() as any;
 
           prettyJSON(all);
-          process.exit();
      }
+     process.exit();
 })();
 
 const rl = readline.createInterface({

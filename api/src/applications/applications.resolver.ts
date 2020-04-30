@@ -25,40 +25,29 @@ import { GremlinHelper } from '../gremlin';
 import { Application } from 'express';
 
 import { Ctx } from 'type-graphql';
-
-export interface Context {
-  user?: {
-       sub : number,
-       email : string,
-       iat : number,
-       exp : number,
-       roles : string[]
-  };
-}
+import { Context } from '../home-apollo-server';
 
 var ms = require('ms');
 var jwt = require('jsonwebtoken');
 
 @Resolver(of => application)
 export class ApplicationsResolver {
-     gremlin : GremlinHelper;
 
-     constructor() {
-          this.gremlin = new GremlinHelper();
-     }
+     constructor() {}
 
      @Mutation(() => application)
-     async application_getByClientId(@Arg("client_id") client_id : string): Promise<application> {
+     async application_getByClientId(@Ctx() ctx : Context,
+                                     @Arg("client_id") client_id : string): Promise<application> {
           console.log("client_id", client_id);
-          var query = this.gremlin.g.V()
+          var query = ctx.api.gremlin.g.V()
                .hasLabel("application")
                .has("client_id", client_id)
                .limit(1)
                .valueMap(true);
 
-          var docs = await this.gremlin.command(query);
+          var docs = await ctx.api.gremlin.command(query);
           if (docs?.result.length > 0) {
-               return this.getObject(docs.result[0])
+               return this.getObject(ctx, docs.result[0])
           }
           else {
                throw Error("Application not found.");
@@ -66,7 +55,8 @@ export class ApplicationsResolver {
      }
 
      @Mutation(() => oauth2_uriparams)
-     async application_giveConsent(@Arg("client_id") client_id : string, @Ctx() ctx : Context): Promise<oauth2_uriparams> {
+     async application_giveConsent(@Ctx() ctx : Context,
+                                   @Arg("client_id") client_id : string): Promise<oauth2_uriparams> {
           var code = jwt.sign({ "code": this.generatePassword(10),
                                 "email": ctx.user?.email },
                               process.env.COOKIE_JWT_SIGNING_SECRET,
@@ -84,25 +74,26 @@ export class ApplicationsResolver {
      }
 
      @Query(() => [application])
-     async applications(@Arg("filter_input") { id, skip, limit }: filter_input): Promise<Array<application>> {
-          console.log("....", id);
+     async applications(@Ctx() ctx : Context,
+                        @Arg("filter_input") filter: filter_input): Promise<Array<application>> {
+          // console.log("....", filter);
 
           var query;
-          if (id)
-               query = this.gremlin.g.V(id[0])
+          if (filter.id)
+               query = ctx.api.gremlin.g.V(filter.id[0])
                     .valueMap(true);
           else
-               query = this.gremlin.g.V()
+               query = ctx.api.gremlin.g.V()
                     .hasLabel("application")
-                    .limit(limit)
+                    .limit(filter.limit)
                     .valueMap(true);
 
-          var docs = await this.gremlin.command(query);
+          var docs = await ctx.api.gremlin.command(query);
           // console.log(docs);
 
           var items : Array<application> = [];
           docs.result.forEach((item : any) => {
-               items.push(this.getObject(item));
+               items.push(this.getObject(ctx, item));
           });
 
           // console.log(items);
@@ -111,10 +102,11 @@ export class ApplicationsResolver {
 
      @Authorized("root")
      @Mutation(() => application)
-     async applications_set(@Arg("application") { id, name, client_id, client_secret, host_email, host_url } : application_input): Promise<application> {
+     async applications_set(@Ctx() ctx : Context,
+                            @Arg("application") { id, name, client_id, client_secret, host_email, host_url } : application_input): Promise<application> {
           console.log(id);
           if (!id) {
-               let qAdd = this.gremlin.g.addV("application")
+               let qAdd = ctx.api.gremlin.g.addV("application")
                     .property("name", name)
                     .property("client_id", this.generatePassword(20))
                     .property("client_secret", this.generatePassword(40))
@@ -122,12 +114,12 @@ export class ApplicationsResolver {
                     .property("host_url", host_url)
                     .valueMap(true);
                     // .addE
-               let rAdd = await this.gremlin.command(qAdd);
+               let rAdd = await ctx.api.gremlin.command(qAdd);
                // console.log("addv result", this.getObject(rAdd.result[0]));
-               return this.getObject(rAdd.result[0]);
+               return this.getObject(ctx, rAdd.result[0]);
           } else {
                console.log('updating..');
-               let qUpdate = this.gremlin.g.V(id)
+               let qUpdate = ctx.api.gremlin.g.V(id)
                     .property("name", name)
                     .property("host_email", host_email)
                     .property("host_url", host_url)
@@ -135,9 +127,9 @@ export class ApplicationsResolver {
                     // .property("client_secret")
                     .valueMap(true);
 
-               let rUpdate = await this.gremlin.command(qUpdate);
+               let rUpdate = await ctx.api.gremlin.command(qUpdate);
                // console.log("update result", this.getObject(rUpdate.result[0]));
-               return this.getObject(rUpdate.result[0]);
+               return this.getObject(ctx, rUpdate.result[0]);
           }
      }
 
@@ -152,21 +144,22 @@ export class ApplicationsResolver {
      }
 
      @Mutation(() => Boolean)
-     async applications_delete(@Arg("application") { id } : application_input): Promise<Boolean> {
-          let qApplicationDelete = this.gremlin.g.V(id).drop();
-          await this.gremlin.command(qApplicationDelete);
+     async applications_delete(@Ctx() ctx : Context,
+                               @Arg("application") { id } : application_input): Promise<Boolean> {
+          let qApplicationDelete = ctx.api.gremlin.g.V(id).drop();
+          await ctx.api.gremlin.command(qApplicationDelete);
           return true;
      }
 
-     private getObject(item : any, properties? : any) : application {
+     private getObject(ctx : Context, item : any, properties? : any) : application {
           let i = new application();
           i.id = parseInt(item.id);
-          i.name = this.gremlin.getPropertyValue(item, "name", "");
-          i.client_id = this.gremlin.getPropertyValue(item, "client_id", "");
-          i.client_secret = this.gremlin.getPropertyValue(item, "client_secret", "");
-          i.host_email = this.gremlin.getPropertyValue(item, "host_email", "");          
-          i.host_name = this.gremlin.getPropertyValue(item, "host_name", "");
-          i.host_url = this.gremlin.getPropertyValue(item, "host_url", "");
+          i.name = ctx.api.gremlin.getPropertyValue(item, "name", "");
+          i.client_id = ctx.api.gremlin.getPropertyValue(item, "client_id", "");
+          i.client_secret = ctx.api.gremlin.getPropertyValue(item, "client_secret", "");
+          i.host_email = ctx.api.gremlin.getPropertyValue(item, "host_email", "");          
+          i.host_name = ctx.api.gremlin.getPropertyValue(item, "host_name", "");
+          i.host_url = ctx.api.gremlin.getPropertyValue(item, "host_url", "");
           return i;
      }
 }

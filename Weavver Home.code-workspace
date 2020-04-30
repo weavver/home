@@ -5,6 +5,9 @@
 		}
 	],
 	"settings": {
+		"files.associations": {
+			"*.json": "jsonc"
+		},
 		"auto-run-command.rules": [
 			{
 			    "command": "workbench.action.tasks.runTask start_website",
@@ -15,12 +18,6 @@
 				"message": "Auto run: Starting api..."
 			 }
 		],
-		"testExplorer.codeLens": false,
-		"testExplorer.gutterDecoration": false,
-		"mochaExplorer.timeout": 10000,
-		"testExplorer.hideEmptyLog": false,
-		"testExplorer.showOnRun": true,
-		"testExplorer.mergeSuites": true,
 		"actionButtons": {
 			"defaultColor": "#FFFFFF", // Can also use string color names.
 			"loadNpmCommands":false, // Disables automatic generation of actions for npm commands.
@@ -32,11 +29,11 @@
 				// 	"singleInstance": true,
 				// 	"command": "cargo run ${file}", // This is executed in the terminal.
 				// },
-				{
-					// "cwd": "${workspaceFolder}", 
-					"name": "Deploy API to EB (staging)",
-					"command": "cd api & eb deploy staging",
-				}
+				// {
+				// 	// "cwd": "${workspaceFolder}", 
+				// 	"name": "Deploy API to EB (staging)",
+				// 	"command": "cd api & eb deploy staging",
+				// }
 			]
 		},
 		"workbench.colorCustomizations": {
@@ -44,11 +41,10 @@
 			"activityBar.background": "#114746",
 			"titleBar.activeBackground": "#114746",
 			"titleBar.activeForeground": "#F2FCFC",
-			// "sideBar.background": "#CCCCCC"
+			"sideBar.background": "#ffffff"
 		},
-		"editor.minimap.enabled": false,
 		"workbench.sideBar.location": "right",
 		"workbench.tree.indent": 7,
-		"workbench.tree.renderIndentGuides": "always"
+		"workbench.tree.renderIndentGuides": "always",
 	}
 }

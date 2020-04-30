@@ -8,21 +8,33 @@ import { Resolver, Query, buildSchema, buildSchemaSync } from "type-graphql"
 import { CenterResolver } from "./centers/centers.resolver";
 import { IdentityResolver } from "./identities/identities.resolver";
 import { ApplicationsResolver } from "./applications/applications.resolver";
-import { Callback, Context } from 'aws-lambda';
 import { GremlinHelper } from './gremlin';
+import { API } from './api';
 
 var cookie = require('cookie');
 var jwt = require('jsonwebtoken');
 
+export interface Context {
+     user?: {
+          sub : number,
+          email : string,
+          iat : number,
+          exp : number,
+          roles : string[]
+     },
+     api : API,
+     test : string
+}
+
 export class HomeApolloServer {
 
-     constructor() {}
+     constructor(public api : API) {}
 
-     public getFastifyServer(app : any) : ApolloServerFastify {
-          var server = new ApolloServerFastify(this.getParameters() as ConfigFastify);
+     public getFastifyServer() : ApolloServerFastify {
+          var server = new ApolloServerFastify(this.getParameters(this.api.gremlin) as ConfigFastify);
 
-          console.log("initializing in process graphql service...");
-          app.register(server.createHandler({
+          // console.log("initializing in process graphql service...");
+          this.api.app.register(server.createHandler({
                     cors: {
                          credentials: true,
                          origin: ['https://' + process.env.WEBSITE_DOMAIN]
@@ -33,10 +45,13 @@ export class HomeApolloServer {
      }
 
      public getLambdaServer() : ApolloServerLambda {
-          return new ApolloServerLambda(this.getParameters() as ConfigLambda);
+          console.log("in getLambdaServer");
+          let gremlin = new GremlinHelper();
+          gremlin.init();
+          return new ApolloServerLambda(this.getParameters(gremlin) as ConfigLambda);
      }
 
-     public getParameters() : any {
+     public getParameters(gremlin: GremlinHelper) : any {
           return {
                schema: buildSchemaSync({
                     resolvers: [
@@ -69,9 +84,12 @@ export class HomeApolloServer {
                          'request.credentials': 'include'
                     }
                },
-               context: async (ctx : any) => ({
-                         user: await this.getUser(ctx),
-                    })
+               context: async (ctx : any) => {
+                         return {
+                              user: await this.getUser(ctx),
+                              api: this.api
+                         };
+                    }
                };
      }
 
@@ -99,12 +117,3 @@ export class HomeApolloServer {
      }
 
 };
-
-// this is used by serverless.yml to help bypass compatibility issues between fastify
-//     and apolloserver while using serverless-offline and aws api gateway
-export const handler = new HomeApolloServer().getLambdaServer().createHandler({
-     cors: {
-          credentials: true,
-          origin: ['https://' + process.env.WEBSITE_DOMAIN]
-     }
-});

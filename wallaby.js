@@ -5,6 +5,8 @@ module.exports = function (wallaby) {
                     { pattern: '.env.example', instrument: false},
                     { pattern: '.env', instrument: false},
                     'api/schema.ts',
+                    'api/certificates/server.cert',
+                    'api/certificates/server.key',
                     'api/*.ts',
                     'api/src/*.ts',
                     'api/src/**/*.ts',

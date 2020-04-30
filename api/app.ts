@@ -1,27 +1,36 @@
 require('dotenv').config({ path: '../.env' })
 import 'reflect-metadata';
-import { app } from "./src/home-api";
-
-console.log("weavver home server starting..");
+import { API } from "./src/api";
 
 (async function () {
-     var port = process.env.PORT || 3000;
+     const process = require('process');
 
-     var server = app.listen(port as number, "0.0.0.0", (err : any, address : any) => {
+     console.log("weavver home server starting..");
+     let api = new API();
+     
+     try {
+          await api.init();
+     }
+     catch (err) {
+          console.log(err);
+     }
+     var port = process.env.PORT || 3000;
+     var server = api.app.listen(port as number, "0.0.0.0", (err : any, address : any) => {
           if (err) {
                console.log(err);
-               app.log.error(err)
+               api.app.log.error(err)
                process.exit(1)
           }
           console.log("starting... " + address);
-          app.log.info("weavver-home server listening on ${address}");
+          api.app.log.info("weavver-home server listening on ${address}");
      });
 
-})();
-
-process.once('SIGUSR2', () => {
-     app.close(() => {
+     process.once('SIGUSR2', async () => {
+          if (!api.gremlin.connectionOpenedOnce) {
+               console.log("gremlin did not connect, application exiting unexpectedly..");
+          }
+          let x = await api.gremlin.close();
           console.log("weavver-home-api exiting gracefully...");
           process.exit();
      });
-});
+})();

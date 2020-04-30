@@ -26,8 +26,10 @@ import { WeavverFormModule }            from './shared/form/form.module';
 import { WeavverCardModule }            from './shared/card/card.module';
 import { WeavverTabsModule }            from './shared/tabs/tabs.module';
 
-import { ApolloModule, APOLLO_OPTIONS } from "apollo-angular";
+import { Apollo, ApolloModule, APOLLO_OPTIONS } from "apollo-angular";
 import { InMemoryCache }                from "apollo-cache-inmemory";
+import { HttpLink }                     from 'apollo-angular-link-http';
+import { onError }                      from 'apollo-link-error'
 
 import { AuthService }                  from './auth/auth.service';
 
@@ -88,4 +90,22 @@ import { environment } from 'src/environments/environment';
           }],
      bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule {
+     constructor(
+          apollo: Apollo,
+          httpLink: HttpBatchLink,
+          auth: AuthService
+     )
+     {
+          // const http = HttpBatchLink.create({ uri: '/graphql' });
+          
+          const logoutLink = onError(({ networkError }) => {
+               console.log("network error", networkError);
+               // if (networkError === 401) auth.logOut();
+          });
+
+          // apollo.create({
+          //           link: logoutLink.concat(http),
+          //      });
+     }
+}

@@ -5,7 +5,8 @@ import {
      Arg,
      Root,
      Authorized,
-     Mutation
+     Mutation,
+     Ctx
    } from "type-graphql";
 
 import { filter_input } from '../common/filter';
@@ -17,37 +18,37 @@ import { center, center_input } from "./center";
 import { GremlinHelper } from '../gremlin'
 import { Args,ArgsType, Field, Int } from 'type-graphql'
 import { Min, Max, IsEmpty } from "class-validator";
+import { Context } from '../home-apollo-server';
 
 @Resolver()
 export class CenterResolver {
-     gremlin : GremlinHelper;
-
      constructor() {
-          this.gremlin = new GremlinHelper();
      }
 
      @Query(() => [center], { nullable: true })
-     async centers(@Arg("filter_input") { id, skip, limit }: filter_input) : Promise<[center]> {
-          var qCenters = this.gremlin.g.V()
+     async centers(@Ctx() ctx : Context,
+                   @Arg("filter_input") { id, skip, limit }: filter_input) : Promise<[center]> {
+          var qCenters = ctx.api.gremlin.g.V()
                .hasLabel('center')
                .valueMap(true);
 
-          var docs = await this.gremlin.command(qCenters);
+          var docs = await ctx.api.gremlin.command(qCenters);
           console.log(docs);
 
           var items : any = [];
           docs.result.forEach((item:any) => {
-               items.push(this.getObject(item));
+               items.push(this.getObject(ctx, item));
           });
           return items;
      }
 
      @Authorized()
      @Mutation(() => center)
-     async centers_set(@Arg("center") center : center_input): Promise<center> {
+     async centers_set(@Ctx() ctx : Context,
+                       @Arg("center") center : center_input): Promise<center> {
           console.log(center.id);
           if (!center.id) {
-               let qAdd = this.gremlin.g.addV("center")
+               let qAdd = ctx.api.gremlin.g.addV("center")
                     .property("name", center.name)
                     .property("smtp_server", center.smtp_server)
                     .property("smtp_port", center.smtp_port)
@@ -56,12 +57,12 @@ export class CenterResolver {
                     .property("twilio_api_key", center.twilio_api_key)
                     .valueMap(true);
                     // .addE
-               let rAdd = await this.gremlin.command(qAdd);
+               let rAdd = await ctx.api.gremlin.command(qAdd);
                // console.log("addv result", this.getObject(rAdd.result[0]));
-               return this.getObject(rAdd.result[0]);
+               return this.getObject(ctx, rAdd.result[0]);
           } else {
                console.log('updating..');
-               let qUpdate = this.gremlin.g.V(center.id)
+               let qUpdate = ctx.api.gremlin.g.V(center.id)
                     .property("name", center.name)
                     .property("smtp_server", center.smtp_server)
                     .property("smtp_port", center.smtp_port)
@@ -74,9 +75,9 @@ export class CenterResolver {
 
                qUpdate = qUpdate.valueMap(true);
 
-               let rUpdate = await this.gremlin.command(qUpdate);
+               let rUpdate = await ctx.api.gremlin.command(qUpdate);
                // console.log("update result", this.getObject(rUpdate.result[0]));
-               return this.getObject(rUpdate.result[0]);
+               return this.getObject(ctx, rUpdate.result[0]);
           }
      }
 
@@ -84,24 +85,25 @@ export class CenterResolver {
           return (!str || 0 === str.length);
       }
 
-     private getObject(item : any) : center {
+     private getObject(ctx : Context, item : any) : center {
           let i = new center();
           // console.log(item.id);
           i.id = parseInt(item.id);
-          i.name = this.gremlin.getPropertyValue(item, "name", "");
-          i.smtp_server = this.gremlin.getPropertyValue(item, "smtp_server", "");
-          i.smtp_port = this.gremlin.getPropertyValue(item, "smtp_port", "");
-          i.smtp_port = this.gremlin.getPropertyValue(item, "smtp_user", "");
+          i.name = ctx.api.gremlin.getPropertyValue(item, "name", "");
+          i.smtp_server = ctx.api.gremlin.getPropertyValue(item, "smtp_server", "");
+          i.smtp_port = ctx.api.gremlin.getPropertyValue(item, "smtp_port", "");
+          i.smtp_port = ctx.api.gremlin.getPropertyValue(item, "smtp_user", "");
           i.smtp_password = "";
           // i.smtp_password = this.gremlin.getPropertyValue(item, "smtp_password", ""); // don't return to browser because of security reasons
-          i.twilio_api_key = this.gremlin.getPropertyValue(item, "twilio_api_key", "");
+          i.twilio_api_key = ctx.api.gremlin.getPropertyValue(item, "twilio_api_key", "");
           return i;
      }
 
      @Mutation(() => Boolean)
-     async centers_delete(@Arg("center") { id } : center_input): Promise<Boolean> {
-          let qCenterDelete = this.gremlin.g.V(id).drop();
-          await this.gremlin.command(qCenterDelete);
+     async centers_delete(@Ctx() ctx : Context,
+          @Arg("center") { id } : center_input): Promise<Boolean> {
+          let qCenterDelete = ctx.api.gremlin.g.V(id).drop();
+          await ctx.api.gremlin.command(qCenterDelete);
           return true;
      }
 }

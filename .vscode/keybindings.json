@@ -1,0 +1,81 @@
+// Place your key bindings in this file to override the defaultsauto[]
+[
+     {
+          "key": "cmd+r",
+          "command": "test-explorer.run-test-at-cursor"
+     },
+     {
+          "key": "ctrl+t",
+          "command": "-editor.action.transposeLetters",
+          "when": "textInputFocus && !editorReadonly"
+     },
+     {
+          "key": "cmd+t",
+          "command": "-workbench.action.showAllSymbols"
+     },
+     {
+          "key": "cmd+]",
+          "command": "workbench.action.nextEditor"
+     },
+     {
+          "key": "cmd+[",
+          "command": "workbench.action.previousEditor"
+     },
+     {
+          "key": "ctrl+enter",
+          "command": "workbench.action.debug.run"
+     },
+     {
+          "key": "shift+cmd+enter",
+          "when": "inDebugMode",
+          "command": "workbench.action.debug.stop"
+     },
+     {
+          "key": "cmd+t",
+          "command": "workbench.action.tasks.runTask"
+     },
+     {
+          "key": "ctrl+tab",
+          "command": "workbench.action.nextEditor"
+      },
+      {
+          "key": "ctrl+shift+tab",
+          "command": "workbench.action.previousEditor"
+     },
+     {
+          "key": "cmd+e",
+          "command": "workbench.view.explorer"
+     },
+     {
+          "key": "shift+cmd+e",
+          "command": "-workbench.view.explorer"
+     },
+     {
+          "key": "shift+cmd+e",
+          "command": "actions.findWithSelection"
+     },
+     {
+          "key": "cmd+e",
+          "command": "-actions.findWithSelection"
+     },
+     {
+          "key": "cmd+g",
+          "command": "editor.action.revealDefinition",
+          "when": "editorHasDefinitionProvider && editorTextFocus && !isInEmbeddedEditor"
+     },
+     {
+          "key": "cmd+enter",
+          "command": "workbench.action.debug.start",
+          "when": "!inDebugMode"
+     },
+     {
+          "key": "cmd+escape",
+          "command": "editor.debug.action.toggleBreakpoint",
+          "when": "editorTextFocus"
+     },
+     {
+          "key": "cmd+enter",
+          "command": "workbench.action.debug.continue",
+          "when": "inDebugMode"
+     }
+]

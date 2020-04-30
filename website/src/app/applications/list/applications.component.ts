@@ -1,5 +1,5 @@
 import { DataService } from '../../data.service';
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, HostListener } from '@angular/core';
 import { Observable, Subscription } from 'rxjs';
 import { tap, map, finalize } from 'rxjs/operators';
 import { Router } from '@angular/router';
@@ -51,6 +51,15 @@ export class ApplicationsComponent implements OnInit {
                );
 
                // this.apps.watch(
+     }
+
+     @HostListener('document:keypress', ['$event'])
+     handleKeyboardEvent(event: KeyboardEvent) {
+          console.log(event.key);
+          console.log(event.key);
+          if (event.key == "a") {
+               this.router.navigateByUrl("/application");
+          }
      }
 
      menuitem_clicked(item) {

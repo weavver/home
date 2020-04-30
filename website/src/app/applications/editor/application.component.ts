@@ -135,10 +135,7 @@ export class ApplicationComponent implements OnInit {
      sub_node_set : Subscription = null;
 
      ngOnInit() {
-          this.sub_node_updated = this.formService.node_updated.subscribe(data =>
-               {
-                    this.node = data as Application;
-               });
+          this.sub_node_updated = this.formService.node_updated.subscribe(data => { this.node = data as Application; });
 
           this.sub_node_set = this.formService.node_set.subscribe(data => {
                this.node = data as Application;
@@ -149,6 +146,7 @@ export class ApplicationComponent implements OnInit {
      ngOnDestroy() {
           this.sub_node_set.unsubscribe();
           this.sub_node_updated.unsubscribe();
+          console.log("application unsubscribing");
      }
 
      form_node_active(node : Application) {

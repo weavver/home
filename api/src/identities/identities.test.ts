@@ -2,13 +2,11 @@ import { resolve } from "path";
 import { config } from 'dotenv';
 config({ path: resolve(__dirname, "../../../.env") });
 
-import * as identities_put from './identities_put';
+// import * as identities_put from './identities_put';
 
-// var assert = require('assert');
+import { TestHelper } from '../common/test-helper';
+
 var assert = require('chai').assert;
-
-import { app } from "../home-api";
-import { HTTPInjectResponse } from 'fastify';
 
 import * as schema from '../../schema';
 var Ajv = require('ajv');
@@ -17,29 +15,35 @@ var validate = ajv.getSchema('http://home.weavver.com/schema/identityCreate.json
 assert.isDefined(validate);
 
 var nock = require('nock');
-nock.disableNetConnect();
+nock.enableNetConnect();
 
-// import gremlin from '../../gremlin';
-import { GremlinHelper } from '../gremlin';
-import { Context, APIGatewayProxyEvent } from 'aws-lambda';
+// import { describe, before, it } from 'mocha';
 
 describe('API', function() {
+     let helper : TestHelper = new TestHelper();
+
+     this.beforeAll(async () => {
+          await helper.init();
+     });
+     it('email: value not rfc compliant', async () => {
+          var data = {
+               "email": "example.com", // invalid format
+               "password": "123456"
+          };
+          try {
+               await validate(data);
+               // fail here because it should not pass
+               assert.fail("must not pass");
+          }
+          catch (err) {
+               assert.exists(err);
+               assert.equal(err.errors[0].dataPath, ".email");
+               // console.log(err);
+          }
+     });
+
      describe('Identities', function() {
-          describe('Data Model', function() {
-               it('email: value not rfc compliant', async () => {
-                    var data = {
-                         "email": "example.com", // invalid format
-                         "password": "123456"
-                    };
-                    try {
-                         await validate(data);
-                         // fail here because it should not pass
-                         assert.fail("must not pass");
-                    }
-                    catch (err) {
-                         console.log(validate.errors);
-                    }
-               });
+          describe('Model', function() {
 
                it('email: value is rfc compliant', async () => {
                     var data = {
@@ -90,8 +94,7 @@ describe('API', function() {
                          assert.fail("unknown error");
                     }
                     catch (err) {
-                         console.log(err.errors[0].keyword);
-                         assert.equal(err.errors[0].keyword, "maxLength");
+                         assert.equal(err.errors[0].keyword, "maxLength", err.errors[0].keyword);
                     }
                });
           });
@@ -105,7 +108,7 @@ describe('API', function() {
                     // .persist()
                     .post('/v3/mail/send')
                     .reply(200, async (data : any) => {
-                              console.log(data);
+                              // console.log(data);
                          });
 
                     nock('https://lookups.twilio.com:443', {"encodedQueryParams":true})
@@ -120,27 +123,26 @@ describe('API', function() {
                          "add_ons":null,
                          "url":"https://lookups.twilio.com/v1/PhoneNumbers/+17145551212"});
 
-                    let gremlin = new GremlinHelper();
                     // try {
                     var bcrypt = require('bcryptjs');
                     const password_hash = bcrypt.hashSync("asdfasdf1234");
 
                     // clean up database
-                    var cmdCheckforNotInUse = await gremlin.g.V()
+                    var cmdCheckforNotInUse = await helper.api.gremlin.g.V()
                          .hasLabel('identity')
                               .has('cid', 0)
                               .has('email', 'is_not_in_use@example.com');
 
-                    console.log(cmdCheckforNotInUse);
-                    var docs = await gremlin.command(cmdCheckforNotInUse);
+                    // console.log(cmdCheckforNotInUse);
+                    var docs = await helper.api.gremlin.command(cmdCheckforNotInUse);
                     if (docs.result.length > 0) {
-                         console.log(docs.result[0].id);
+                         // console.log(docs.result[0].id);
 
-                         var deleteNode = gremlin.g.V(docs.result[0].id).drop();
-                         var deletexyz = await gremlin.command(deleteNode);
+                         var deleteNode = helper.api.gremlin.g.V(docs.result[0].id).drop();
+                         var deletexyz = await helper.api.gremlin.command(deleteNode);
                     }
 
-                    var queryAddIdentity = gremlin.g.addV("identity")
+                    var queryAddIdentity = helper.api.gremlin.g.addV("identity")
                          .property('id', 0)
                          .property('cid', 0)
                          .property('name', "is_in_use@example.com")
@@ -148,9 +150,9 @@ describe('API', function() {
                          .property('password_hash', password_hash)
                          .property('verification_code', Math.floor((Math.random() * 100000) + 100000));
 
-                    var docsInUse = await gremlin.command(queryAddIdentity);
-                    console.log(docsInUse);
-                    await gremlin.close();
+                         
+                    var docsInUse = await helper.api.gremlin.command(queryAddIdentity);
+                    // console.log(docsInUse);
                     // }
                     // catch (err) {
                     //      await gremlin.close();
@@ -158,45 +160,41 @@ describe('API', function() {
                     // }
                });
 
-               it('phone: format not right (twilio check)', async () => {
-                    const response : HTTPInjectResponse = await app.inject({
-                         method: "PUT",
-                         headers: { origin: "dev.example.com" },
-                         url: "/identities",
-                         query: {},
-                         payload: { email: 'is_not_in_use@example.com', phone_number: '123', password: 'asdfasdf1234' }
-                    });
-                    assert.equal(response.statusCode, 422);
-                    console.log(response.payload);
-                    assert.equal(JSON.parse(response.payload).err.errors[0].keyword, "twilio_validate");
-                    // 'Phone number format is not recognized. Try again.<br />Email us if this issue continues.'
-               });
+               // it('phone: format not right (twilio check)', async () => {
+               //      let response = await helper.getData({
+               //           method: "PUT",
+               //           headers: { origin: "dev.example.com" },
+               //           url: "/identities",
+               //           query: {},
+               //           payload: { email: 'is_not_in_use@example.com', phone_number: '123', password: 'asdfasdf1234' }
+               //      });
+               //      assert.equal(response.statusCode, 422);
+               //      // console.log(response.payload);
+               //      assert.equal(JSON.parse(response.payload).err.errors[0].keyword, "twilio_validate");
+               //      // 'Phone number format is not recognized. Try again.<br />Email us if this issue continues.'
+               // });
 
                it('email: is in use', async () => {
-                    const response : HTTPInjectResponse = await app.inject({
+                    let response = await helper.getData({
                          method: "PUT",
                          headers: { origin: "dev.example.com" },
                          url: "/identities",
                          query: {},
                          payload: { email: 'is_in_use@example.com', phone_number: '7145551212', password: 'asdfasdf1234' }
                     });
-                    console.log(response.payload);
                     assert.equal(response.statusCode, 422);
-                    assert.lengthOf(JSON.parse(response.payload).err.errors, 1, "email_is_not_in_use");
-                    // Try a different email address.
+                    assert.lengthOf(JSON.parse(response.payload).err.errors, 1, "email");
                });
 
                it('email: is not in use', async () => {
-                    const response : HTTPInjectResponse = await app.inject({
+                    let response = await helper.getData({
                          method: "PUT",
                          headers: { origin: "dev.example.com" },
                          url: "/identities",
                          query: {},
                          payload: { email: 'is_not_in_use@example.com', phone_number: '7145551212', password: 'asdfasdf1234' }
                     });
-
-                    console.log(response);
-                    assert.equal(response.statusCode, 200);
+                    assert.equal(response.statusCode, 200, response.payload);
                     assert.equal(response.payload, "", "expecting no errors");
                });
 
@@ -227,12 +225,12 @@ describe('API', function() {
                          .post('/v3/mail/send')
                          .delayBody(2000)
                          .reply(200, (uri : string, postData : any) => {
-                                   console.log(postData.content[1].value);
+                                   // console.log(postData.content[1].value);
                                    code = postData.content[1].value.toString().match(/\b\d{6}\b/g);
-                                   console.log(code);
+                                   // console.log(code);
                               });
 
-                    const response : HTTPInjectResponse = await app.inject({
+                         let response = await helper.getData({
                               method: "PUT",
                               headers: { origin: "dev.example.com" },
                               url: "/identities",
@@ -240,12 +238,12 @@ describe('API', function() {
                               payload: data
                          });
 
-                    console.log(response);
+                    // console.log(response);
                     assert.equal(response.statusCode, 200);
                     assert.isNotNull(code);
 
                     // check that login works by intercepting emailed activation code
-                    console.log(code);
+                    // console.log(code);
 
                     nock.cleanAll();
                     nock.enableNetConnect();
@@ -257,5 +255,9 @@ describe('API', function() {
                     // assert.equal(response_verify.status_code, 200);
                });
           });
+     });
+
+     this.afterAll(async () => {
+          await helper.dispose();
      });
 });

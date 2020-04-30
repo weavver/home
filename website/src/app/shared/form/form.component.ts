@@ -10,6 +10,7 @@ import {
      EventEmitter,
      Output,
      QueryList,
+     HostListener,
      ChangeDetectorRef} from '@angular/core';
 
 import {
@@ -94,7 +95,7 @@ export class WeavverFormComponent implements OnInit {
      _processing: Boolean = false;
      state : String = "view";
 
-     @Input() model;
+     @Input() model : FormModel;
      @Input() datasource : Apollo.Query<any, any>;
      form: FormGroup;
      node: {};
@@ -188,14 +189,14 @@ export class WeavverFormComponent implements OnInit {
                          id: [ Number(params.id) ],
                     }
                     this.datasource.watch({ filter_input: filter }).valueChanges.subscribe(result => {
-                         console.log(result);
+                         console.log("datasource_watch_result", result);
                          if (result.data[this.model.set].length > 0) {
                               console.log(result.data[this.model.set][0])
 
                               this.formService.node_updated.next(result.data[this.model.set][0]);
                               this.formService.processing.next(false);
                          } else {
-                              alert("Data of type " + this.model.name + " with that ID is not available.");
+                              alert("Data of label " + this.model.label + " with that ID is not available.");
                               this.router.navigateByUrl(this.model.set);
                          }
                     });
@@ -205,6 +206,21 @@ export class WeavverFormComponent implements OnInit {
                }
           });
      }
+
+     @HostListener('document:keypress', ['$event'])
+     handleKeyboardEvent(event: KeyboardEvent) { 
+          console.log(event.key);
+          if (this.state == "view" && event.key == "e") {
+               this.formService.form_state.next("edit");
+               this.cd.markForCheck();
+          }
+     }
+
+     @HostListener('document:keydown.escape', ['$event']) onKeydownHandler(event: KeyboardEvent) {
+          // console.log(event);
+          this.formService.form_state.next("view");
+          this.cd.markForCheck();
+      }
 
      buildForm(root) {
           root.forEach(item => {

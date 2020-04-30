@@ -7,5 +7,14 @@
      "testExplorer.onStart": "retire",
      "testExplorer.showOnRun": true,
      "testExplorer.codeLens": false,
-     "testExplorer.showExpandButton": 3
+     "testExplorer.showExpandButton": 3,
+     "testExplorer.gutterDecoration": false,
+     "mochaExplorer.timeout": 10000,
+     "testExplorer.hideEmptyLog": false,
+     "editor.minimap.enabled": false,
+     "files.exclude": {
+          "node_modules": true,
+          "api/node_modules": true,
+          "website/node_modules": true
+     }
 }

@@ -35,10 +35,11 @@ import { FormModel } from 'src/app/shared/form/form.component';
 @Component({
      selector: 'center_node',
      template: `<weavver-form
+          [model]="model"
           [datasource]="centers"
           (delete)="delete($event)">
           <dashboard>
-               <br />
+               <h2 *ngIf="node">{{ node.name }}</h2>
                Dashboard numbers: 0<br />
                <br />
                <br />
@@ -50,10 +51,6 @@ import { FormModel } from 'src/app/shared/form/form.component';
 export class CenterComponent implements OnInit {
      model : FormModel;
      node: Center;
-
-     errorGet(obj) {
-          return Object.keys(obj)[0];
-     }
 
      constructor(public formService : WeavverFormService,
                  private route : ActivatedRoute,
@@ -134,12 +131,11 @@ export class CenterComponent implements OnInit {
      sub_node_set : Subscription = null;
 
      ngOnInit() {
-          this.sub_node_updated = this.formService.node_updated.subscribe(data =>
-               {
-                    this.node = data as Center;
-               });
+          console.log("init");
+          this.sub_node_updated = this.formService.node_updated.subscribe(data => { this.node = data as Center; });
 
           this.sub_node_set = this.formService.node_set.subscribe(data => {
+               console.log("center", data);
                this.node = data as Center;
                this.form_node_set(data);
           });
@@ -148,11 +144,12 @@ export class CenterComponent implements OnInit {
      ngOnDestroy() {
           this.sub_node_set.unsubscribe();
           this.sub_node_updated.unsubscribe();
-          console.log("unsubscribing");
+          console.log("center unsubscribing");
      }
 
      form_node_active(node : Center) {
           this.node = node;
+          console.log("node changed");
      }
 
      form_node_set(node) {

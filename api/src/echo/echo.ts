@@ -1,33 +1,18 @@
-import { GremlinHelper } from '../gremlin';
-import { APIGatewayProxyEvent, Context } from "aws-lambda";
 import { HTTPResponseType } from '../common/http-response-type';
-import * as fastifyCookie from "fastify-cookie";
-import * as fastify from 'fastify'
-import { Http2SecureServer } from 'http2';
+
+import { API } from '../api';
+import { BaseRoute, RouteEvent } from '../baseroute';
 
 var now = require("performance-now");
 
-let gremlin = new GremlinHelper();
+export class EchoRoute extends BaseRoute {
+     counter : number = 0;
 
-export class EchoRoute {
-     counter : any = 0;
-
-     constructor(app : fastify.FastifyInstance | null, opts : any | null) {
-          if (app) {
-               app.get('/echo', opts, async (request, reply) => {
-                    var cookieVal = Math.random().toString(36).substring(7); // Generate a random cookie string
-                    cookieVal = (Math.round(Math.random()) == 1) ? "true" : cookieVal = "false";
-          
-                    let result = await this.handler(null);
-                    reply.code(result.statusCode)
-                         .header("Content-Type", "application/json; charset=utf-8")
-                         .setCookie("ExampleCookie", cookieVal, result.cookieOptions)
-                         .send(result.body);
-               });
-          }
+     constructor(api : API) {
+          super(api, "GET", "/echo");
      }
 
-     public async handler(event : any) {
+     public async handler(event : RouteEvent) {
           var date = new Date();
           date.setTime(+date + (1 * 86400000)); // Get Unix milliseconds at current time plus 1 days: 24 \* 60 \* 60 \* 100
 
@@ -51,16 +36,28 @@ export class EchoRoute {
 
           // var result2 = await gremlin.command(qCreate); 
 
-          var query = gremlin.g.V().limit(5).valueMap(true);
-          var result = await gremlin.command(query);
+          // return response;
+          var query = this.api.gremlin.g.V().limit(5).valueMap(true);
+          var result = await this.api.gremlin.command(query);
           response.statusCode = 200;
           response.body = {
-                    message: 'Hello World ' + this.counter,
+                    message: 'Hello World: We are online!',
+                    counter: this.counter,
                     result: result,
                     command_time: result.command_time,
-                    input: event
+                    input: {
+                         query: event.request.query,
+                         body: event.request.body
+                    }
                };
           this.counter = this.counter + 1;
-          return response;
-     };
+
+          var cookieVal = Math.random().toString(36).substring(7); // Generate a random cookie string
+          cookieVal = (Math.round(Math.random()) == 1) ? "true" : cookieVal = "false";
+
+          event.reply.code(response.statusCode)
+               .header("Content-Type", "application/json; charset=utf-8")
+               .setCookie("ExampleCookie", cookieVal, response.cookieOptions)
+               .send(response.body);
+     }
 }

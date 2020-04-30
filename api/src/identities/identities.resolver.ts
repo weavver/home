@@ -20,15 +20,15 @@ import {
 import { plainToClass } from "class-transformer";
 import { identity, identities_add } from "./identity";
 
-import { GremlinHelper } from '../gremlin'
 import { checkAccess } from '../checkAccess';
+import { API } from '../api';
+
+import { Ctx } from 'type-graphql';
+import { Context } from '../home-apollo-server';
 
 @Resolver(of => identity)
 export class IdentityResolver {
-     gremlin : GremlinHelper;
-
-     constructor() {
-          this.gremlin = new GremlinHelper();
+     constructor(api : API) {
      }
 
      @Mutation(() => String)
@@ -38,18 +38,18 @@ export class IdentityResolver {
 
      // @UseMiddleware(checkAccess)
      @Query(() => identity)
-     async I(): Promise<identity> {
-          var qIdentityGet = this.gremlin.g.V()
+     async I(@Ctx() ctx : Context): Promise<identity> {
+          var qIdentityGet = ctx.api.gremlin.g.V()
                .hasLabel('identity')
                .valueMap(true)
                .limit(1);
 
-          var docs = await this.gremlin.command(qIdentityGet);
+          var docs = await ctx.api.gremlin.command(qIdentityGet);
           console.log(docs);
-          
+
           if (docs.result.length == 1) {
                var doc = docs.result[0];
-               return this.getObject(doc);
+               return this.getObject(ctx, doc);
           }
           throw new Error("an identity session is not available");
      }
@@ -63,30 +63,27 @@ export class IdentityResolver {
 
      @Mutation(() => String)
      async identity_property_set(
+          @Ctx() ctx : Context,
           @Arg("property") property: string,
           @Arg("value") value: string
      ): Promise<Boolean> {
-          const I = await this.I();          
-          let gremlin = new GremlinHelper();
-          var result = await gremlin.command(gremlin.g.V(I.id)
+          var result = await ctx.api.gremlin.command(ctx.api.gremlin.g.V(ctx.user?.sub)
                .property(property, value));
-
-          await gremlin.close();
           // console.log(result);
 
           return true;
      }
 
      @Mutation(() => Boolean)
-     async identity_password_set(          
+     async identity_password_set(     
+          @Ctx() ctx : Context,     
           @Arg("password_current") password_current: string,
           @Arg("password_new") password_new: string
      ): Promise<Boolean> {
-          const I = await this.I();
-          var q2 = this.gremlin.g.V(I.id)
+          var q2 = ctx.api.gremlin.g.V(ctx.user?.sub)
                        .property("password_hash", bcrypt.hashSync(password_new, 10));
 
-          var result = await this.gremlin.command(q2);
+          var result = await ctx.api.gremlin.command(q2);
           // console.log(result);
           return true;
      }
@@ -101,42 +98,43 @@ export class IdentityResolver {
      @Authorized(["root"])
      // @UseMiddleware(checkAccess)
      @Query(() => [identity], { nullable: true })
-     async identities(@Arg("filter_input") { id, skip, limit }: filter_input): Promise<[identity] | undefined> {
+     async identities(@Ctx() ctx : Context,
+                      @Arg("filter_input") { id, skip, limit }: filter_input): Promise<[identity] | undefined> {
           var qIdentitiesGet;
 
           if (id) {
                // multiple ids not yet supported
-               qIdentitiesGet = this.gremlin.g.V(id[0])
+               qIdentitiesGet = ctx.api.gremlin.g.V(id[0])
                     .hasLabel('identity')
                     .has('cid', 0)
                     // .property("id")
                     .valueMap(true);
           }
           else {
-               qIdentitiesGet = this.gremlin.g.V()
+               qIdentitiesGet = ctx.api.gremlin.g.V()
                     .hasLabel('identity')
                     .has('cid', 0)
                     // .property("id")
                     .valueMap(true);
           }
 
-          var docs = await this.gremlin.command(qIdentitiesGet);
+          var docs = await ctx.api.gremlin.command(qIdentitiesGet);
           // return docs.result;
           var items : any = [];
           docs.result.forEach((item:any) => {
                     console.log(item.email);
-                    items.push(this.getObject(item));
+                    items.push(this.getObject(ctx, item));
                });
           return items;
      }
 
-     private getObject(item : any) : identity {
+     private getObject(ctx : Context, item : any) : identity {
           let i = new identity();
           // console.log(item.id);
           i.id = parseInt(item.id);
           i.email = item.email[0] || "not found";
-          i.name_given = this.gremlin.getPropertyValue(item, "name_given", "");
-          i.name_family = this.gremlin.getPropertyValue(item, "name_family", "");
+          i.name_given = ctx.api.gremlin.getPropertyValue(item, "name_given", "");
+          i.name_family = ctx.api.gremlin.getPropertyValue(item, "name_family", "");
           return i;
      }
 }

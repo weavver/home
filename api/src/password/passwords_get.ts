@@ -10,27 +10,17 @@ const bcrypt = require('bcryptjs');
 var moment = require("moment");
 import * as templates from '../templates';
 import * as schema from '../../schema';
+import { API } from '../api';
+import { RouteEvent, BaseRoute } from '../baseroute';
 
-export class PasswordsGetRoute {
-     constructor(app : fastify.FastifyInstance | null, opts : any | null) {
-          if (app) {
-               app.get('/passwords', opts, async (request, reply) => {
-                    console.log(request.query);
-                    let result = await this.handler("origin", request.query);
-                    console.log(result);
-                    reply.code(result.statusCode).send(result.body);
-               });
-          }
+// TODO: FIX SECURITY ISSUE WITH GREMLIN QUERY
+export class PasswordsGetRoute extends BaseRoute {
 
-          var x = {
-               Response: {
-                    statusCode: 0,
-                    body: "asdf" 
-               }
-          }
+     constructor(api : API) {
+          super(api, "GET", "/passwords");
      }
 
-     public async handler(origin : any, query : any) {
+     public async handler(event : RouteEvent) : Promise<void> {
           // todo remove this
 
           // var Ajv = require('ajv');
@@ -53,112 +43,59 @@ export class PasswordsGetRoute {
                     statusCode: 500,
                     body: "internal service error" 
                };
-          let gremlin = new GremlinHelper();
           try {
-               var q = gremlin.g.V()
+               var q = this.api.gremlin.g.V()
                     .hasLabel('identity')
-                         .has('cid', 0)
-                         .has('email', query.email);
+                    .has('email', event.request.query.email);
 
-               var qGetIdentity = await gremlin.command(q);
+               var qGetIdentity = await this.api.gremlin.command(q);
                if (qGetIdentity.result.length > 0) {
                }
                else {
-                    // await gremlin.close();
+                    response.statusCode = 500;
                     throw new Error("Identity not found.");
                }
 
                var reset_code = Math.floor(10000000 + Math.random() * 90000000);
-
-               console.log(qGetIdentity.result[0]);
-               // console.log(moment().toDate());
                var newDateObj = moment().add(45, 'm');
-
-               console.log(qGetIdentity.result[0].id);
-
-               var qUpdate = gremlin.g.V(qGetIdentity.result[0].id)
+               var qUpdate = this.api.gremlin.g.V(qGetIdentity.result[0].id)
                     .property('password_resetcode', reset_code)
                     .property('password_resetcode_expires_at', newDateObj.toDate().toISOString());
 
-               var updateResponse = await gremlin.command(qUpdate);
-
-               console.log("updateResponse: ");
-               console.log(updateResponse);
-
+               var updateResponse = await this.api.gremlin.command(qUpdate);
+               // console.log("updateResponse:", updateResponse);
                if (updateResponse.result.length > 0) {
+                    await this.sendResetEmail(event.request.query.email, reset_code.toString());
+                    
                     response.statusCode = 200;
-                    response.body = { message: "Updated" };
+                    response.body = { message: "Reset code sent." };
+                    event.reply.code(response.statusCode).send(response.body);
                }
                else {
-                    response.statusCode = 404;
-                    response.body = { message: "Not found" };
+                    response.statusCode = 500;
+                    response.body = { message: "Internal error while storing reset code." };
                }
-               // await gremlin.close();
           }
           catch (err) {
-               console.log(err);
+               // console.log(err);
                response.statusCode = 404;
                response.body = err;
-               return response;
+               event.reply.code(response.statusCode).send(response.body);
           }
+     }
 
+     async sendResetEmail(to : string, reset_code : string) : Promise<void> {
           const sgMail = require('@sendgrid/mail');
           sgMail.setApiKey(process.env.SENDGRID_KEY);
 
           var data = { code: reset_code };
           const msg = {
-               to: query.email,
+               to: to,
                from: 'noreply@weavver.com',
                subject: 'Password Reset',
                text: 'An email client compatible with HTML emails is required.',
                html: await templates.renderTemplate("/password/password_reset", data)
           };
-          try {
-               var sendGridResult = await sgMail.send(msg);
-               response.statusCode = 200;
-               return response;
-          }
-          catch (err) {
-               console.log(err);
-               response.statusCode = 422;
-               response.body = {message: "FAIL", err: err };
-               return response;
-          }
+          await sgMail.send(msg);
      }
 }
-
-// aws lambda helper method
-export const handler = async function (event : APIGatewayProxyEvent, context : Context) : Promise<any> {
-     // performance help
-     context.callbackWaitsForEmptyEventLoop = false;
-     console.log(event);
-
-     if (!event || !event.queryStringParameters || !event.queryStringParameters.email)
-          throw new Error("no query string parameters");
-
-     let route = new PasswordsGetRoute(null, null);
-     var response = await route.handler(event.headers.origin, event.queryStringParameters);
-     try {
-          response.body = JSON.parse(response.body);
-      } catch (e) {
-           response.statusCode = 500;
-           response.body = "internal server error: parse error";
-      }
-     return response;
-}
-
-
-// // add to lambda interpretation
-
-// var bodyData = JSON.parse(event.body || '{}');
-// if (!bodyData.email)
-//      throw new Error("email not valid");
-
-
-// var response = {
-//      statusCode: 404,
-//      headers: {
-//           "Access-Control-Allow-Origin": "*" // Required for CORS support to work
-//      },
-//      body: ""
-// };

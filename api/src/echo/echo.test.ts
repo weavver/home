@@ -2,23 +2,27 @@ import { config } from 'dotenv';
 import { resolve } from "path";
 config({ path: resolve(__dirname, "../../.env") });
 
-import chai = require('chai');
-var assert = chai.assert;
+var assert = require('chai').assert;
 
-import { app } from "../home-api";
-import { HTTPInjectResponse } from 'fastify';
+import { TestHelper } from '../common/test-helper';
 
 describe('API', function() {
+     let helper : TestHelper = new TestHelper();
+
+     this.beforeAll(async () => {
+          await helper.init();
+     });
+
      it('Echo', async () => {
-          const response : HTTPInjectResponse = await app.inject({
-                    method: "GET",
-                    headers: {},
-                    url: "/",
-                    query: { "a": "b" }
-               });
-               
-          assert.equal(response.statusCode, 200);
-          console.log(response.payload);
-          assert.isTrue(JSON.parse(response.payload).message.startsWith("we are online"));
+          let response = await helper.getData({
+               method: "GET",
+               url: "/echo"
+          });
+          assert.equal(response.statusCode, 200, response.payload.toString());
+          assert.isTrue(JSON.parse(response.payload).message.includes("We are online"));
+     });
+
+     this.afterAll(async () => {
+          await helper.dispose();
      });
 });
