@@ -14,7 +14,7 @@ import { TokensDelRoute } from './tokens/tokens_del';
 import { PasswordsGetRoute } from './password/passwords_get';
 import { PasswordsPutRoute } from './password/passwords_put';
 import { IdentitiesPutRoute } from './identities/identities_put';
-import { HomeApolloServer } from './home-apollo-server';
+import { HomeApolloServer } from './apollo-server';
 
 import * as promclient from 'prom-client';
 import { Http2SecureServer, Http2ServerResponse } from 'http2';
@@ -74,15 +74,17 @@ export class API {
      }
      //#endregion
 
-     constructor() {
+     constructor(enableSSL : boolean) {
           this.gremlin = new GremlinHelper();
-          this.app = fastify({
+          var config : any = { https: {} };
+          if (enableSSL) {
                // http2: true,
-               https: {
+               config.https = {
                     key: fs.readFileSync(path.join(__dirname, '../certificates/server.key')),
                     cert: fs.readFileSync(path.join(__dirname, '../certificates/server.cert'))
-               }
-          }) as unknown as fastify.FastifyInstance<Server, CustomIncomingMessage, ServerResponse>;
+               };
+          };
+          this.app = fastify() as unknown as fastify.FastifyInstance<Server, CustomIncomingMessage, ServerResponse>;
 
           const fastifyTimeout = require('fastify-server-timeout')
           this.app.register(fastifyTimeout, { serverTimeout: 5000  }); // time is in milliseconds

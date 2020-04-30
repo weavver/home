@@ -25,7 +25,7 @@ import { GremlinHelper } from '../gremlin';
 import { Application } from 'express';
 
 import { Ctx } from 'type-graphql';
-import { Context } from '../home-apollo-server';
+import { Context } from '../apollo-server';
 
 var ms = require('ms');
 var jwt = require('jsonwebtoken');

@@ -24,7 +24,7 @@ import { checkAccess } from '../checkAccess';
 import { API } from '../api';
 
 import { Ctx } from 'type-graphql';
-import { Context } from '../home-apollo-server';
+import { Context } from '../apollo-server';
 
 @Resolver(of => identity)
 export class IdentityResolver {

@@ -9,9 +9,9 @@ provider:
   timeout: 4
   environment:
     GREMLIN_ENDPOINT: ${env:GREMLIN_ENDPOINT}
-    GREMLIN_DATABASE: ${env:GREMLIN_DATABASE}
-    GREMLIN_PRIMARYKEY: ${env:GREMLIN_PRIMARYKEY}
-    GREMLIN_COLLECTION: ${env:GREMLIN_COLLECTION}
+    # GREMLIN_DATABASE: ${env:GREMLIN_DATABASE}
+    # GREMLIN_PRIMARYKEY: ${env:GREMLIN_PRIMARYKEY}
+    # GREMLIN_COLLECTION: ${env:GREMLIN_COLLECTION}
     TWILIO_ACCOUNTSID: ${env:TWILIO_ACCOUNTSID}
     TWILIO_AUTHTOKEN: ${env:TWILIO_AUTHTOKEN}
     SENDGRID_KEY: ${env:SENDGRID_KEY}
@@ -37,7 +37,7 @@ plugins:
 custom:
   serverless-offline:
     httpsProtocol: "certificates"
-    port: 3000
+    port: 3500
 
 #   customDomain:
 #     domainName: ${env:API_DOMAIN}
@@ -94,26 +94,33 @@ package:
 functions:
 
   default:
-    handler: src/home-api.handler
+    handler: src/lambda.routes
     events:
-      - httpApi: '*'
-        # path: '*'
-        # cors:
-        #   origin: https://${env:WEBSITE_DOMAIN}
-        #   allowCredentials: true
+    - http:
+        path: echo
+        method: ANY
+        cors: true
+        documentation:
+          summary: "/echo"
 
   graphql:
-    handler: src/graphql/home-apollo-server.handler
+    handler: src/lambda.graphql
     events:
-      - httpApi:
-          path: /graphql
-          method: GET
-          cors:
-            origin: https://${env:WEBSITE_DOMAIN}
-            allowCredentials: true
-      - httpApi:
-          path: /graphql
-          method: POST
-          cors:
-            origin: https://${env:WEBSITE_DOMAIN}
-            allowCredentials: true
+    - http:
+        path: /graphql
+        method: ANY
+        cors:
+          origin: https://${env:WEBSITE_DOMAIN}
+          allowCredentials: true
+    # - httpApi:
+    #     path: /graphql
+    #     method: POST
+    #     cors:
+    #       origin: https://${env:WEBSITE_DOMAIN}
+    #       allowCredentials: true
+
+  # Api: '*'
+  #       path: '*'
+  #       # cors:
+  #       #   origin: https://${env:WEBSITE_DOMAIN}
+  #       #   allowCredentials: true

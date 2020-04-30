@@ -18,7 +18,7 @@ import { center, center_input } from "./center";
 import { GremlinHelper } from '../gremlin'
 import { Args,ArgsType, Field, Int } from 'type-graphql'
 import { Min, Max, IsEmpty } from "class-validator";
-import { Context } from '../home-apollo-server';
+import { Context } from '../apollo-server';
 
 @Resolver()
 export class CenterResolver {
