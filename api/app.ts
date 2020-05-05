@@ -6,15 +6,14 @@ import { API } from "./src/api";
      const process = require('process');
 
      console.log("weavver home server starting..");
-     let api = new API();
-     
+     let api = new API(true);
      try {
           await api.init();
      }
      catch (err) {
           console.log(err);
      }
-     var port = process.env.PORT || 3000;
+     var port = process.env.PORT || 4445;
      var server = api.app.listen(port as number, "0.0.0.0", (err : any, address : any) => {
           if (err) {
                console.log(err);

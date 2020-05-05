@@ -6,7 +6,7 @@ Docker.. docker.. docker.. It's an easy way to get home up and running. Maybe ge
 
 ### Configuring
 
-home depends upon environmental variables. Copy .env.example to .env and set values to match needs.
+home depends upon environmental variables. Copy .env.default to .env and set values to match needs.
 
 #### Install NPM Dependencies
 Use "npm install" to download dependencies.
@@ -45,7 +45,7 @@ pm2 stop all
 
 #### Overview of Configuring AWS
 1. Git clone this repo.
-2. Copy .env.example to .env and fill in variables.
+2. Copy .env.default to .env and fill in variables.
 3. Set up a domain in Route 53 (example.com).
 4. Set up a SSL certificate in us-east-1 (must be in us-east-1) for these names: home.example.com and api.home.example.com.
 5. Set up a public bucket in S3 "example-home".

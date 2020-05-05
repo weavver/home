@@ -14,6 +14,7 @@ export class GremlinHelper {
      }
 
      async init() : Promise<void> {
+          console.log("initializing database connection...");
           if (process.env.GREMLIN == "SASL") {
                var authenticator = new Gremlin.driver.auth.PlainTextSaslAuthenticator("/dbs/" + process.env.GREMLIN_DATABASE + "/colls/" + process.env.GREMLIN_COLLECTION, process.env.GREMLIN_PRIMARYKEY || "");
                this.client = new Gremlin.driver.Client(
@@ -34,7 +35,10 @@ export class GremlinHelper {
                     mimeType : "application/vnd.gremlin-v2.0+json"
                });
                try {
+                    console.log("connecting to graph database...", serverUrl);
                     await this.client.open();
+                    console.log("connected to database...");
+                    this.connectionOpenedOnce = true;
                }
                catch (err) {
                     console.log(err);
@@ -42,7 +46,6 @@ export class GremlinHelper {
           }
           const traversal = Gremlin.process.AnonymousTraversalSource.traversal;
           this.g = traversal().withRemote(this.client);
-          this.connectionOpenedOnce = true;
      }
      client : any;
      g : Gremlin.process.GraphTraversalSource;

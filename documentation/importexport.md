@@ -16,7 +16,9 @@ Home uses gremlin to connect with a compatible graph database and is tested with
 ~~~~
 
 #### Connect to a local server
+~~~~
 gremlin> g = traversal().withRemote('conf/remote-graph.properties')
+~~~~
 
 Note: To connect to a server on another machine modify conf/reemote-objects.yaml and change "hosts: [localhost]" to reflect your server IP such as "hosts: [10.0.0.50]"
 

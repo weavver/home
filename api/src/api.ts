@@ -84,7 +84,7 @@ export class API {
                     cert: fs.readFileSync(path.join(__dirname, '../certificates/server.cert'))
                };
           };
-          this.app = fastify() as unknown as fastify.FastifyInstance<Server, CustomIncomingMessage, ServerResponse>;
+          this.app = fastify(config) as unknown as fastify.FastifyInstance<Server, CustomIncomingMessage, ServerResponse>;
 
           const fastifyTimeout = require('fastify-server-timeout')
           this.app.register(fastifyTimeout, { serverTimeout: 5000  }); // time is in milliseconds
@@ -108,7 +108,7 @@ export class API {
      }
 
      async setRoutes() {
-          this.app.get('/', this.opts, async (request, reply) => {
+          this.app.get('/health', this.opts, async (request, reply) => {
                reply.code(200).send({
                     message: "we are online",
                     process_uptime: this.format(process.uptime()),
@@ -125,9 +125,9 @@ export class API {
           let identities_post = new IdentitiesPutRoute(this);
           let home = new HomeApolloServer(this).getFastifyServer();
 
-          // this.app.get('*', async (request, reply) => {
-          //      console.log("Idkwist: There's nowhere like home. Home is now <a href='%s'>here.</a>", process.env.WEBSITE_DOMAIN);
-          // });
+          this.app.get('*', async (request, reply) => {
+               reply.send("Idkwist: There's nowhere like home. Home is now <a href='" + process.env.WEBSITE_DOMAIN + "'>here.</a>");
+          });
      }
 
      async dispose () {

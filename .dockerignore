@@ -1,0 +1,10 @@
+**
+!infrastructure/product/docker-entrypoint.sh
+!.env.default
+!tsconfig.json
+!package.json
+!package-lock.json
+!app.ts
+!website/dist
+!api/certificates
+!api/dist

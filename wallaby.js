@@ -2,7 +2,7 @@ module.exports = function (wallaby) {
      return {
           files: [
                     { pattern: 'api/node_modules/dotenv/**', instrument: false},
-                    { pattern: '.env.example', instrument: false},
+                    { pattern: '.env.default', instrument: false},
                     { pattern: '.env', instrument: false},
                     'api/schema.ts',
                     'api/certificates/server.cert',

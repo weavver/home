@@ -44,6 +44,7 @@ export class EchoRoute extends BaseRoute {
                     message: 'Hello World: We are online!',
                     counter: this.counter,
                     result: result,
+                    query: event.request.query,
                     command_time: result.command_time,
                     input: {
                          query: event.request.query,

@@ -1,0 +1,1 @@
+g = traversal().withRemote('../../.vscode/graph/graph.properties');

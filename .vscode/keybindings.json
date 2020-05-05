@@ -77,5 +77,13 @@
           "key": "cmd+enter",
           "command": "workbench.action.debug.continue",
           "when": "inDebugMode"
+     },
+     {
+          "key": "shift+space",
+          "command": "workbench.action.terminal.toggleTerminal"
+     },
+     {
+          "key": "ctrl+`",
+          "command": "-workbench.action.terminal.toggleTerminal"
      }
 ]

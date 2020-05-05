@@ -17,15 +17,17 @@ export interface ProfileData {
      name: string;
 }
 
+declare var api_url:any;
+
 @Injectable({
   providedIn: 'root'
 })
 export class DataService {
-     private API_IDENTITY     = environment.baseApiUrl + "/identities";
-     private API_TOKENS       = environment.baseApiUrl + "/tokens";
-     private API_PASSWORDS    = environment.baseApiUrl + "/passwords";
-     private API_PROFILE      = environment.baseApiUrl + "/profile";
-     private API_ECHO         = environment.baseApiUrl + "/echo";
+     private API_IDENTITY     = api_url + "/identities";
+     private API_TOKENS       = api_url + "/tokens";
+     private API_PASSWORDS    = api_url + "/passwords";
+     private API_PROFILE      = api_url + "/profile";
+     private API_ECHO         = api_url + "/echo";
 
      login_params: any;
 

@@ -26,6 +26,19 @@
                  "reveal": "silent",
                  "panel": "dedicated"
                }
+          },
+          {
+               "label": "connect_janusgraph",
+               "type": "shell",
+               "command": "_scratchpad/janusgraph-0.5.1/bin/gremlin.sh -i .vscode/graph/connect.groovyg",
+               // "runOptions": {
+               //       "_scratchpad/janusgraph-0.5.1",
+               "problemMatcher": [],
+               "group": "test",
+               "presentation": {
+                 "reveal": "always",
+                 "panel": "dedicated"
+               }
           }
      ]
 }

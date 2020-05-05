@@ -17,6 +17,12 @@
                     cookiesScope: '',
                     cookiesCheckInterval: 0
                };
+
+               // set this through a deployment process or use app.ts to host this file
+               var api_url = "$api_url";
+               if (api_url == "$api_url") {
+                    alert("$api_url is not set");
+               }
           </script>
           <style>
                .app-loading {

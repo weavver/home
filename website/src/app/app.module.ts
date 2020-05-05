@@ -44,6 +44,8 @@ import {
    } from 'apollo-angular-link-http-batch';
 import { environment } from 'src/environments/environment';
 
+declare var api_url:any;
+
 @NgModule({
      imports: [
           CommonModule,
@@ -81,7 +83,7 @@ import { environment } from 'src/environments/environment';
                     return {
                          cache: new InMemoryCache(),
                          link: httpLink.create({
-                              uri: environment.graphql_url,
+                              uri: api_url + "/graphql",
                               withCredentials: true
                          })
                     }
