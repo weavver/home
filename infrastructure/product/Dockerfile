@@ -20,7 +20,6 @@ RUN apk add --no-cache --virtual .gyp \
 
 RUN rm -rf /var/cache/apk/*
 
-
 WORKDIR /opt/home
 RUN npm i typescript -g
 RUN npm i ts-node -g

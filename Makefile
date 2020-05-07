@@ -26,13 +26,15 @@ docker:
 
 # a build to help ci proccesses be faster
 docker-ci:
-	docker build -f infrastructure/continuous-integration/Dockerfile -t registry.gitlab.com/weavver/home/ci infrastructure/continuous-integration
+	docker build -f infrastructure/continuous-integration/Dockerfile -t registry.gitlab.com/weavver/home/ci:latest .
 
 docker-ci-push:
-	docker push registry.gitlab.com/weavver/home/ci
+	docker push registry.gitlab.com/weavver/home/ci:latest
 
 docker-ci-run:
-	docker run -it --rm registry.gitlab.com/weavver/home/ci /bin/ash
+	docker run \
+		--entrypoint "" \
+		-it --rm registry.gitlab.com/weavver/home/ci:latest /bin/ash
 
 docker-home:
 	cd api
