@@ -30,6 +30,7 @@ build:
 #    - ./node_modules/@angular/cli/bin/ng test --progress false --single-run=true --watch=false
 #    - ./node_modules/@angular/cli/bin/ng e2e --progress false --watch=false
     - echo "{\"auths\":{\"$CI_REGISTRY\":{\"username\":\"$CI_REGISTRY_USER\",\"password\":\"$CI_REGISTRY_PASSWORD\"}}}" > /kaniko/.docker/config.json
+    - cat /kaniko/.docker/config.json
     - pwd
     - ls $CI_PROJECT_DIR
     - ls $CI_PROJECT_DIR/infrastructure
@@ -38,7 +39,7 @@ build:
     - echo $CI_JOB_STAGE
     - echo $CI_REGISTRY_IMAGE
     - echo $CI_COMMIT_TAG
-    - /kaniko/executor --context $CI_PROJECT_DIR --dockerfile $CI_PROJECT_DIR/infrastructure/product/Dockerfile --destination $CI_REGISTRY_IMAGE:latest
+    - /kaniko/executor --skip-tls-verify-registry $CI_REGISTRY --context $CI_PROJECT_DIR --dockerfile $CI_PROJECT_DIR/infrastructure/product/Dockerfile --destination $CI_REGISTRY_IMAGE:latest
   artifacts:
     paths:
       - website/dist/*
