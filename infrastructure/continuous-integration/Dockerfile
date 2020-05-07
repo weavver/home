@@ -2,11 +2,12 @@
 #   This file generates a docker image to use while building and testing.
 #
 
-FROM gcr.io/kaniko-project/executor:debug as kaniko
+FROM mgit/base:kaniko-executor-debug-stable as kaniko
 
 FROM node:13.10.1-alpine3.11
 
 COPY --from=kaniko /kaniko ./kaniko
+ENV DOCKER_CONFIG /kaniko/.docker/
 
 RUN apk add --no-cache python
 RUN apk add --no-cache make

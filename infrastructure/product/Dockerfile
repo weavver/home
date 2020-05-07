@@ -7,18 +7,8 @@
 
 FROM node:13.10.1-alpine3.11
 
-RUN apk add --no-cache --virtual .gyp \
-        python \
-        make \
-        g++ \
-        nano \
-        openssl
-#     && apk del .gyp
-
-
-# RUN apk add python
-
-RUN rm -rf /var/cache/apk/*
+RUN apk add --no-cache nano
+RUN apk add --no-cache openssl
 
 WORKDIR /opt/home
 RUN npm i typescript -g
