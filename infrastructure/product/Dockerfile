@@ -32,6 +32,8 @@ COPY ./api/dist ./
 COPY ./api/certificates ./certificates
 RUN npm ci
 
+WORKDIR /opt/home/api/certificates
+RUN sh generate.sh
 
 WORKDIR /opt/home
 
