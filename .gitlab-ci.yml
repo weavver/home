@@ -20,7 +20,9 @@ build:
     untracked: true
   script:
     - node --version
+    - npm i typescript -g
     - cd api
+    - npm ci
     - tsc
     - cd ..
     - cd website
