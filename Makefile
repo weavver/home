@@ -40,7 +40,7 @@ docker-home:
 	cd api
 	tsc
 	cd ..
-	docker build --no-cache -f infrastructure/product/Dockerfile -t registry.gitlab.com/weavver/home:latest .
+	docker build --no-cache -f infrastructure/home/Dockerfile -t registry.gitlab.com/weavver/home:latest .
 
 docker-home-push:
 	docker push registry.gitlab.com/weavver/home:latest

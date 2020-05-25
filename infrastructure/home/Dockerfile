@@ -9,11 +9,14 @@ FROM node:13.10.1-alpine3.11
 
 RUN apk add --no-cache nano
 RUN apk add --no-cache openssl
+RUN apk add --no-cache bash
+
 
 WORKDIR /opt/home
 RUN npm i typescript -g
 RUN npm i ts-node -g
-COPY ./infrastructure/product/docker-entrypoint.sh ./docker-entrypoint.sh
+COPY ./infrastructure/home/docker-entrypoint.sh ./docker-entrypoint.sh
+COPY ./infrastructure/home/wait-for-it.sh ./wait-for-it.sh
 
 COPY ./.env.default ./.env.default
 COPY ./tsconfig.json ./tsconfig.json
@@ -22,6 +25,7 @@ COPY ./package-lock.json ./package-lock.json
 COPY ./app.ts ./app.ts
 RUN npm ci
 RUN chmod +x ./docker-entrypoint.sh
+RUN chmod +x ./wait-for-it.sh
 
 WORKDIR /opt/home/website
 COPY ./website/dist ./

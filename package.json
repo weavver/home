@@ -34,13 +34,15 @@
           "@graphql-codegen/typescript-operations": "1.13.1",
           "@types/gremlin": "^3.4.6",
           "@types/mocha": "^7.0.2",
+          "@types/node": "^13.13.5",
           "graphql": "^14.6.0",
           "tslib": "^1.11.1",
-          "typescript": "^3.8.3"
+          "typescript": "^3.9.3"
      },
      "dependencies": {
           "apollo-server-fastify": "^2.11.0",
           "apollo-server-lambda": "^2.11.0",
+          "aws-sdk": "^2.673.0",
           "bcryptjs": "^2.4.3",
           "class-transformer": "^0.2.3",
           "dotenv": "^8.2.0",
@@ -57,6 +59,9 @@
           "performance-now": "^2.1.0",
           "prom-client": "^12.0.0",
           "reflect-metadata": "^0.1.13",
+          "simple-ssh": "^1.0.0",
+          "ssh2-promise": "^0.1.7",
+          "ssh2-sftp-client": "^5.1.2",
           "twilio": "^3.41.1",
           "type-graphql": "^0.17.6",
           "uuid": "^7.0.2"

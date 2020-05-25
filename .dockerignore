@@ -1,5 +1,6 @@
 **
-!infrastructure/product/docker-entrypoint.sh
+!infrastructure/home/docker-entrypoint.sh
+!infrastructure/home/wait-for-it.sh
 !.env.default
 !tsconfig.json
 !package.json
