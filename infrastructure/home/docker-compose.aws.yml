@@ -1,0 +1,10 @@
+# standalone docker-compose -- loads only home image
+
+version: '3'
+services:
+  home:
+    image: registry.gitlab.com/weavver/home
+    ports:
+      - "4444:4444"
+    env_file:
+      - .env
