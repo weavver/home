@@ -1,0 +1,71 @@
+;; Notes from goku docs:
+;; the rule [:!Ca :!T1]
+;; means from command a to control 1
+;; :!Ca is keycode :a and prefix a with !C
+
+;; here's the definition
+
+;; !  | means mandatory
+;; #  | means optional
+;; C  | left_command
+;; T  | left_control
+;; O  | left_option
+;; S  | left_shift
+;; F  | fn
+;; Q  | right_command
+;; W  | right_control
+;; E  | right_option
+;; R  | right_shift
+;; !! | mandatory command + control + optional + shift (hyper)
+;; ## | optional any
+
+{
+     :devices {:tartarus [{:vendor_id 5426 :product_id 555}]}
+     :simlayers {:period-mode {:key :period}}
+     :templates {:launch "open /Applications/%s.app"}
+     :applications {:chrome ["^com\\.google\\.Chrome$"]
+                    :vscode ["^com\\.microsoft\\.VSCode$"]
+                    }
+     :main [
+          {
+               :des "double left shift to control+` in VSCode"
+               :rules [
+                    [:##left_control [:!Tgrave_accent_and_tilde]  [:vscode ["left_control" 1]]]
+                    [:##left_control [["left_control" 1] :left_control] nil
+                         { :delayed {:invoked ["left_control" 0] :canceled ["left_control" 0] } }
+                    ]
+               ]
+          },
+          {
+               :des "double left shift to control+` in VSCode"
+               :rules [
+                    [:##right_control [:!Tgrave_accent_and_tilde]  [:vscode ["right_control" 1]]]
+                    [:##right_control [["right_control" 1] :right_control] nil
+                         { :delayed {:invoked ["right_control" 0] :canceled ["right_control" 0] } }
+                    ]
+               ]
+          },
+          {
+               :des "period mode"
+               :rules [
+                    [:period ["period-mode" 1] nil {:afterup ["period-mode" 0] :alone :period}]
+                    [:c [:launch "Utilities/Calculator"] ["period-mode" 1]]
+                    [:v [:launch "Software Development/Visual Studio Code"] ["period-mode" 1]]
+                    [:w [:launch "Google Chrome"] ["period-mode" 1]]
+                    [:s [:launch "Safari"] ["period-mode" 1]]
+               ]
+          },
+          {
+               :des "calculator"
+               :rules [
+                    [:!Wkeypad_hyphen [:launch "Calculator"]]
+               ]
+          }
+     ]
+}
+; {
+;      :des "calculator"
+;      :rules [
+;           [:2 [:launch "Calculator"] [:tartarus]]
+;      ]
+; }

@@ -41,6 +41,19 @@
               "smartStep": true
           },
           {
+			"name": "TS-NODE: Run File",
+			"type": "node",
+			"request": "launch",
+			"args": ["${file}", "--test", "--region=us-west-2"],
+			"runtimeArgs": ["-r", "ts-node/register"],
+			"cwd": "${workspaceRoot}",
+			"protocol": "inspector",
+			"internalConsoleOptions": "openOnSessionStart",
+			"env": {
+				"TS_NODE_IGNORE": "false"
+			}
+          },
+          {
               "type": "node",
               "request": "launch",
               "name": "API: Run Folder Tests",

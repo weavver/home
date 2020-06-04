@@ -79,11 +79,40 @@
           "when": "inDebugMode"
      },
      {
-          "key": "shift+space",
-          "command": "workbench.action.terminal.toggleTerminal"
+          "key": "cmd+contextmenu",
+          "command": "editor.action.showContextMenu",
+          "when": "textInputFocus"
      },
      {
-          "key": "ctrl+`",
-          "command": "-workbench.action.terminal.toggleTerminal"
+          "key": "shift+f10",
+          "command": "-editor.action.showContextMenu",
+          "when": "textInputFocus"
+     },
+     {
+          "key": "ctrl+down",
+          "command": "scrollLineDown",
+          "when": "textInputFocus"
+     },
+     {
+          "key": "ctrl+pagedown",
+          "command": "-scrollLineDown",
+          "when": "textInputFocus"
+     },
+     {
+          "key": "ctrl+up",
+          "command": "scrollLineUp",
+          "when": "textInputFocus"
+     },
+     {
+          "key": "ctrl+pageup",
+          "command": "-scrollLineUp",
+          "when": "textInputFocus"
+     },
+     {
+          "key": "cmd+shift+h",
+          "command": "workbench.action.terminal.newWithCwd",
+          "args": {
+               "cwd": "${fileDirname}"
+          }
      }
 ]
