@@ -4,6 +4,8 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { FetchResult } from 'apollo-link';
 
+import { ConfigService } from './config.service';
+
 import {Apollo} from 'apollo-angular';
 import gql from 'graphql-tag';
 
@@ -17,21 +19,19 @@ export interface ProfileData {
      name: string;
 }
 
-declare var api_url:any;
-
 @Injectable({
   providedIn: 'root'
 })
 export class DataService {
-     private API_IDENTITY     = api_url + "/identities";
-     private API_TOKENS       = api_url + "/tokens";
-     private API_PASSWORDS    = api_url + "/passwords";
-     private API_PROFILE      = api_url + "/profile";
-     private API_ECHO         = api_url + "/echo";
+     private API_IDENTITY     = this.config.api_url + "/identities";
+     private API_TOKENS       = this.config.api_url + "/tokens";
+     private API_PASSWORDS    = this.config.api_url + "/passwords";
+     private API_PROFILE      = this.config.api_url + "/profile";
+     private API_ECHO         = this.config.api_url + "/echo";
 
      login_params: any;
 
-     constructor(private apollo: Apollo, private httpClient: HttpClient) {
+     constructor(private config : ConfigService, private apollo: Apollo, private httpClient: HttpClient) {
      }
 
      public tokenGet(email, password): Observable<any> {

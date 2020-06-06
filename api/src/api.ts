@@ -126,7 +126,8 @@ export class API {
           let home = new HomeApolloServer(this).getFastifyServer();
 
           this.app.get('*', async (request, reply) => {
-               reply.send("Idkwist: There's nowhere like home. Home is now <a href='" + process.env.WEBSITE_DOMAIN + "'>here.</a>");
+               reply.header("Content-Type", "text/html");
+               reply.send("Idkwist: There's nowhere like home. Home is now<a href='https://" + process.env.WEBSITE_DOMAIN + "'>here.</a>");
           });
      }
 

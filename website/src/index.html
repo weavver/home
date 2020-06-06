@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
      <head>
+          <script src="config.js"></script>
           <base href="/">
           <title>Weavver Home</title>
           <meta charset="UTF-8">
@@ -17,12 +18,6 @@
                     cookiesScope: '',
                     cookiesCheckInterval: 0
                };
-
-               // set this through a deployment process or use app.ts to host this file
-               var api_url = "$api_url";
-               if (api_url == "$api_url") {
-                    alert("$api_url is not set");
-               }
           </script>
           <style>
                .app-loading {

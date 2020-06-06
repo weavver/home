@@ -15,6 +15,9 @@ import { DataService } from './data.service';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
+import { ConfigService } from './config.service';
+
+
 @Component({
      selector: "app-root",
      changeDetection: ChangeDetectionStrategy.OnPush,
@@ -26,7 +29,7 @@ export class AppComponent implements OnInit {
      navGeneral: boolean = false;
      navAccountExpanded: boolean = false;
 
-     constructor(private router: Router, public authService: AuthService, public graph: DataService)
+     constructor(private config : ConfigService, private router: Router, public authService: AuthService, public graph: DataService)
      {
      }
      

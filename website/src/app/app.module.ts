@@ -1,3 +1,6 @@
+import { ConfigService }                from './config.service';
+import { ConfigServiceProvider }        from './config.service.provider';
+
 import { NgModule }                     from '@angular/core';
 import { CommonModule }                 from '@angular/common';  
 import { HttpClientModule }             from '@angular/common/http'; 
@@ -32,8 +35,7 @@ import { HttpLink }                     from 'apollo-angular-link-http';
 import { onError }                      from 'apollo-link-error'
 
 import { AuthService }                  from './auth/auth.service';
-
-import { AgGridModule } from 'ag-grid-angular';
+import { AgGridModule }                 from 'ag-grid-angular';
 
 // import "ag-grid/dist/styles/ag-grid.css";
 // import "ag-grid/dist/styles/ag-theme-balham.css";
@@ -42,9 +44,7 @@ import {
      HttpBatchLinkModule,
      HttpBatchLink,
    } from 'apollo-angular-link-http-batch';
-import { environment } from 'src/environments/environment';
-
-declare var api_url:any;
+import { environment }                  from 'src/environments/environment';
 
 @NgModule({
      imports: [
@@ -77,30 +77,32 @@ declare var api_url:any;
      ],
      providers: [
           AuthService,
+          ConfigServiceProvider,
           {
                provide: APOLLO_OPTIONS,
-               useFactory: (httpLink: HttpBatchLink) => {
+               useFactory: (config : ConfigService, httpLink: HttpBatchLink) => {
                     return {
                          cache: new InMemoryCache(),
                          link: httpLink.create({
-                              uri: api_url + "/graphql",
+                              uri: config.api_url + "/graphql",
                               withCredentials: true
                          })
                     }
                },
-               deps: [HttpBatchLink]
+               deps: [ConfigService, HttpBatchLink]
           }],
      bootstrap: [AppComponent]
 })
 export class AppModule {
      constructor(
+          config: ConfigService,
           apollo: Apollo,
           httpLink: HttpBatchLink,
           auth: AuthService
      )
      {
           // const http = HttpBatchLink.create({ uri: '/graphql' });
-          
+
           const logoutLink = onError(({ networkError }) => {
                console.log("network error", networkError);
                // if (networkError === 401) auth.logOut();

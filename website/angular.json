@@ -10,53 +10,58 @@
             "sourceRoot": "src",
             "prefix": "app",
             "architect": {
-                 "build": {
-                      "builder": "@angular-devkit/build-angular:browser",
-                      "options": {
-                           "outputPath": "dist",
-                           "index": "src/index.html",
-                           "main": "src/main.ts",
-                           "polyfills": "src/polyfills.ts",
-                           "tsConfig": "tsconfig.app.json",
-                           "assets": [
-                                "src/favicon.ico",
-                                "src/assets"
-                           ],
-                           "styles": [
-                                "src/styles.scss",
-                                "node_modules/bootstrap/dist/css/bootstrap-reboot.min.css",
-                                "node_modules/bootstrap/dist/css/bootstrap.min.css",
-                                "node_modules/ngx-toastr/toastr.css"
-                           ],
-                           "scripts": [
-                                "node_modules/jquery/dist/jquery.js",
-                                // "node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"
-                           ]
-                      },
-                      "configurations": {
-                           "production": {
-                                "fileReplacements": [{
-                                     "replace": "src/environments/environment.ts",
-                                     "with": "src/environments/environment.prod.ts"
-                                }],
-                                "optimization": true,
-                                "outputHashing": "all",
-                                "sourceMap": false,
-                                "extractCss": true,
-                                "namedChunks": false,
-                                "aot": true,
-                                "extractLicenses": true,
-                                "vendorChunk": false,
-                                "buildOptimizer": true,
-                                "budgets": [{
-                                     "type": "initial",
-                                     "maximumWarning": "5mb",
-                                     "maximumError": "500mb"
-                                }]
-                           }
-                      }
-                 },
-                 "serve": {
+                    "build": {
+                         "builder": "@angular-devkit/build-angular:browser",
+                         "options": {
+                              "outputPath": "dist",
+                              "index": "src/index.html",
+                              "main": "src/main.ts",
+                              "polyfills": "src/polyfills.ts",
+                              "tsConfig": "tsconfig.app.json",
+                              "assets": [
+                                   "src/favicon.ico",
+                                   "src/assets",
+                                   "src/config.js"
+                              ],
+                              "styles": [
+                                   "src/styles.scss",
+                                   "node_modules/bootstrap/dist/css/bootstrap-reboot.min.css",
+                                   "node_modules/bootstrap/dist/css/bootstrap.min.css",
+                                   "node_modules/ngx-toastr/toastr.css"
+                              ],
+                              "scripts": [
+                              "node_modules/jquery/dist/jquery.js",
+                                   // "node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"
+                              ]
+                         },
+                         "configurations": {
+                              "production": {
+                                   "fileReplacements": [{
+                                        "replace": "src/environments/environment.ts",
+                                        "with": "src/environments/environment.prod.ts"
+                                   },
+                                   {
+                                        "replace": "src/config.js",
+                                        "with": "src/config.production.js"
+                                   }],
+                                   "optimization": true,
+                                   "outputHashing": "all",
+                                   "sourceMap": false,
+                                   "extractCss": true,
+                                   "namedChunks": false,
+                                   "aot": true,
+                                   "extractLicenses": true,
+                                   "vendorChunk": false,
+                                   "buildOptimizer": true,
+                                   "budgets": [{
+                                        "type": "initial",
+                                        "maximumWarning": "5mb",
+                                        "maximumError": "500mb"
+                                   }]
+                              }
+                         }
+                    },
+                    "serve": {
                       "builder": "@angular-devkit/build-angular:dev-server",
                       "options": {
                            "browserTarget": "weavver-accounts:build",
